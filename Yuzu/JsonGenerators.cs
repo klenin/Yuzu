@@ -262,15 +262,19 @@ namespace Yuzu
 
 		public void Generate<T>()
 		{
-			PutF("class {0}_JsonDeserializer : JsonDeserializerGenBase\n", typeof(T).Name);
+			var t = typeof(T);
+			if (t.IsInterface) {
+				throw new YuzuException($"Can't generate code for interface {t.Name}");
+			}
+			PutF("class {0}_JsonDeserializer : JsonDeserializerGenBase\n", t.Name);
 			Put("{\n");
 
-			PutF("public static new {0}_JsonDeserializer Instance = new {0}_JsonDeserializer();\n", typeof(T).Name);
+			PutF("public static new {0}_JsonDeserializer Instance = new {0}_JsonDeserializer();\n", t.Name);
 			Put("\n");
 
-			PutF("public {0}_JsonDeserializer()\n", typeof(T).Name);
+			PutF("public {0}_JsonDeserializer()\n", t.Name);
 			Put("{\n");
-			PutF("Options.Assembly = Assembly.Load(\"{0}\");\n", typeof(T).Assembly.FullName);
+			PutF("Options.Assembly = Assembly.Load(\"{0}\");\n", t.Assembly.FullName);
 			GenAssigns("Options", Options);
 			GenAssigns("JsonOptions", JsonOptions);
 			Put("}\n");
@@ -279,21 +283,21 @@ namespace Yuzu
 			Put("public override object FromReaderInt()\n");
 			Put("{\n");
 			// Since deserializer is dynamically constructed anyway, it is too late to determine object type here.
-			PutF("return FromReaderInt(new {0}());\n", typeof(T).Name);
+			PutF("return FromReaderInt(new {0}());\n", t.Name);
 			Put("}\n");
 			Put("\n");
 
 			Put("public override object FromReaderIntPartial(string name)\n");
 			Put("{\n");
-			PutF("return ReadFields(new {0}(), name);\n", typeof(T).Name);
+			PutF("return ReadFields(new {0}(), name);\n", t.Name);
 			Put("}\n");
 			Put("\n");
 
 			Put("protected override object ReadFields(object obj, string name)\n");
 			Put("{\n");
-			PutF("var result = ({0})obj;\n", typeof(T).Name);
+			PutF("var result = ({0})obj;\n", t.Name);
 			tempCount = 0;
-			foreach (var yi in Meta.Get(typeof(T), Options).Items) {
+			foreach (var yi in Meta.Get(t, Options).Items) {
 				if (yi.IsOptional) {
 					PutF("if (\"{0}\" == name) {{\n", yi.Tag(Options));
 					PutF("result.{0} = ", yi.Name);
@@ -311,14 +315,14 @@ namespace Yuzu
 			Put("return result;\n");
 			Put("}\n");
 
-			if (Utils.IsCompact(typeof(T), Options)) {
+			if (Utils.IsCompact(t, Options)) {
 				Put("\n");
 				Put("protected override object ReadFieldsCompact(object obj)\n");
 				Put("{\n");
-				PutF("var result = ({0})obj;\n", typeof(T).Name);
+				PutF("var result = ({0})obj;\n", t.Name);
 				bool isFirst = true;
 				tempCount = 0;
-				foreach (var yi in Meta.Get(typeof(T), Options).Items) {
+				foreach (var yi in Meta.Get(t, Options).Items) {
 					if (!isFirst)
 						Put("Require(',');\n");
 					isFirst = false;

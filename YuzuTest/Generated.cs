@@ -486,6 +486,99 @@ namespace YuzuTest
 		}
 	}
 
+	class SampleInterfaceImplementation_JsonDeserializer : JsonDeserializerGenBase
+	{
+		public static new SampleInterfaceImplementation_JsonDeserializer Instance = new SampleInterfaceImplementation_JsonDeserializer();
+
+		public SampleInterfaceImplementation_JsonDeserializer()
+		{
+			Options.Assembly = Assembly.Load("YuzuTest, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null");
+			Options.ClassNames = false;
+			Options.IgnoreNewFields = false;
+			Options.AllowEmptyTypes = false;
+			JsonOptions.EnumAsString = true;
+			JsonOptions.IgnoreCompact = false;
+			JsonOptions.FieldSeparator = "\n";
+			JsonOptions.Indent = "\t";
+			JsonOptions.ClassTag = "class";
+			JsonOptions.ArrayLengthPrefix = true;
+			JsonOptions.DateFormat = "O";
+			JsonOptions.TimeSpanFormat = "c";
+		}
+
+		public override object FromReaderInt()
+		{
+			return FromReaderInt(new SampleInterfaceImplementation());
+		}
+
+		public override object FromReaderIntPartial(string name)
+		{
+			return ReadFields(new SampleInterfaceImplementation(), name);
+		}
+
+		protected override object ReadFields(object obj, string name)
+		{
+			var result = (SampleInterfaceImplementation)obj;
+			if ("bar" != name) throw new YuzuException("bar!=" + name);
+			result.bar = RequireInt();
+			name = GetNextName(false);
+			Require('}');
+			return result;
+		}
+	}
+
+	class SampleWithList_JsonDeserializer : JsonDeserializerGenBase
+	{
+		public static new SampleWithList_JsonDeserializer Instance = new SampleWithList_JsonDeserializer();
+
+		public SampleWithList_JsonDeserializer()
+		{
+			Options.Assembly = Assembly.Load("YuzuTest, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null");
+			Options.ClassNames = false;
+			Options.IgnoreNewFields = false;
+			Options.AllowEmptyTypes = false;
+			JsonOptions.EnumAsString = true;
+			JsonOptions.IgnoreCompact = false;
+			JsonOptions.FieldSeparator = "\n";
+			JsonOptions.Indent = "\t";
+			JsonOptions.ClassTag = "class";
+			JsonOptions.ArrayLengthPrefix = true;
+			JsonOptions.DateFormat = "O";
+			JsonOptions.TimeSpanFormat = "c";
+		}
+
+		public override object FromReaderInt()
+		{
+			return FromReaderInt(new SampleWithList());
+		}
+
+		public override object FromReaderIntPartial(string name)
+		{
+			return ReadFields(new SampleWithList(), name);
+		}
+
+		protected override object ReadFields(object obj, string name)
+		{
+			var result = (SampleWithList)obj;
+			if ("list" != name) throw new YuzuException("list!=" + name);
+			result.list = RequireOrNull('[') ? null : new List<SampleBase>();
+			if (result.list != null) {
+				if (SkipSpacesCarefully() == ']') {
+					Require(']');
+				}
+				else {
+					do {
+						var tmp1 = (SampleBase)SampleBase_JsonDeserializer.Instance.FromReader(new SampleBase(), Reader);
+						result.list.Add(tmp1);
+					} while (Require(']', ',') == ',');
+				}
+			}
+			name = GetNextName(false);
+			Require('}');
+			return result;
+		}
+	}
+
 	class SampleBase_JsonDeserializer : JsonDeserializerGenBase
 	{
 		public static new SampleBase_JsonDeserializer Instance = new SampleBase_JsonDeserializer();
@@ -883,6 +976,47 @@ namespace YuzuTest
 			Require(',');
 			result.R = checked((byte)RequireUInt());
 			Require(']');
+			return result;
+		}
+	}
+
+	class SampleWithNullField_JsonDeserializer : JsonDeserializerGenBase
+	{
+		public static new SampleWithNullField_JsonDeserializer Instance = new SampleWithNullField_JsonDeserializer();
+
+		public SampleWithNullField_JsonDeserializer()
+		{
+			Options.Assembly = Assembly.Load("YuzuTest, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null");
+			Options.ClassNames = false;
+			Options.IgnoreNewFields = false;
+			Options.AllowEmptyTypes = false;
+			JsonOptions.EnumAsString = true;
+			JsonOptions.IgnoreCompact = false;
+			JsonOptions.FieldSeparator = "\n";
+			JsonOptions.Indent = "\t";
+			JsonOptions.ClassTag = "class";
+			JsonOptions.ArrayLengthPrefix = true;
+			JsonOptions.DateFormat = "O";
+			JsonOptions.TimeSpanFormat = "c";
+		}
+
+		public override object FromReaderInt()
+		{
+			return FromReaderInt(new SampleWithNullField());
+		}
+
+		public override object FromReaderIntPartial(string name)
+		{
+			return ReadFields(new SampleWithNullField(), name);
+		}
+
+		protected override object ReadFields(object obj, string name)
+		{
+			var result = (SampleWithNullField)obj;
+			if ("About" != name) throw new YuzuException("About!=" + name);
+			result.About = RequireString();
+			name = GetNextName(false);
+			Require('}');
 			return result;
 		}
 	}

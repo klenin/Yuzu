@@ -102,6 +102,8 @@ namespace YuzuTest
 				jd.Generate<SampleDictKeys>();
 				jd.JsonOptions.ArrayLengthPrefix = true;
 				jd.Generate<SampleArray>();
+				jd.Generate<SampleInterfaceImplementation>();
+				jd.Generate<SampleWithList>();
 				jd.Generate<SampleBase>();
 				jd.Generate<SampleDerivedA>();
 				jd.Generate<SampleDerivedB>();
@@ -110,6 +112,7 @@ namespace YuzuTest
 				jd.Generate<SampleRect>();
 				jd.Generate<SampleDate>();
 				jd.Generate<Color>();
+				jd.Generate<SampleWithNullField>();
 				jd.Options.ClassNames = true;
 				jd.Generate<SampleClassList>();
 				jd.Options.ClassNames = false;

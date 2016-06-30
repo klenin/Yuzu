@@ -9,7 +9,6 @@ using Yuzu;
 
 namespace YuzuTest
 {
-
 	[TestClass]
 	public class TestSpeed
 	{

@@ -759,5 +759,82 @@ namespace YuzuTest
 			XAssert.Throws<YuzuException>(() => js.ToString(new Bad2()), "F");
 			XAssert.Throws<YuzuException>(() => js.ToString(new Bad3()), "G");
 		}
+
+		// fails
+		// [TestMethod]
+		public void TestNullFieldGenerated()
+		{
+			var js = new JsonSerializer();
+			var sample = new SampleWithNullField();
+			var s = js.ToString(sample);
+			var deserializedSample = new SampleWithNullField();
+			var jdg = new JsonDeserializerGenerator();
+			jdg.FromString(deserializedSample, s);
+			Assert.IsInstanceOfType(deserializedSample, typeof(SampleWithNullField));
+			Assert.AreEqual(sample.About, deserializedSample.About);
+		}
+
+		// fails
+		//[TestMethod]
+		public void TestInterfaceImplementation()
+		{
+			var js = new JsonSerializer();
+			var sample = new SampleInterfaceImplementation(666);
+			sample.SerializationPath = "D:/dev/ProjectName/Main/Data/Fonts/Default.png";
+			var s = js.ToString(sample);
+			var jdg = new JsonDeserializerGenerator();
+			var deserializedSample = new SampleInterfaceImplementation();
+			jdg.FromString(deserializedSample, s);
+			Assert.IsInstanceOfType(deserializedSample, typeof(SampleInterfaceImplementation));
+			Assert.AreEqual(sample.SerializationPath, deserializedSample.SerializationPath);
+			Assert.AreEqual(sample.GetFoo(), deserializedSample.GetFoo());
+		}
+
+		// fails
+		//[TestMethod]
+		public void TestRootListOfDerived()
+		{
+			var sl = new List<SampleBase>() {
+				new SampleDerivedA() { FBase = 1, FA = 2 },
+				new SampleDerivedB() { FB = 3, FBase = 4 }
+			};
+			var js = new JsonSerializer();
+			js.Options.ClassNames = true;
+			var s = js.ToString(sl);
+			var jd = new JsonDeserializer();
+			jd.Options.ClassNames = true;
+			var dsl = (List<SampleBase>)jd.FromString(s);
+			Assert.AreEqual(dsl.Count, 2);
+			Assert.AreEqual(dsl[0].FBase, 1);
+			Assert.AreEqual(dsl[1].FBase, 4);
+			Assert.IsInstanceOfType(dsl[0], typeof(SampleDerivedA));
+			Assert.IsInstanceOfType(dsl[1], typeof(SampleDerivedB));
+			Assert.AreEqual((dsl[0] as SampleDerivedA).FA, 2);
+			Assert.AreEqual((dsl[1] as SampleDerivedB).FB, 3);
+		}
+
+		[TestMethod]
+		public void TestClassWithFieldListOfDerived()
+		{
+			var sl = new SampleWithList {
+				list = new List<SampleBase> {
+					new SampleDerivedA() { FBase = 1, FA = 2 },
+					new SampleDerivedB() { FB = 3, FBase = 4 }
+				}
+			};
+			var js = new JsonSerializer();
+			js.Options.ClassNames = true;
+			var s = js.ToString(sl);
+			var jd = new JsonDeserializer();
+			jd.Options.ClassNames = true;
+			var dsl = (SampleWithList)jd.FromString(s);
+			Assert.AreEqual(dsl.list.Count, 2);
+			Assert.AreEqual(dsl.list[0].FBase, 1);
+			Assert.AreEqual(dsl.list[1].FBase, 4);
+			Assert.IsInstanceOfType(dsl.list[0], typeof(SampleDerivedA));
+			Assert.IsInstanceOfType(dsl.list[1], typeof(SampleDerivedB));
+			Assert.AreEqual((dsl.list[0] as SampleDerivedA).FA, 2);
+			Assert.AreEqual((dsl.list[1] as SampleDerivedB).FB, 3);
+		}
 	}
 }

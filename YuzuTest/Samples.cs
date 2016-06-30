@@ -9,6 +9,40 @@ using Yuzu;
 
 namespace YuzuTest
 {
+	public interface ISampleInterface
+	{
+		[YuzuRequired]
+		string SerializationPath { get; set; }
+	}
+
+	public class SampleInterfaceImplementation : ISampleInterface
+	{
+		public SampleInterfaceImplementation()
+		{ }
+		public SampleInterfaceImplementation(int foo)
+		{
+			this.foo = foo;
+		}
+		[YuzuRequired]
+		public int bar = 101;
+		[YuzuRequired]
+		int foo = -1;
+		public int GetFoo() { return foo; }
+		public string SerializationPath { get; set; }
+	}
+
+	public class SampleWithNullField
+	{
+		[YuzuRequired]
+		public string About = null;
+	}
+
+	public class SampleWithList
+	{
+		[YuzuRequired]
+		public List<SampleBase> list = null;
+	}
+
 	public class SampleBase
 	{
 		[YuzuRequired("0_FBase")]
@@ -218,12 +252,6 @@ namespace YuzuTest
 		public TimeSpan T;
 	}
 
-	public class SampleWithNullField
-	{
-		[YuzuRequired]
-		public string About = null;
-	}
-
 	[YuzuCompact]
 	[ProtoContract]
 	public class Color
@@ -332,5 +360,4 @@ namespace YuzuTest
 			}
 		}
 	}
-
 }
