@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Reflection;
+using System.Linq;
 using System.Text;
 
 using Yuzu.Grisu;
@@ -348,7 +348,7 @@ namespace Yuzu.Json
 				Action<object> surrogateWriter = GetSurrogateWriter(meta);
 				if (sg.FuncTo == null || (sg.FuncIf != null && !sg.FuncIf(obj)))
 					// Ignore compact since class name is always required.
-					WriteObject(obj, null);
+					WriteObject(obj, null, null);
 				else
 					surrogateWriter(sg.FuncTo(obj));
 			}
@@ -490,12 +490,15 @@ namespace Yuzu.Json
 				return GetWriteFunc(st);
 			var sgMeta = Meta.Get(st, Options);
 			// Unpack conditional compact surrogate for compact field to allow detection.
-			if (!sgMeta.IsCompact || JsonOptions.IgnoreCompact || meta.IsCompact && sg.FuncIf != null)
-				return obj => WriteObject(obj, meta);
+			if (!sgMeta.IsCompact || JsonOptions.IgnoreCompact || meta.IsCompact && sg.FuncIf != null) {
+				var fieldWriters1 = GetFieldWriters(meta);
+				return obj => WriteObject(obj, meta, fieldWriters1);
+			}
+			var fieldWriters = GetFieldWriters(sgMeta);
 			if (IsOneline(sgMeta))
-				return obj => WriteObjectCompactOneline(obj, sgMeta);
+				return obj => WriteObjectCompactOneline(obj, sgMeta, fieldWriters);
 			else
-				return obj => WriteObjectCompact(obj, sgMeta);
+				return obj => WriteObjectCompact(obj, sgMeta, fieldWriters);
 		}
 
 		private Action<object> MakeWriteFunc(Type t)
@@ -543,12 +546,13 @@ namespace Yuzu.Json
 					return obj => surrogateWriter(sg.FuncTo(obj));
 
 				Action<object> writeFunc;
+				var fieldWriters = GetFieldWriters(meta);
 				if (!meta.IsCompact || JsonOptions.IgnoreCompact)
-					writeFunc = obj => WriteObject(obj, meta);
+					writeFunc = obj => WriteObject(obj, meta, fieldWriters);
 				else if (IsOneline(meta))
-					writeFunc = obj => WriteObjectCompactOneline(obj, meta);
+					writeFunc = obj => WriteObjectCompactOneline(obj, meta, fieldWriters);
 				else
-					writeFunc = obj => WriteObjectCompact(obj, meta);
+					writeFunc = obj => WriteObjectCompact(obj, meta, fieldWriters);
 
 				if (sg.FuncTo != null && sg.FuncIf != null)
 					return obj => {
@@ -586,7 +590,10 @@ namespace Yuzu.Json
 			GetWriteFunc(item.Value.GetType())(item.Value);
 		}
 
-		private void WriteObject(object obj, Meta meta)
+		private List<Action<object>> GetFieldWriters(Meta meta) =>
+			meta.Items.Select(yi => GetWriteFunc(yi.Type)).ToList();
+
+		private void WriteObject(object obj, Meta meta, List<Action<object>> fieldWriters)
 		{
 			if (obj == null) {
 				writer.Write(nullBytes);
@@ -594,8 +601,10 @@ namespace Yuzu.Json
 			}
 			var expectedType = meta == null ? null : meta.Type;
 			var actualType = obj.GetType();
-			if (meta == null || meta.Type != actualType)
+			if (meta == null || meta.Type != actualType) {
 				meta = Meta.Get(actualType, Options);
+				fieldWriters = GetFieldWriters(meta);
+			}
 			meta.BeforeSerialization.Run(obj);
 			writer.Write((byte)'{');
 			WriteFieldSeparator();
@@ -610,15 +619,17 @@ namespace Yuzu.Json
 					WriteName(JsonOptions.ClassTag, ref isFirst);
 					WriteUnescapedString(meta.WriteAlias ?? TypeSerializer.Serialize(actualType));
 				}
+				int fieldIndex = -1;
 				var storage = meta.GetUnknownStorage == null ? null : meta.GetUnknownStorage(obj);
 				// Duplicate code to optimize fast-path without unknown storage.
 				if (storage == null || storage.Fields.Count == 0 || JsonOptions.Unordered) {
 					foreach (var yi in meta.Items) {
+						fieldIndex += 1;
 						var value = yi.GetValue(obj);
 						if (yi.SerializeIf != null && !yi.SerializeIf(obj, value))
 							continue;
 						WriteName(yi.Tag(Options), ref isFirst);
-						GetWriteFunc(yi.Type)(value);
+						fieldWriters[fieldIndex](value);
 					}
 					// If Unordered, dump all unknown fields after all known ones.
 					if (storage != null)
@@ -630,6 +641,7 @@ namespace Yuzu.Json
 					storage.Sort();
 					var storageIndex = 0;
 					foreach (var yi in meta.Items) {
+						fieldIndex += 1;
 						var value = yi.GetValue(obj);
 						if (yi.SerializeIf != null && !yi.SerializeIf(obj, value))
 							continue;
@@ -641,7 +653,7 @@ namespace Yuzu.Json
 							WriteUnknownStorageItem(si, ref isFirst);
 						}
 						WriteName(name, ref isFirst);
-						GetWriteFunc(yi.Type)(value);
+						fieldWriters[fieldIndex](value);
 					}
 					for (; storageIndex < storage.Fields.Count; ++storageIndex)
 						WriteUnknownStorageItem(storage.Fields[storageIndex], ref isFirst);
@@ -657,7 +669,7 @@ namespace Yuzu.Json
 			writer.Write((byte)'}');
 		}
 
-		private void WriteObjectCompact(object obj, Meta meta)
+		private void WriteObjectCompact(object obj, Meta meta, List<Action<object>> fieldWriters)
 		{
 			if (obj == null) {
 				writer.Write(nullBytes);
@@ -674,10 +686,11 @@ namespace Yuzu.Json
 			objStack.Push(obj);
 			try {
 				depth += 1;
+				int index = 0;
 				foreach (var yi in meta.Items) {
 					WriteSep(ref isFirst);
 					WriteIndent();
-					GetWriteFunc(yi.Type)(yi.GetValue(obj));
+					fieldWriters[index++](yi.GetValue(obj));
 				}
 			}
 			finally {
@@ -690,7 +703,7 @@ namespace Yuzu.Json
 			writer.Write((byte)']');
 		}
 
-		private void WriteObjectCompactOneline(object obj, Meta meta)
+		private void WriteObjectCompactOneline(object obj, Meta meta, List<Action<object>> fieldWriters)
 		{
 			if (obj == null) {
 				writer.Write(nullBytes);
@@ -705,11 +718,12 @@ namespace Yuzu.Json
 			var isFirst = true;
 			objStack.Push(obj);
 			try {
+				int index = 0;
 				foreach (var yi in meta.Items) {
 					if (!isFirst)
 						writer.Write((byte)',');
 					isFirst = false;
-					GetWriteFunc(yi.Type)(yi.GetValue(obj));
+					fieldWriters[index++](yi.GetValue(obj));
 				}
 			}
 			finally {
