@@ -78,7 +78,8 @@ namespace YuzuTest.Binary
 			return XS(s1, rt1) + " " + XS(s2, rt2) + " " + XS(s3, rt3);
 		}
 
-		private void CheckDeserializers(Action<BinaryDeserializer> a) {
+		private void CheckDeserializers(Action<BinaryDeserializer> a)
+		{
 			a(new BinaryDeserializer());
 			a(new BinaryDeserializerGen());
 		}
@@ -844,7 +845,7 @@ namespace YuzuTest.Binary
 			var result = bs.ToBytes(v);
 			Assert.AreEqual(
 				"20 01 00 " + XS(typeof(SampleRect)) + " 02 00 " +
-				XS("A", RoughType.Record, "B", RoughType.Record) + 
+				XS("A", RoughType.Record, "B", RoughType.Record) +
 				" 01 00 02 00 " + XS(typeof(SamplePoint)) + " 02 00 " +
 				XS("X", RoughType.Int, "Y", RoughType.Int) +
 				" 21 00 00 00 2C 00 00 00 " +
@@ -888,7 +889,7 @@ namespace YuzuTest.Binary
 				" 03 00 29 00 00 00 02 00 13 00 00 00 01 00 00 00" +
 				" 03 00 2A 00 00 00 02 00 12 00 00 00 02 00 00 00",
 				XS(result3));
-			var w3 = bd.FromBytes<SampleStructWithProps[]> (result3);
+			var w3 = bd.FromBytes<SampleStructWithProps[]>(result3);
 			Assert.AreEqual(v3.Length, w3.Length);
 			AssertEqualSampleStructWithProps(v3[0], w3[0]);
 			AssertEqualSampleStructWithProps(v3[1], w3[1]);
@@ -1517,7 +1518,7 @@ namespace YuzuTest.Binary
 			var w1 = (YuzuUnknown)bd.FromBytes<object>(data1);
 			Assert.AreEqual("NewType1", w1.ClassTag);
 			Assert.AreEqual(1, w1.Fields.Count);
-			Assert.AreEqual(7*256 + 7, w1.Fields["a"]);
+			Assert.AreEqual(7 * 256 + 7, w1.Fields["a"]);
 			CollectionAssert.AreEqual(data1, bs.ToBytes(w1));
 			dynamic d1 = bd1.FromBytes(data1);
 			Assert.AreEqual("NewType1", d1.ClassTag);
@@ -1600,7 +1601,7 @@ namespace YuzuTest.Binary
 			bd.BinaryOptions.AutoSignature = true;
 			Assert.AreEqual(17, bd.FromBytes<int>(result1));
 
-			XAssert.Throws<YuzuException>(() => bd.FromBytes(new byte [] { 0x05, 0x11, 0, 0, 0 }), "ignature");
+			XAssert.Throws<YuzuException>(() => bd.FromBytes(new byte[] { 0x05, 0x11, 0, 0, 0 }), "ignature");
 
 			var ms = new MemoryStream(new byte[] { 0x05, 0x12, 0, 0, 0 });
 			bd.Reader = new BinaryReader(ms);
