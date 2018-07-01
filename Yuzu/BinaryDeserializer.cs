@@ -349,8 +349,8 @@ namespace Yuzu.Binary
 			}
 			if (requiredCountActiual != def.Meta.RequiredCount)
 				throw Error(
-					"Expected {0} required field(s), but found {1}",
-					def.Meta.RequiredCount, requiredCountActiual);
+					"Expected {0} required field(s), but found {1} for class {2}",
+					def.Meta.RequiredCount, requiredCountActiual, typeName);
 		}
 
 		private ReaderClassDef GetClassDef(short classId)

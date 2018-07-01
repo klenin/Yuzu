@@ -724,8 +724,8 @@ namespace Yuzu.Json
 					}
 					if (requiredCountActiual != meta.RequiredCount)
 						throw Error(
-							"Expected {0} required field(s), but found {1}",
-							meta.RequiredCount, requiredCountActiual);
+							"Expected {0} required field(s), but found {1} for class {2}",
+							meta.RequiredCount, requiredCountActiual, obj.GetType().Name);
 				}
 				else if (Options.AllowUnknownFields) {
 					var storage = meta.GetUnknownStorage == null ?
