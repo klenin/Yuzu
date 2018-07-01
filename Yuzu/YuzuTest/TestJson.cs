@@ -1382,7 +1382,7 @@ namespace YuzuTest.Json
 		}
 
 		[TestMethod]
-		public void TestTopLevelListOfNonPrimitiveTypes()
+		public void TestTopLevelContainerOfNonPrimitiveTypes()
 		{
 			var js = new JsonSerializer();
 			js.JsonOptions.Indent = "";
@@ -1399,9 +1399,21 @@ namespace YuzuTest.Json
 				"{\"class\":\"YuzuTest.SampleDerivedB, YuzuTest\",\"FBase\":0,\"FB\":20}]",
 				result1);
 			var w1 = (List<object>)jd.FromString(result1);
-			for (int i = 0; i < v1.Count; i++) {
+			for (int i = 0; i < v1.Count; i++)
 				Assert.AreEqual((v1[i] as SampleDerivedB).FB, (w1[i] as SampleDerivedB).FB);
-			}
+
+			var v2 = new Dictionary<string, object> {
+				{ "3", new SampleDerivedB { FB = 10 } },
+				{ "7", new SampleDerivedB { FB = 20 } } };
+
+			var result2 = js.ToString(v2);
+			Assert.AreEqual(
+				"{\"3\":{\"class\":\"YuzuTest.SampleDerivedB, YuzuTest\",\"FBase\":0,\"FB\":10}," +
+				"\"7\":{\"class\":\"YuzuTest.SampleDerivedB, YuzuTest\",\"FBase\":0,\"FB\":20}}",
+				result2);
+			var w2 = (Dictionary<string, object>)jd.FromString(result2);
+			foreach (var i in v2)
+				Assert.AreEqual((i.Value as SampleDerivedB).FB, (w2[i.Key] as SampleDerivedB).FB);
 		}
 
 		[TestMethod]
@@ -1465,6 +1477,15 @@ namespace YuzuTest.Json
 
 			jd.Options.AllowUnknownFields = true;
 			var w3 = jd.FromString<SampleBool>("{\"B\":true, \"a\": {\"class\":\"NewType3\"}}");
+
+			var w4 = (Dictionary<string, object>)jd.FromString("{\"zz\": {\"class\":\"NewType3\", \"Fld\": 112 }}");
+			Assert.AreEqual(1, w4.Count);
+			var w4i = w4.First();
+			Assert.AreEqual("zz", w4i.Key);
+			Assert.IsInstanceOfType(w4i.Value, typeof(YuzuUnknown));
+			CollectionAssert.AreEqual(
+				new SortedDictionary<string, object> { { "Fld", (double)112 } },
+				((YuzuUnknown)w4i.Value).Fields);
 		}
 
 		[TestMethod]

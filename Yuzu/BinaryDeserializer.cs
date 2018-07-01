@@ -181,8 +181,26 @@ namespace Yuzu.Binary
 			var dict = new Dictionary<K, V>();
 			var rk = ReadValueFunc(typeof(K));
 			var rv = ReadValueFunc(typeof(V));
+			for (int i = 0; i < count; ++i) {
+				var key = (K)rk();
+				var value = rv();
+				if (!(value is V))
+					throw Error("Incompatible type for key {0}, expected: {1} but got {2}",
+						key.ToString(), typeof(V).Name, value.GetType().Name);
+				dict.Add(key, (V)value);
+			}
+			return dict;
+		}
+
+		protected Dictionary<K, object> ReadDictionaryRecord<K>()
+		{
+			var count = Reader.ReadInt32();
+			if (count == -1)
+				return null;
+			var dict = new Dictionary<K, object>();
+			var rk = ReadValueFunc(typeof(K));
 			for (int i = 0; i < count; ++i)
-				dict.Add((K)rk(), (V)rv());
+				dict.Add((K)rk(), ReadObject<object>());
 			return dict;
 		}
 
@@ -523,9 +541,10 @@ namespace Yuzu.Binary
 						ReadListRecord :
 						MakeDelegate(Utils.GetPrivateCovariantGeneric(GetType(), nameof(ReadList), t));
 				if (g == typeof(Dictionary<,>))
-					// FIXME: Check for Record, similar to List case above.
 					return MakeDelegate(
-						Utils.GetPrivateCovariantGenericAll(GetType(), nameof(ReadDictionary), t));
+						t.GetGenericArguments()[1] == typeof(Record) ?
+							Utils.GetPrivateCovariantGeneric(GetType(), nameof(ReadDictionaryRecord), t) :
+							Utils.GetPrivateCovariantGenericAll(GetType(), nameof(ReadDictionary), t));
 				if (g == typeof(Action<>))
 					return MakeDelegate(Utils.GetPrivateCovariantGeneric(GetType(), nameof(ReadAction), t));
 				if (g == typeof(Nullable<>)) {

@@ -1457,7 +1457,7 @@ namespace YuzuTest.Binary
 		}
 
 		[TestMethod]
-		public void TestTopLevelListOfNonPrimitiveTypes()
+		public void TestTopLevelContainerOfNonPrimitiveTypes()
 		{
 			var bs = new BinarySerializer();
 			bs.Options.TagMode = TagMode.Names;
@@ -1475,9 +1475,22 @@ namespace YuzuTest.Binary
 				" 01 00 00 00 00 00 02 00 14 00 00 00 00 00",
 				XS(result1));
 			var w1 = (List<object>)bd.FromBytes(result1);
-			for (int i = 0; i < v1.Count; i++) {
+			for (int i = 0; i < v1.Count; i++)
 				Assert.AreEqual(v1[i].FB, (w1[i] as SampleDerivedB).FB);
-			}
+
+			var v2 = new Dictionary<string, object> {
+				{ "3", new SampleDerivedB { FB = 10 } },
+				{ "7", new SampleDerivedB { FB = 20 } } };
+
+			var result2 = bs.ToBytes(v2);
+			Assert.AreEqual(
+				"\n22 10 11 02 00 00 00" +
+				" 01 33 20 01 00 01 00 00 00 00 00 02 00 0A 00 00 00 00 00" +
+				" 01 37 20 01 00 01 00 00 00 00 00 02 00 14 00 00 00 00 00",
+				"\n"+XS(result2));
+			var w2 = (Dictionary<string, object>)bd.FromBytes(result2);
+			foreach (var i in v2)
+				Assert.AreEqual((i.Value as SampleDerivedB).FB, (w2[i.Key] as SampleDerivedB).FB);
 		}
 
 		[TestMethod]
@@ -1538,6 +1551,20 @@ namespace YuzuTest.Binary
 			bd.Options.AllowUnknownFields = true;
 			var w3 = bd.FromBytes<SampleBool>(data3);
 			Assert.AreEqual(true, w3.B);
+
+			var data4 = SX(
+				"22 10 20 01 00 00 00 " + XS("zz") +
+				" 04 00 " + XS("NewType3") + " 01 00 " + XS("Fld", RoughType.SByte) +
+				" 01 00 70 00 00");
+			var w4 = (Dictionary<string, object>)bd.FromBytes(data4);
+
+			Assert.AreEqual(1, w4.Count);
+			var w4i = w4.First();
+			Assert.AreEqual("zz", w4i.Key);
+			Assert.IsInstanceOfType(w4i.Value, typeof(YuzuUnknown));
+			CollectionAssert.AreEqual(
+				new SortedDictionary<string, object> { { "Fld", (sbyte)(7 * 16) } },
+				((YuzuUnknown)w4i.Value).Fields);
 		}
 
 		[TestMethod]
@@ -1703,5 +1730,6 @@ namespace YuzuTest.Binary
 			)), "List");
 
 		}
+
 	}
 }
