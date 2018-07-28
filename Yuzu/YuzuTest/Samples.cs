@@ -503,7 +503,7 @@ namespace YuzuTest
 	{
 		[YuzuRequired]
 		public SampleCollection<ISample> A = new SampleCollection<ISample>();
-		[YuzuRequired]
+		[YuzuMember]
 		public SampleCollection<int> B = new SampleCollection<int>();
 	}
 

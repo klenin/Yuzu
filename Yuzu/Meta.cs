@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -140,7 +141,35 @@ namespace Yuzu.Metadata
 		private bool IsNonEmptyCollection<T>(object obj, object value) =>
 			value == null || ((ICollection<T>)value).Count > 0;
 
-		private void AddItem(MemberInfo m, bool must, bool all)
+		private bool IsNonEmptyCollectionConditional(object obj, object value, Meta collMeta)
+		{
+			if (value == null) return false;
+			int index = 0;
+			// Use non-generic IEnumerable to avoid boxing/unboxing.
+			foreach (var i in (IEnumerable)value)
+				if (collMeta.SerializeItemIf(value, index++, i)) return true;
+			return false;
+		}
+
+		private Func<object, object, bool> GetCollectionSerializeIf(Item item, CommonOptions options)
+		{
+			if (Default == null)
+				Default = Activator.CreateInstance(Type);
+			var d = item.GetValue(Default);
+			var icoll = Utils.GetICollection(item.Type);
+			if (d == null || icoll == null)
+				return (object obj, object value) => !Object.Equals(item.GetValue(obj), d);
+			var collMeta = Get(item.Type, options);
+			if (options.CheckForEmptyCollections && collMeta.SerializeItemIf != null)
+				return (object obj, object value) => IsNonEmptyCollectionConditional(obj, value, collMeta);
+			var mi = Utils.GetPrivateGeneric(
+				GetType(), nameof(IsNonEmptyCollection), icoll.GetGenericArguments()[0]);
+			return
+				(Func<object, object, bool>)
+				Delegate.CreateDelegate(typeof(Func<object, object, bool>), this, mi);
+		}
+
+		private void AddItem(MemberInfo m, CommonOptions options, bool must, bool all)
 		{
 			var ia = new ItemAttrs(m, Options, all ? AllOptionality : YuzuItemOptionality.None);
 			if (ia.Count == 0) {
@@ -206,21 +235,8 @@ namespace Yuzu.Metadata
 			}
 			if (item.Type.IsDefined(Options.CompactAttribute, false))
 				item.IsCompact = true;
-			if (ia.Member != null && item.SerializeIf == null && !Type.IsAbstract && !Type.IsInterface) {
-				if (Default == null)
-					Default = Activator.CreateInstance(Type);
-				var d = item.GetValue(Default);
-				var icoll = Utils.GetICollection(item.Type);
-				if (d != null && icoll != null) {
-					var mi = Utils.GetPrivateGeneric(
-						GetType(), nameof(IsNonEmptyCollection), icoll.GetGenericArguments()[0]);
-					item.SerializeIf =
-						(Func<object, object, bool>)
-						Delegate.CreateDelegate(typeof(Func<object, object, bool>), this, mi);
-				}
-				else
-					item.SerializeIf = (object obj, object value) => !Object.Equals(item.GetValue(obj), d);
-			}
+			if (ia.Member != null && item.SerializeIf == null && !Type.IsAbstract && !Type.IsInterface)
+				item.SerializeIf = GetCollectionSerializeIf(item, options);
 			Items.Add(item);
 		}
 
@@ -238,7 +254,7 @@ namespace Yuzu.Metadata
 			Surrogate.ProcessMethod(m);
 		}
 
-		private void ExploreType(Type t)
+		private void ExploreType(Type t, CommonOptions options)
 		{
 			const BindingFlags bindingFlags =
 				BindingFlags.Static | BindingFlags.Instance |
@@ -256,7 +272,7 @@ namespace Yuzu.Metadata
 							GetUnknownStorage = obj => (YuzuUnknownStorage)f.GetValue(obj);
 						}
 						else
-							AddItem(m,
+							AddItem(m, options,
 								Must.HasFlag(YuzuItemKind.Field) && f.IsPublic,
 								AllKind.HasFlag(YuzuItemKind.Field) && f.IsPublic);
 						break;
@@ -274,7 +290,7 @@ namespace Yuzu.Metadata
 #endif
 						}
 						else
-							AddItem(m,
+							AddItem(m, options,
 								Must.HasFlag(YuzuItemKind.Property) && g != null,
 								AllKind.HasFlag(YuzuItemKind.Property) && g != null);
 						break;
@@ -308,8 +324,8 @@ namespace Yuzu.Metadata
 
 			Surrogate = new Surrogate(Type, Options);
 			foreach (var i in t.GetInterfaces())
-				ExploreType(i);
-			ExploreType(t);
+				ExploreType(i, options);
+			ExploreType(t, options);
 			Surrogate.Complete();
 
 			if (Utils.GetICollection(t) != null) {

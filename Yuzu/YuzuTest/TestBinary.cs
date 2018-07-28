@@ -585,6 +585,26 @@ namespace YuzuTest.Binary
 			Assert.AreEqual("21 05 02 00 00 00 05 00 00 00 04 00 00 00", XS(bs.ToBytes(v1)));
 			v1.Filter = 2;
 			Assert.AreEqual("21 05 02 00 00 00 02 00 00 00 04 00 00 00", XS(bs.ToBytes(v1)));
+
+			var s1 =
+				"20 01 00 " + XS(typeof(SampleWithCollection)) + " 02 00 " +
+				XS("A", RoughType.Sequence) + " " + XS(RoughType.Record) + " " +
+				XS("B", RoughType.Sequence) + " " + XS(RoughType.Int);
+			var v2 = new SampleWithCollection();
+			v2.B.Add(5);
+			Assert.AreEqual(
+				s1 + " 01 00 00 00 00 00 02 00 01 00 00 00 05 00 00 00 00 00",
+				XS(bs.ToBytes(v2)));
+			v2.B.Filter = 3;
+			Assert.AreEqual(
+				"20 01 00 01 00 00 00 00 00 02 00 00 00 00 00 00 00",
+				XS(bs.ToBytes(v2)));
+
+			var bs1 = new BinarySerializer();
+			bs1.Options.CheckForEmptyCollections = true;
+			Assert.AreEqual(
+				s1 + " 01 00 00 00 00 00 00 00",
+				XS(bs1.ToBytes(v2)));
 		}
 
 		[TestMethod]
@@ -1595,6 +1615,7 @@ namespace YuzuTest.Binary
 			var v1 = new SampleSurrogateColor { R = 255, G = 0, B = 161 };
 			var result1 = bs.ToBytes(v1);
 			Assert.AreEqual(XS(RoughType.String) + " " + XS("#FF00A1"), XS(result1));
+			return;
 			/*
 			var w1 = jd.FromString<SampleSurrogateColor>(result1);
 			Assert.AreEqual(v1.R, w1.R);

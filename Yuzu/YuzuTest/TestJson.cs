@@ -528,6 +528,11 @@ namespace YuzuTest.Json
 			Assert.AreEqual("{\n~\"A\":[],\n~\"B\":[\n~~5\n~]\n}", js.ToString(v2));
 			v2.B.Filter = 3;
 			Assert.AreEqual("{\n~\"A\":[],\n~\"B\":[]\n}", js.ToString(v2));
+
+			var js1 = new JsonSerializer();
+			js1.Options.CheckForEmptyCollections = true;
+			js1.JsonOptions.Indent = "";
+			Assert.AreEqual("{\n\"A\":[]\n}", js1.ToString(v2));
 		}
 
 		[TestMethod]

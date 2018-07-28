@@ -230,6 +230,7 @@ namespace Yuzu
 		public bool AllowUnknownFields;
 		public bool AllowEmptyTypes;
 		public bool ReportErrorPosition;
+		public bool CheckForEmptyCollections;
 	}
 
 	public class YuzuPosition

@@ -747,17 +747,18 @@ namespace YuzuGenBin
 				}
 			}
 			fd = def.Fields[d.Reader.ReadInt16()];
-			if (2 != fd.OurIndex) throw dg.Error("2!=" + fd.OurIndex);
-			result.B = (global::YuzuTest.SampleCollection<global::System.Int32>)null;
-			var tmp3 = d.Reader.ReadInt32();
-			if (tmp3 >= 0) {
-				result.B = new global::YuzuTest.SampleCollection<global::System.Int32>();
-				while (--tmp3 >= 0) {
-					var tmp4 = d.Reader.ReadInt32();
-					result.B.Add(tmp4);
+			if (2 == fd.OurIndex) {
+				result.B = (global::YuzuTest.SampleCollection<global::System.Int32>)null;
+				var tmp3 = d.Reader.ReadInt32();
+				if (tmp3 >= 0) {
+					result.B = new global::YuzuTest.SampleCollection<global::System.Int32>();
+					while (--tmp3 >= 0) {
+						var tmp4 = d.Reader.ReadInt32();
+						result.B.Add(tmp4);
+					}
 				}
+				fd = def.Fields[d.Reader.ReadInt16()];
 			}
-			fd = def.Fields[d.Reader.ReadInt16()];
 			if (fd.OurIndex != ReaderClassDef.EOF) throw dg.Error("Unfinished object");
 		}
 

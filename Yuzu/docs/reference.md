@@ -139,6 +139,13 @@ Otherwise an exception is thrown. Default value is `false`.
 If `true`, a source stream position is included in error messages during deserialization.
 Default value is `false`.
 
+#### `CheckForEmptyCollections`
+
+If `true`, a collection with `YuzuSerializeItemIf` attribute which returns `false` for all items will not be serialized.
+This requires an extra pass through the collection.
+Otherwise a collection will be serialized as empty.
+Default value is `false`.
+
 ## JSON options
 
 #### `FieldSeparator`
