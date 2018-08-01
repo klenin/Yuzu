@@ -18,6 +18,18 @@ namespace YuzuTest
 	[TestClass]
 	public class TestSpeed
 	{
+		private static MemoryStream bsStructProp = new MemoryStream();
+		[ClassInitialize]
+		public static void Init(TestContext context)
+		{
+			var a = new List<SampleStructWithProps>();
+			for (int i = 0; i < 200000; ++i) {
+				a.Add(new SampleStructWithProps { A = i, P = new SamplePoint { X = i, Y = i } });
+			}
+			var bs = new BinarySerializer();
+			bs.ToStream(a, bsStructProp);
+		}
+
 		[TestMethod]
 		public void TestJsonLongListStr()
 		{
@@ -220,6 +232,16 @@ namespace YuzuTest
 			var list2 = (new BinaryDeserializerGen()).FromStream<SampleAoS>(ms);
 			Assert.AreEqual(list1.A.Count, list2.A.Count);
 		}
+
+		[TestMethod]
+		public void TestBinaryGenStructPropRead()
+		{
+			var bd = new BinaryDeserializerGen();
+			bsStructProp.Position = 0;
+			var p = bd.FromReader<List<SampleStructWithProps>>(new BinaryReader(bsStructProp));
+			Assert.AreEqual(101, p[101].P.X);
+		}
+
 	}
 
 	[TestClass]

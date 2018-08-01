@@ -202,25 +202,39 @@ namespace Yuzu.Binary
 			throw new NotImplementedException();
 		}
 
-		private void GenerateSetValue(Type t, string name, Meta.Item item)
+		private bool GenerateSetValueInline(Type t, string name, Meta.Item item)
 		{
-			var canInline =
-				!t.IsGenericType && Utils.IsStruct(t) &&
-				item != null && item.PropInfo == null &&
-				!simpleValueReader.ContainsKey(t);
-			if (canInline) {
-				var meta = Meta.Get(t, options);
-				if (meta.IsCompact && meta.Surrogate.FuncFrom == null && meta.AfterDeserialization.Actions.Count == 0) {
-					cw.Put("dg.EnsureClassDef(typeof({0}));\n", Utils.GetTypeSpec(t));
+			if (t.IsGenericType || !Utils.IsStruct(t) || item == null || simpleValueReader.ContainsKey(t))
+				return false;
+			var meta = Meta.Get(t, options);
+			if (meta.IsCompact && meta.Surrogate.FuncFrom == null && meta.AfterDeserialization.Actions.Count == 0) {
+				cw.Put("dg.EnsureClassDef(typeof({0}));\n", Utils.GetTypeSpec(t));
+				if (item.PropInfo == null) {
 					foreach (var yi in meta.Items)
 						GenerateSetValue(yi.Type, name + "." + yi.Name, yi);
 				}
-				else
-					cw.Put("dg.ReadIntoStruct(ref {0});\n", name);
-				return;
+				else {
+					var tempStructName = cw.GetTempName();
+					cw.Put("var {0} = new {1}();\n", tempStructName, Utils.GetTypeSpec(t));
+					foreach (var yi in meta.Items)
+						GenerateSetValue(yi.Type, tempStructName + "." + yi.Name, yi);
+					cw.Put("{0} = {1}\n;", name, tempStructName);
+				}
+				return true;
 			}
-			cw.Put("{0} = ", name);
-			GenerateValue(t, name);
+			else if (item.PropInfo == null) {
+				cw.Put("dg.ReadIntoStruct(ref {0});\n", name);
+				return true;
+			}
+			return false;
+		}
+
+		private void GenerateSetValue(Type t, string name, Meta.Item item)
+		{
+			if (!GenerateSetValueInline(t, name, item)) {
+				cw.Put("{0} = ", name);
+				GenerateValue(t, name);
+			}
 		}
 
 		private void GenerateMerge(Type t, string name)
