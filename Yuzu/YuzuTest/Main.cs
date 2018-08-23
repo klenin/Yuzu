@@ -99,6 +99,7 @@ namespace YuzuTest
 				jd.JsonOptions.Comments = false;
 				jd.Generate<SampleObj>();
 				jd.Generate<SampleDict>();
+				jd.Generate<SampleSortedDict>();
 				jd.Generate<SampleDictKeys>();
 				jd.Generate<ISampleMember>();
 				jd.Generate<SampleMemberI>();

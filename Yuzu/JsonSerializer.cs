@@ -269,13 +269,13 @@ namespace Yuzu.Json
 			writer.Write((byte)']');
 		}
 
-		private void WriteDictionary<K, V>(object obj)
+		private void WriteIDictionary<K, V>(object obj)
 		{
 			if (obj == null) {
 				writer.Write(nullBytes);
 				return;
 			}
-			var dict = (Dictionary<K, V>)obj;
+			var dict = (IDictionary<K, V>)obj;
 			var wf = GetWriteFunc(typeof(V));
 			writer.Write((byte)'{');
 			if (dict.Count > 0) {
@@ -472,10 +472,10 @@ namespace Yuzu.Json
 			if (!t.IsClass && !t.IsInterface) return false;
 			if (t.IsGenericType) {
 				var g = t.GetGenericTypeDefinition();
-				if (g == typeof(Dictionary<,>) || g == typeof(Action<>) || g == typeof(Nullable<>))
+				if (g == typeof(Action<>) || g == typeof(Nullable<>))
 					return false;
 			}
-			if (Utils.GetICollection(t) != null)
+			if (Utils.GetICollection(t) != null || Utils.GetIDictionary(t) != null)
 				return false;
 			return true;
 		}
@@ -511,9 +511,6 @@ namespace Yuzu.Json
 			}
 			if (t.IsGenericType) {
 				var g = t.GetGenericTypeDefinition();
-				if (g == typeof(Dictionary<,>))
-					return MakeDelegateAction(
-						Utils.GetPrivateCovariantGenericAll(GetType(), nameof(WriteDictionary), t));
 				if (g == typeof(Action<>)) {
 					return WriteAction;
 				}
@@ -524,6 +521,14 @@ namespace Yuzu.Json
 			}
 			if (t.IsArray)
 				return MakeDelegateAction(Utils.GetPrivateCovariantGeneric(GetType(), nameof(WriteArray), t));
+
+
+			var idict = Utils.GetIDictionary(t);
+			if (idict != null) {
+				return MakeDelegateAction(
+					Utils.GetPrivateCovariantGenericAll(GetType(), nameof(WriteIDictionary), t));
+			}
+
 			var ienum = Utils.GetIEnumerable(t);
 			if (ienum != null) {
 				var meta = Meta.Get(t, Options); // Check for serializable fields.

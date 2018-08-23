@@ -636,6 +636,31 @@ namespace YuzuTest.Json
 		}
 
 		[TestMethod]
+		public void TestSortedDictionary()
+		{
+			var js = new JsonSerializer();
+			js.JsonOptions.Indent = "";
+			js.JsonOptions.FieldSeparator = "";
+
+			var v0 = new SampleSortedDict { d = new SortedDictionary<string, int> { { "a", 3 }, { "b", 4 } } };
+			var result0 = js.ToString(v0);
+			Assert.AreEqual(
+				"{\"d\":{\"a\":3,\"b\":4}}",
+				result0);
+
+			var jd = new JsonDeserializer();
+			var w0 = jd.FromString<SampleSortedDict>(result0);
+			Assert.AreEqual(v0.d.Count, w0.d.Count);
+			Assert.AreEqual(v0.d["a"], w0.d["a"]);
+			Assert.AreEqual(v0.d["b"], w0.d["b"]);
+
+			var w1 = (SampleSortedDict)SampleSortedDict_JsonDeserializer.Instance.FromString(result0);
+			Assert.AreEqual(v0.d.Count, w1.d.Count);
+			Assert.AreEqual(v0.d["a"], w1.d["a"]);
+			Assert.AreEqual(v0.d["b"], w1.d["b"]);
+		}
+
+		[TestMethod]
 		public void TestDictionaryKeys()
 		{
 			var js = new JsonSerializer();

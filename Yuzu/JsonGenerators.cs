@@ -173,22 +173,25 @@ namespace Yuzu.Json
 
 		private void GenerateMerge(Type t, string name)
 		{
-			var icoll = Utils.GetICollection(t);
-			if (t.IsGenericType && t.GetGenericTypeDefinition() == typeof(Dictionary<,>)) {
+			var idict = Utils.GetIDictionary(t);
+			if (idict != null) {
 				cw.Put("Require('{');\n");
-				GenerateDictionary(t, name);
+				GenerateDictionary(t, idict, name);
+				return;
 			}
-			else if (icoll != null) {
+			var icoll = Utils.GetICollection(t);
+			if (icoll != null) {
 				cw.Put("Require('[');\n");
 				GenerateCollection(t, icoll, name);
+				return;
 			}
-			else if ((t.IsClass || t.IsInterface) && t != typeof(object))
+			if ((t.IsClass || t.IsInterface) && t != typeof(object))
 				cw.Put("{0}.Instance.FromReader({1}, Reader);\n", GetDeserializerName(t), name);
 			else
 				throw Error("Unable to merge field {1} of type {0}", name, t.Name);
 		}
 
-		private void GenerateDictionary(Type t, string name)
+		private void GenerateDictionary(Type t, Type idict, string name)
 		{
 			cw.Put("if (SkipSpacesCarefully() == '}') {\n");
 			cw.Put("Require('}');\n");
@@ -200,8 +203,8 @@ namespace Yuzu.Json
 			cw.Put("Require(':');\n");
 			var tempValue = cw.GetTempName();
 			cw.Put("var {0} = ", tempValue);
-			GenerateValue(t.GetGenericArguments()[1], tempValue);
-			var keyType = t.GetGenericArguments()[0];
+			GenerateValue(idict.GetGenericArguments()[1], tempValue);
+			var keyType = idict.GetGenericArguments()[0];
 			var tempKey =
 				keyType == typeof(string) ? tempKeyStr :
 				keyType == typeof(int) ? String.Format("int.Parse({0})", tempKeyStr) :
@@ -255,12 +258,6 @@ namespace Yuzu.Json
 					Utils.GetTypeSpec(t));
 				return;
 			}
-			if(t.IsGenericType && t.GetGenericTypeDefinition() == typeof(Dictionary<,>)) {
-				PutRequireOrNull('{', t, name);
-				GenerateDictionary(t, name);
-				cw.Put("}\n");
-				return;
-			}
 			if (t.IsGenericType && t.GetGenericTypeDefinition() == typeof(Nullable<>)) {
 				cw.PutPart("null;\n");
 				cw.Put("if (SkipSpacesCarefully() == 'n') {\n");
@@ -305,6 +302,13 @@ namespace Yuzu.Json
 				cw.Put("{0} = {1};\n", name, tempArrayName);
 				cw.Put("}\n");
 				cw.Put("Require(']');\n");
+				cw.Put("}\n");
+				return;
+			}
+			var idict = Utils.GetIDictionary(t);
+			if (idict != null) {
+				PutRequireOrNull('{', t, name);
+				GenerateDictionary(t, idict, name);
 				cw.Put("}\n");
 				return;
 			}

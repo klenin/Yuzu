@@ -527,6 +527,67 @@ namespace YuzuGen.YuzuTest
 		}
 	}
 
+	class SampleSortedDict_JsonDeserializer : JsonDeserializerGenBase
+	{
+		public static new SampleSortedDict_JsonDeserializer Instance = new SampleSortedDict_JsonDeserializer();
+
+		public SampleSortedDict_JsonDeserializer()
+		{
+			Options.AllowUnknownFields = false;
+			Options.AllowEmptyTypes = false;
+			Options.ReportErrorPosition = false;
+			Options.CheckForEmptyCollections = false;
+			JsonOptions.MaxOnelineFields = 0;
+			JsonOptions.EnumAsString = true;
+			JsonOptions.SaveRootClass = false;
+			JsonOptions.IgnoreCompact = false;
+			JsonOptions.Int64AsString = false;
+			JsonOptions.DecimalAsString = false;
+			JsonOptions.Comments = false;
+			JsonOptions.FieldSeparator = "\n";
+			JsonOptions.Indent = "\t";
+			JsonOptions.ClassTag = "class";
+			JsonOptions.ArrayLengthPrefix = false;
+			JsonOptions.DateFormat = "O";
+			JsonOptions.TimeSpanFormat = "c";
+			JsonOptions.Unordered = false;
+			JsonOptions.BOM = false;
+		}
+
+		public override object FromReaderInt()
+		{
+			return FromReaderTyped<global::YuzuTest.SampleSortedDict>(Reader);
+		}
+
+		public override object FromReaderIntPartial(string name)
+		{
+			return ReadFields(new global::YuzuTest.SampleSortedDict(), name);
+		}
+
+		protected override object ReadFields(object obj, string name)
+		{
+			var result = (global::YuzuTest.SampleSortedDict)obj;
+			if ("d" == name) {
+				result.d = RequireOrNull('{') ? null : new global::System.Collections.Generic.SortedDictionary<global::System.String,global::System.Int32>();
+				if (result.d != null) {
+					if (SkipSpacesCarefully() == '}') {
+						Require('}');
+					}
+					else {
+						do {
+							var tmp1 = RequireString();
+							Require(':');
+							var tmp2 = RequireInt();
+							result.d.Add(tmp1, tmp2);
+						} while (Require('}', ',') == ',');
+					}
+				}
+				name = GetNextName(false);
+			}
+			return result;
+		}
+	}
+
 	class SampleDictKeys_JsonDeserializer : JsonDeserializerGenBase
 	{
 		public static new SampleDictKeys_JsonDeserializer Instance = new SampleDictKeys_JsonDeserializer();

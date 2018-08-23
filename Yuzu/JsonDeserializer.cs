@@ -445,6 +445,15 @@ namespace Yuzu.Json
 			return dict;
 		}
 
+		protected I ReadIDictionary<I, K, V>() where I: class, IDictionary<K, V>, new()
+		{
+			if (RequireOrNull('{'))
+				return null;
+			var dict = new I();
+			ReadIntoDictionary(dict);
+			return dict;
+		}
+
 		private T[] ReadArray<T>()
 		{
 			var lst = ReadList<T>();
@@ -619,8 +628,6 @@ namespace Yuzu.Json
 				var g = t.GetGenericTypeDefinition();
 				if (g == typeof(List<>))
 					return MakeDelegate(Utils.GetPrivateCovariantGeneric(GetType(), nameof(ReadList), t));
-				if (g == typeof(Dictionary<,>))
-					return MakeDelegate(Utils.GetPrivateCovariantGenericAll(GetType(), nameof(ReadDictionary), t));
 				if (g == typeof(Action<>))
 					return MakeDelegate(Utils.GetPrivateCovariantGeneric(GetType(), nameof(ReadAction), t));
 				if (g == typeof(Nullable<>)) {
@@ -631,6 +638,11 @@ namespace Yuzu.Json
 			if (t.IsArray) {
 				var n = JsonOptions.ArrayLengthPrefix ? nameof(ReadArrayWithLengthPrefix) : nameof(ReadArray);
 				return MakeDelegate(Utils.GetPrivateCovariantGeneric(GetType(), n, t));
+			}
+			var idict = Utils.GetIDictionary(t);
+			if (idict != null) {
+				var kv = idict.GetGenericArguments();
+				return MakeDelegate(Utils.GetPrivateGeneric(GetType(), nameof(ReadIDictionary), t, kv[0], kv[1]));
 			}
 			var icoll = Utils.GetICollection(t);
 			if (icoll != null) {
