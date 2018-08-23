@@ -219,7 +219,7 @@ namespace Yuzu.Binary
 					cw.Put("var {0} = new {1}();\n", tempStructName, Utils.GetTypeSpec(t));
 					foreach (var yi in meta.Items)
 						GenerateSetValue(yi.Type, tempStructName + "." + yi.Name, yi);
-					cw.Put("{0} = {1}\n;", name, tempStructName);
+					cw.Put("{0} = {1};\n", name, tempStructName);
 				}
 				return true;
 			}

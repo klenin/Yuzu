@@ -961,8 +961,8 @@ namespace YuzuGenBin
 			var tmp1 = new global::YuzuTest.SamplePoint();
 			tmp1.X = d.Reader.ReadInt32();
 			tmp1.Y = d.Reader.ReadInt32();
-			result.P = tmp1
-;			return result;
+			result.P = tmp1;
+			return result;
 		}
 
 		private static void Read_YuzuTest__SampleAliasMany(BinaryDeserializer d, ReaderClassDef def, object obj)
