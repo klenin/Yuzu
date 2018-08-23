@@ -69,7 +69,9 @@ namespace Yuzu.Binary
 				return RT.roughTypeToType[(int)rt] == expectedType;
 			if (expectedType.IsArray)
 				return rt == RoughType.Sequence && ReadCompatibleType(expectedType.GetElementType());
-			if (expectedType.IsGenericType && expectedType.GetGenericTypeDefinition() == typeof(Dictionary<,>)) {
+
+			var idict = Utils.GetIDictionary(expectedType);
+			if (idict != null) {
 				if (rt != RoughType.Mapping)
 					return false;
 				var g = expectedType.GetGenericArguments();
@@ -162,7 +164,7 @@ namespace Yuzu.Binary
 			return list;
 		}
 
-		protected void ReadIntoDictionary<K, V>(Dictionary<K, V> dict)
+		protected void ReadIntoDictionary<K, V>(IDictionary<K, V> dict)
 		{
 			var rk = ReadValueFunc(typeof(K));
 			var rv = ReadValueFunc(typeof(V));
@@ -171,7 +173,7 @@ namespace Yuzu.Binary
 				dict.Add((K)rk(), (V)rv());
 		}
 
-		protected void ReadIntoDictionaryNG<K, V>(object dict) => ReadIntoDictionary((Dictionary<K, V>)dict);
+		protected void ReadIntoDictionaryNG<K, V>(object dict) => ReadIntoDictionary((IDictionary<K, V>)dict);
 
 		protected Dictionary<K, V> ReadDictionary<K, V>()
 		{
@@ -179,6 +181,25 @@ namespace Yuzu.Binary
 			if (count == -1)
 				return null;
 			var dict = new Dictionary<K, V>();
+			var rk = ReadValueFunc(typeof(K));
+			var rv = ReadValueFunc(typeof(V));
+			for (int i = 0; i < count; ++i) {
+				var key = (K)rk();
+				var value = rv();
+				if (!(value is V))
+					throw Error("Incompatible type for key {0}, expected: {1} but got {2}",
+						key.ToString(), typeof(V).Name, value.GetType().Name);
+				dict.Add(key, (V)value);
+			}
+			return dict;
+		}
+
+		protected I ReadIDictionary<I, K, V>() where I : class, IDictionary<K, V>, new()
+		{
+			var count = Reader.ReadInt32();
+			if (count == -1)
+				return null;
+			var dict = new I();
 			var rk = ReadValueFunc(typeof(K));
 			var rv = ReadValueFunc(typeof(V));
 			for (int i = 0; i < count; ++i) {
@@ -554,12 +575,19 @@ namespace Yuzu.Binary
 			}
 			if (t.IsArray)
 				return MakeDelegate(Utils.GetPrivateCovariantGeneric(GetType(), nameof(ReadArray), t));
+
+			var idict = Utils.GetIDictionary(t);
+			if (idict != null) {
+				var kv = idict.GetGenericArguments();
+				return MakeDelegate(Utils.GetPrivateGeneric(GetType(), nameof(ReadIDictionary), t, kv[0], kv[1]));
+			}
+
 			var icoll = Utils.GetICollection(t);
 			if (icoll != null) {
 				var elemType = icoll.GetGenericArguments()[0];
-				var m = GetType().GetMethod(nameof(ReadCollection), BindingFlags.Instance | BindingFlags.NonPublic);
-				return MakeDelegate(m.MakeGenericMethod(t, elemType));
+				return MakeDelegate(Utils.GetPrivateGeneric(GetType(), nameof(ReadCollection), t, elemType));
 			}
+
 			if (t.IsClass || t.IsInterface)
 				return MakeDelegate(Utils.GetPrivateGeneric(GetType(), nameof(ReadObject), t));
 			if (Utils.IsStruct(t))
@@ -569,9 +597,10 @@ namespace Yuzu.Binary
 
 		private Action<object> MakeMergerFunc(Type t)
 		{
-			if (t.IsGenericType && t.GetGenericTypeDefinition() == typeof(Dictionary<,>))
+			var idict = Utils.GetIDictionary(t);
+			if (idict != null)
 				return MakeDelegateAction(
-					Utils.GetPrivateCovariantGenericAll(GetType(), nameof(ReadIntoDictionaryNG), t));
+					Utils.GetPrivateCovariantGenericAll(GetType(), nameof(ReadIntoDictionaryNG), idict));
 			var icoll = Utils.GetICollection(t);
 			if (icoll != null)
 				return MakeDelegateAction(

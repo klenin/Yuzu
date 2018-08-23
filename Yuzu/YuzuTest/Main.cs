@@ -154,6 +154,7 @@ namespace YuzuTest
 				bd.Generate<SampleNullable>();
 				bd.Generate<SampleObj>();
 				bd.Generate<SampleDict>();
+				bd.Generate<SampleSortedDict>();
 				bd.Generate<SampleDictKeys>();
 				bd.Generate<SampleMemberI>();
 				bd.Generate<SampleArray>();

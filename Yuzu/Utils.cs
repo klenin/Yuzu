@@ -67,7 +67,7 @@ namespace Yuzu.Util
 				return t.GetInterface("IEnumerable`1");
 			}
 			catch (AmbiguousMatchException) {
-				throw new YuzuException("Multiple GetIEnumerable interfaces for type " + t.Name);
+				throw new YuzuException("Multiple IEnumerable interfaces for type " + t.Name);
 			}
 		}
 
@@ -78,6 +78,17 @@ namespace Yuzu.Util
 			}
 			catch (AmbiguousMatchException) {
 				throw new YuzuException("Multiple ICollection interfaces for type " + t.Name);
+			}
+		}
+
+		public static Type GetIDictionary(Type t)
+		{
+			if (t.Name == "IDictionary`2") return t;
+			try {
+				return t.GetInterface("IDictionary`2");
+			}
+			catch (AmbiguousMatchException) {
+				throw new YuzuException("Multiple IDictionary interfaces for type " + t.Name);
 			}
 		}
 

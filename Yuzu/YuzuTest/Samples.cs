@@ -197,6 +197,12 @@ namespace YuzuTest
 		public Dictionary<string, SampleDict> Children;
 	}
 
+	public class SampleSortedDict
+	{
+		[YuzuMember]
+		public SortedDictionary<string, int> d;
+	}
+
 	public class SampleKey : IEquatable<SampleKey>
 	{
 		[YuzuRequired]

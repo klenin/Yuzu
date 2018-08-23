@@ -193,6 +193,36 @@ namespace YuzuGenBin
 			return result;
 		}
 
+		private static void Read_YuzuTest__SampleSortedDict(BinaryDeserializer d, ReaderClassDef def, object obj)
+		{
+			var result = (global::YuzuTest.SampleSortedDict)obj;
+			var dg = (BinaryDeserializerGen)d;
+			ReaderClassDef.FieldDef fd;
+			fd = def.Fields[d.Reader.ReadInt16()];
+			if (1 == fd.OurIndex) {
+				result.d = (global::System.Collections.Generic.SortedDictionary<global::System.String,global::System.Int32>)null;
+				var tmp1 = d.Reader.ReadInt32();
+				if (tmp1 >= 0) {
+					result.d = new global::System.Collections.Generic.SortedDictionary<global::System.String,global::System.Int32>();
+					while (--tmp1 >= 0) {
+						var tmp2 = d.Reader.ReadString();
+						if (tmp2 == "" && d.Reader.ReadBoolean()) tmp2 = null;
+						var tmp3 = d.Reader.ReadInt32();
+						result.d.Add(tmp2, tmp3);
+					}
+				}
+				fd = def.Fields[d.Reader.ReadInt16()];
+			}
+			if (fd.OurIndex != ReaderClassDef.EOF) throw dg.Error("Unfinished object");
+		}
+
+		private static object Make_YuzuTest__SampleSortedDict(BinaryDeserializer d, ReaderClassDef def)
+		{
+			var result = new global::YuzuTest.SampleSortedDict();
+			Read_YuzuTest__SampleSortedDict(d, def, result);
+			return result;
+		}
+
 		private static void Read_YuzuTest__SampleDictKeys(BinaryDeserializer d, ReaderClassDef def, object obj)
 		{
 			var result = (global::YuzuTest.SampleDictKeys)obj;
@@ -927,8 +957,12 @@ namespace YuzuGenBin
 			var result = new global::YuzuTest.SampleStructWithProps();
 			var dg = (BinaryDeserializerGen)d;
 			result.A = d.Reader.ReadInt32();
-			result.P = (global::YuzuTest.SamplePoint)dg.ReadStruct<global::YuzuTest.SamplePoint>();
-			return result;
+			dg.EnsureClassDef(typeof(global::YuzuTest.SamplePoint));
+			var tmp1 = new global::YuzuTest.SamplePoint();
+			tmp1.X = d.Reader.ReadInt32();
+			tmp1.Y = d.Reader.ReadInt32();
+			result.P = tmp1
+;			return result;
 		}
 
 		private static void Read_YuzuTest__SampleAliasMany(BinaryDeserializer d, ReaderClassDef def, object obj)
@@ -1023,6 +1057,7 @@ namespace YuzuGenBin
 			readCache[typeof(global::YuzuTest.SampleNullable)] = Read_YuzuTest__SampleNullable;
 			readCache[typeof(global::YuzuTest.SampleObj)] = Read_YuzuTest__SampleObj;
 			readCache[typeof(global::YuzuTest.SampleDict)] = Read_YuzuTest__SampleDict;
+			readCache[typeof(global::YuzuTest.SampleSortedDict)] = Read_YuzuTest__SampleSortedDict;
 			readCache[typeof(global::YuzuTest.SampleDictKeys)] = Read_YuzuTest__SampleDictKeys;
 			readCache[typeof(global::YuzuTest.SampleMemberI)] = Read_YuzuTest__SampleMemberI;
 			readCache[typeof(global::YuzuTest.SampleArray)] = Read_YuzuTest__SampleArray;
@@ -1061,6 +1096,7 @@ namespace YuzuGenBin
 			makeCache[typeof(global::YuzuTest.SampleNullable)] = Make_YuzuTest__SampleNullable;
 			makeCache[typeof(global::YuzuTest.SampleObj)] = Make_YuzuTest__SampleObj;
 			makeCache[typeof(global::YuzuTest.SampleDict)] = Make_YuzuTest__SampleDict;
+			makeCache[typeof(global::YuzuTest.SampleSortedDict)] = Make_YuzuTest__SampleSortedDict;
 			makeCache[typeof(global::YuzuTest.SampleDictKeys)] = Make_YuzuTest__SampleDictKeys;
 			makeCache[typeof(global::YuzuTest.SampleMemberI)] = Make_YuzuTest__SampleMemberI;
 			makeCache[typeof(global::YuzuTest.SampleArray)] = Make_YuzuTest__SampleArray;

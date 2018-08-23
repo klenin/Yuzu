@@ -669,7 +669,7 @@ namespace YuzuTest.Binary
 			bs.Options.TagMode = TagMode.Names;
 			var bd = new BinaryDeserializer();
 			bd.Options.TagMode = TagMode.Names;
-			var bdg = new BinaryDeserializer();
+			var bdg = new BinaryDeserializerGen();
 			bdg.Options.TagMode = TagMode.Names;
 
 			var v0 = new SampleDict {
@@ -697,6 +697,26 @@ namespace YuzuTest.Binary
 			Assert.AreEqual(v0.Value, w1.Value);
 			Assert.AreEqual(v0.Children.Count, w1.Children.Count);
 			Assert.AreEqual(v0.Children["a"].Value, w1.Children["a"].Value);
+		}
+
+		[TestMethod]
+		public void TestSortedDictionary()
+		{
+			var bs = new BinarySerializer();
+
+			var v0 = new SampleSortedDict { d = new SortedDictionary<string, int> { { "a", 3 }, { "b", 4 } } };
+			var result0 = bs.ToBytes(v0);
+			Assert.AreEqual(
+				"20 01 00 " + XS(typeof(SampleSortedDict)) + " 01 00 " + XS("d") +
+				" 22 10 05 01 00 02 00 00 00 " + XS("a") + " 03 00 00 00 " + XS("b") + " 04 00 00 00 00 00",
+				XS(result0));
+
+			CheckDeserializers(bd => {
+				var w0 = bd.FromBytes<SampleSortedDict>(result0);
+				Assert.AreEqual(v0.d.Count, w0.d.Count);
+				Assert.AreEqual(v0.d["a"], w0.d["a"]);
+				Assert.AreEqual(v0.d["b"], w0.d["b"]);
+			});
 		}
 
 		[TestMethod]

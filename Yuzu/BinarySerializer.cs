@@ -106,13 +106,6 @@ namespace Yuzu.Binary
 			}
 			if (t.IsGenericType) {
 				var g = t.GetGenericTypeDefinition();
-				if (g == typeof(Dictionary<,>)) {
-					writer.Write((byte)RoughType.Mapping);
-					var a = t.GetGenericArguments();
-					WriteRoughType(a[0]);
-					WriteRoughType(a[1]);
-					return;
-				}
 				if (g == typeof(Nullable<>)) {
 					writer.Write((byte)RoughType.Nullable);
 					WriteRoughType(t.GetGenericArguments()[0]);
@@ -124,6 +117,15 @@ namespace Yuzu.Binary
 				WriteRoughType(t.GetElementType());
 				return;
 			}
+			var idict = Utils.GetIDictionary(t);
+			if (idict != null) {
+				writer.Write((byte)RoughType.Mapping);
+				var a = idict.GetGenericArguments();
+				WriteRoughType(a[0]);
+				WriteRoughType(a[1]);
+				return;
+			}
+
 			var ienum = Utils.GetIEnumerable(t);
 			if (ienum != null) {
 				writer.Write((byte)RoughType.Sequence);
@@ -137,19 +139,17 @@ namespace Yuzu.Binary
 			throw new NotImplementedException();
 		}
 
-		private void WriteDictionary<K, V>(object obj)
+		private void WriteIDictionary<K, V>(object obj, Action<object> writeKey, Action<object> writeValue)
 		{
 			if (obj == null) {
 				writer.Write(-1);
 				return;
 			}
-			var dict = (Dictionary<K, V>)obj;
+			var dict = (IDictionary<K, V>)obj;
 			writer.Write(dict.Count);
-			var wk = GetWriteFunc(typeof(K));
-			var wv = GetWriteFunc(typeof(V));
 			foreach (var elem in dict) {
-				wk(elem.Key);
-				wv(elem.Value);
+				writeKey(elem.Key);
+				writeValue(elem.Value);
 			}
 		}
 
@@ -532,10 +532,6 @@ namespace Yuzu.Binary
 				return WriteInt;
 			if (t.IsGenericType) {
 				var g = t.GetGenericTypeDefinition();
-				if (g == typeof(Dictionary<,>)) {
-					var m = Utils.GetPrivateCovariantGenericAll(GetType(), nameof(WriteDictionary), t);
-					return MakeDelegateAction(m);
-				}
 				if (g == typeof(Action<>))
 					return WriteAction;
 				if (g == typeof(Nullable<>)) {
@@ -552,6 +548,17 @@ namespace Yuzu.Binary
 				var m = Utils.GetPrivateCovariantGeneric(GetType(), nameof(WriteArray), t);
 				var d = MakeDelegateParam<Action<object>>(m);
 				return obj => d(obj, wf);
+			}
+			{
+				var idict = Utils.GetIDictionary(t);
+				if (idict != null) {
+					var a = idict.GetGenericArguments();
+					var wk = GetWriteFunc(a[0]);
+					var wv = GetWriteFunc(a[1]);
+					var m = Utils.GetPrivateCovariantGenericAll(GetType(), nameof(WriteIDictionary), idict);
+					var d = MakeDelegateParam2<Action<object>, Action<object>>(m);
+					return obj => d(obj, wk, wv);
+				}
 			}
 			var meta = Meta.Get(t, Options);
 			if (meta.SerializeItemIf != null) {

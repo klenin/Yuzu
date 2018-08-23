@@ -128,15 +128,15 @@ namespace Yuzu.Binary
 			cw.Put("}\n"); // while
 		}
 
-		private void GenerateDictionary(Type t, string name, string tempIndexName)
+		private void GenerateDictionary(Type t, Type idict, string name, string tempIndexName)
 		{
 			cw.Put("while (--{0} >= 0) {{\n", tempIndexName);
 			var tempKeyName = cw.GetTempName();
 			cw.Put("var {0} = ", tempKeyName);
-			GenerateValue(t.GetGenericArguments()[0], tempKeyName);
+			GenerateValue(idict.GetGenericArguments()[0], tempKeyName);
 			var tempValueName = cw.GetTempName();
 			cw.Put("var {0} = ", tempValueName);
-			GenerateValue(t.GetGenericArguments()[1], tempValueName);
+			GenerateValue(idict.GetGenericArguments()[1], tempValueName);
 			cw.Put("{0}.Add({1}, {2});\n", name, tempKeyName, tempValueName);
 			cw.Put("}\n"); // while
 		}
@@ -159,13 +159,6 @@ namespace Yuzu.Binary
 				cw.PutPart("({0})d.Reader.ReadInt32();\n", Utils.GetTypeSpec(t));
 				return;
 			}
-			if (t.IsGenericType && t.GetGenericTypeDefinition() == typeof(Dictionary<,>)) {
-				var tempIndexName = PutNullOrCount(t);
-				cw.Put("{0} = new {1}();\n", name, Utils.GetTypeSpec(t));
-				GenerateDictionary(t, name, tempIndexName);
-				cw.Put("}\n");
-				return;
-			}
 			if (t.IsGenericType && t.GetGenericTypeDefinition() == typeof(Nullable<>)) {
 				var arg = t.GetGenericArguments()[0];
 				cw.PutPart("d.Reader.ReadBoolean() ? ({0}?)null : ", Utils.GetTypeSpec(arg));
@@ -181,6 +174,14 @@ namespace Yuzu.Binary
 				cw.Put("}\n");
 				cw.Put("{0} = {1};\n", name, tempArrayName);
 				cw.Put("}\n"); // if >= 0
+				return;
+			}
+			var idict = Utils.GetIDictionary(t);
+			if (idict != null) {
+				var tempIndexName = PutNullOrCount(t);
+				cw.Put("{0} = new {1}();\n", name, Utils.GetTypeSpec(t));
+				GenerateDictionary(t, idict, name, tempIndexName);
+				cw.Put("}\n");
 				return;
 			}
 			var icoll = Utils.GetICollection(t);
@@ -239,8 +240,9 @@ namespace Yuzu.Binary
 
 		private void GenerateMerge(Type t, string name)
 		{
-			if (t.IsGenericType && t.GetGenericTypeDefinition() == typeof(Dictionary<,>)) {
-				GenerateDictionary(t, name, PutCount());
+			var idict = Utils.GetIDictionary(t);
+			if (idict != null) {
+				GenerateDictionary(t, idict, name, PutCount());
 				cw.Put("}\n");
 				return;
 			}
