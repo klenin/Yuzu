@@ -139,7 +139,7 @@ namespace Yuzu.Metadata
 		}
 
 		private bool IsNonEmptyCollection<T>(object obj, object value) =>
-			value == null || ((ICollection<T>)value).Count > 0;
+			value == null || ((ICollection<T>)value).Any();
 
 		private bool IsNonEmptyCollectionConditional(object obj, object value, Meta collMeta)
 		{
