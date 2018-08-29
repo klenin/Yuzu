@@ -281,10 +281,34 @@ namespace YuzuTest.Json
 			jd.FromString(w, result1);
 			Assert.AreEqual(v.F, w.F);
 			Assert.AreEqual(v.D, w.D);
+		}
 
-			Assert.AreEqual("NaN", js.ToString(Double.NaN));
+		[TestMethod]
+		public void TestFloatInfNan()
+		{
+			var js = new JsonSerializer();
+			js.Options.TagMode = TagMode.Names;
+			js.JsonOptions.Indent = "";
+			var jd = new JsonDeserializer();
+			jd.Options.TagMode = TagMode.Names;
+
+			var v1 = new SampleFloat { F = float.NaN, D = double.NaN };
+			var result1 = js.ToString(v1);
+			Assert.AreEqual(
+				"{\n\"F\":NaN,\n\"D\":NaN\n}",
+				result1);
+			var w1 = jd.FromString<SampleFloat>(result1);
+			Assert.IsTrue(float.IsNaN(w1.F));
+			Assert.IsTrue(double.IsNaN(w1.D));
+
+			var v2 = new SampleFloat { F = float.PositiveInfinity, D = double.NegativeInfinity };
+			var result2 = js.ToString(v2);
+			Assert.AreEqual("{\n\"F\":Infinity,\n\"D\":-Infinity\n}", result2);
+			var w2 = jd.FromString<SampleFloat>(result2);
+			Assert.IsTrue(float.IsPositiveInfinity(w2.F));
+			Assert.IsTrue(double.IsNegativeInfinity(w2.D));
+
 			Assert.AreEqual("Infinity", js.ToString(Double.PositiveInfinity));
-			Assert.AreEqual("-Infinity", js.ToString(Double.NegativeInfinity));
 		}
 
 		[TestMethod]

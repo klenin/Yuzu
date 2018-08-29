@@ -286,9 +286,18 @@ namespace Yuzu.Json
 			// Optimization: Do not extract helper methods.
 			sb.Clear();
 			var ch = SkipSpaces();
-			if (ch == '-') {
+			bool neg = ch == '-';
+			if (neg) {
 				sb.Append(ch);
 				ch = Reader.ReadChar();
+			}
+			if (ch == 'N') {
+				Require("aN");
+				return "NaN";
+			}
+			if (ch == 'I') {
+				Require("nfinity");
+				return neg ? "-Infinity" : "Infinity";
 			}
 			while ('0' <= ch && ch <= '9') {
 				sb.Append(ch);

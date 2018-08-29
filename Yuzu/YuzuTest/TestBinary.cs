@@ -331,6 +331,33 @@ namespace YuzuTest.Binary
 		}
 
 		[TestMethod]
+		public void TestFloatInfNan()
+		{
+			var bs = new BinarySerializer();
+			bs.Options.TagMode = TagMode.Names;
+			var bd = new BinaryDeserializer();
+			bd.Options.TagMode = TagMode.Names;
+
+			var v1 = new SampleFloat { F = float.NaN, D = double.NaN };
+			var result1 = bs.ToBytes(v1);
+			Assert.AreEqual(
+				"20 01 00 " + XS(typeof(SampleFloat)) + " 02 00 " +
+				XS("F", RoughType.Float, "D", RoughType.Double) +
+				" 01 00 00 00 C0 FF 02 00 00 00 00 00 00 00 F8 FF 00 00",
+				XS(result1));
+			var w1 = bd.FromBytes<SampleFloat>(result1);
+			Assert.IsTrue(float.IsNaN(w1.F));
+			Assert.IsTrue(double.IsNaN(w1.D));
+
+			var v2 = new SampleFloat { F = float.PositiveInfinity, D = double.NegativeInfinity };
+			var result2 = bs.ToBytes(v2);
+			Assert.AreEqual("20 01 00 01 00 00 00 80 7F 02 00 00 00 00 00 00 00 F0 FF 00 00", XS(result2));
+			var w2 = bd.FromBytes<SampleFloat>(result2);
+			Assert.IsTrue(float.IsPositiveInfinity(w2.F));
+			Assert.IsTrue(double.IsNegativeInfinity(w2.D));
+		}
+
+		[TestMethod]
 		public void TestDecimal()
 		{
 			var bs = new BinarySerializer();
