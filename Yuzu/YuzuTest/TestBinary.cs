@@ -574,6 +574,21 @@ namespace YuzuTest.Binary
 		}
 
 		[TestMethod]
+		public void TestCollectionDefault()
+		{
+			var bs = new BinarySerializer();
+			var bd = new BinaryDeserializer();
+			var v1 = new SampleWithCollectionDefault();
+			var result1 = bs.ToBytes(v1);
+			Assert.AreEqual(
+				"20 01 00 " + XS(typeof(SampleWithCollectionDefault)) + " 01 00 " +
+				XS("B", RoughType.Sequence) + " " + XS(RoughType.Int) + " 00 00", XS(result1));
+			var w1 = bd.FromBytes<SampleWithCollectionDefault>(result1);
+			Assert.AreEqual(1, w1.B.Count);
+			Assert.AreEqual(1, w1.B[0]);
+		}
+
+		[TestMethod]
 		public void TestSerializeItemIf()
 		{
 			var bs = new BinarySerializer();

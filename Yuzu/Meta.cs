@@ -151,14 +151,24 @@ namespace Yuzu.Metadata
 			return false;
 		}
 
-		private Func<object, object, bool> GetCollectionSerializeIf(Item item, CommonOptions options)
+		private bool IsEqualCollections<T>(object value, IEnumerable defColl) =>
+			!Enumerable.SequenceEqual((IEnumerable<T>)value, (IEnumerable<T>)defColl);
+
+		private Func<object, object, bool> GetSerializeIf(Item item, CommonOptions options)
 		{
 			if (Default == null)
 				Default = Activator.CreateInstance(Type);
 			var d = item.GetValue(Default);
 			var icoll = Utils.GetICollection(item.Type);
 			if (d == null || icoll == null)
-				return (object obj, object value) => !Object.Equals(item.GetValue(obj), d);
+				return (object obj, object value) => !object.Equals(value, d);
+			var defColl = (IEnumerable)d;
+			if (defColl.GetEnumerator().MoveNext()) {
+				var m = Utils.GetPrivateCovariantGeneric(GetType(), nameof(IsEqualCollections), icoll);
+				var eq = (Func<object, IEnumerable, bool>)Delegate.CreateDelegate(
+					typeof(Func<object, IEnumerable, bool>), this, m);
+				return (object obj, object value) => eq(value, defColl);
+			}
 			var collMeta = Get(item.Type, options);
 			if (options.CheckForEmptyCollections && collMeta.SerializeItemIf != null)
 				return (object obj, object value) => IsNonEmptyCollectionConditional(obj, value, collMeta);
@@ -236,7 +246,7 @@ namespace Yuzu.Metadata
 			if (item.Type.IsDefined(Options.CompactAttribute, false))
 				item.IsCompact = true;
 			if (ia.Member != null && item.SerializeIf == null && !Type.IsAbstract && !Type.IsInterface)
-				item.SerializeIf = GetCollectionSerializeIf(item, options);
+				item.SerializeIf = GetSerializeIf(item, options);
 			Items.Add(item);
 		}
 

@@ -510,6 +510,20 @@ namespace YuzuTest.Json
 		}
 
 		[TestMethod]
+		public void TestCollectionDefault()
+		{
+			var js = new JsonSerializer();
+			var jd = new JsonDeserializer();
+			js.JsonOptions.Indent = "";
+			var v1 = new SampleWithCollectionDefault();
+			var result1 = js.ToString(v1);
+			Assert.AreEqual("{\n}", result1);
+			var w1 = jd.FromString<SampleWithCollectionDefault>(result1);
+			Assert.AreEqual(1, w1.B.Count);
+			Assert.AreEqual(1, w1.B[0]);
+		}
+
+		[TestMethod]
 		public void TestSerializeItemIf()
 		{
 			var js = new JsonSerializer();

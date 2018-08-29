@@ -513,6 +513,12 @@ namespace YuzuTest
 		public SampleCollection<int> B = new SampleCollection<int>();
 	}
 
+	public class SampleWithCollectionDefault
+	{
+		[YuzuMember]
+		public List<int> B = new List<int> { 1 };
+	}
+
 	public class SampleIEnumerable
 	{
 		[YuzuRequired]
