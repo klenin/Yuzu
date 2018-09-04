@@ -519,6 +519,17 @@ namespace YuzuTest
 		public List<int> B = new List<int> { 1 };
 	}
 
+	public class SampleWithCollectionDefaultNonSerializable
+	{
+		[YuzuMember]
+		public SampleCollection<int> B = new SampleCollection<int>();
+		public SampleWithCollectionDefaultNonSerializable()
+		{
+			B.Add(1);
+			B.Filter = 3;
+		}
+	}
+
 	public class SampleIEnumerable
 	{
 		[YuzuRequired]

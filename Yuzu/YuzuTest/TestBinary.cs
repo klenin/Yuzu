@@ -647,6 +647,12 @@ namespace YuzuTest.Binary
 			Assert.AreEqual(
 				s1 + " 01 00 00 00 00 00 00 00",
 				XS(bs1.ToBytes(v2)));
+			var v3 = new SampleWithCollectionDefaultNonSerializable();
+			v3.B.Add(2);
+			var result3 = bs1.ToBytes(v3);
+			Assert.AreEqual(
+				"20 02 00 " + XS(typeof(SampleWithCollectionDefaultNonSerializable)) + " 01 00 " +
+				XS("B", RoughType.Sequence) + " " + XS(RoughType.Int) + " 00 00", XS(result3));
 		}
 
 		[TestMethod]

@@ -163,14 +163,18 @@ namespace Yuzu.Metadata
 			if (d == null || icoll == null)
 				return (object obj, object value) => !object.Equals(value, d);
 			var defColl = (IEnumerable)d;
-			if (defColl.GetEnumerator().MoveNext()) {
+			var collMeta = Get(item.Type, options);
+			bool checkForEmpty = options.CheckForEmptyCollections && collMeta.SerializeItemIf != null;
+			if (
+				defColl.GetEnumerator().MoveNext() &&
+				(!checkForEmpty || IsNonEmptyCollectionConditional(Default, defColl, collMeta))
+			) {
 				var m = Utils.GetPrivateCovariantGeneric(GetType(), nameof(IsEqualCollections), icoll);
 				var eq = (Func<object, IEnumerable, bool>)Delegate.CreateDelegate(
 					typeof(Func<object, IEnumerable, bool>), this, m);
 				return (object obj, object value) => eq(value, defColl);
 			}
-			var collMeta = Get(item.Type, options);
-			if (options.CheckForEmptyCollections && collMeta.SerializeItemIf != null)
+			if (checkForEmpty)
 				return (object obj, object value) => IsNonEmptyCollectionConditional(obj, value, collMeta);
 			var mi = Utils.GetPrivateGeneric(
 				GetType(), nameof(IsNonEmptyCollection), icoll.GetGenericArguments()[0]);

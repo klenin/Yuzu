@@ -571,6 +571,9 @@ namespace YuzuTest.Json
 			js1.Options.CheckForEmptyCollections = true;
 			js1.JsonOptions.Indent = "";
 			Assert.AreEqual("{\n\"A\":[]\n}", js1.ToString(v2));
+			var v3 = new SampleWithCollectionDefaultNonSerializable();
+			v3.B.Add(2);
+			Assert.AreEqual("{\n}", js1.ToString(v3));
 		}
 
 		[TestMethod]
