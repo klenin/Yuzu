@@ -115,6 +115,8 @@ namespace Yuzu.Json
 		private string wrapperNameSpace = "";
 		private string lastNameSpace = "";
 
+		public string LineSeparator { get { return cw.LineSeparator; } set { cw.LineSeparator = value; } }
+
 		public StreamWriter GenWriter
 		{
 			get { return cw.Output; }

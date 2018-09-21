@@ -427,6 +427,7 @@ namespace Yuzu
 
 	public interface IDeserializerGenerator
 	{
+		string LineSeparator { get; set; }
 		StreamWriter GenWriter { get; set; }
 		void GenerateHeader();
 		void GenerateFooter();

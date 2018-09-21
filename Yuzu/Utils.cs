@@ -216,11 +216,13 @@ namespace Yuzu.Util
 		private int indentLevel = 0;
 		public string IndentString = "\t";
 		private int tempCount = 0;
+		public string LineSeparator = "\r\n";
 
 		public void PutPart(string format, params object[] p)
 		{
 			var s = p.Length > 0 ? String.Format(format, p) : format;
-			Output.Write(s.Replace("\n", "\r\n"));
+			if (LineSeparator != "\n")
+				Output.Write(s.Replace("\n", LineSeparator));
 		}
 
 		public void Put(string format, params object[] p)

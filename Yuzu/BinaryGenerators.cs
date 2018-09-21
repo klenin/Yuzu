@@ -38,6 +38,8 @@ namespace Yuzu.Binary
 		private Dictionary<Type, string> generatedMakers = new Dictionary<Type, string>();
 		private string classDefName = typeof(ReaderClassDef).Name;
 
+		public string LineSeparator { get { return cw.LineSeparator; } set { cw.LineSeparator = value; } }
+
 		public StreamWriter GenWriter
 		{
 			get { return cw.Output; }
