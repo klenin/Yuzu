@@ -221,8 +221,7 @@ namespace Yuzu.Util
 		public void PutPart(string format, params object[] p)
 		{
 			var s = p.Length > 0 ? String.Format(format, p) : format;
-			if (LineSeparator != "\n")
-				Output.Write(s.Replace("\n", LineSeparator));
+			Output.Write(LineSeparator == "\n" ? s : s.Replace("\n", LineSeparator));
 		}
 
 		public void Put(string format, params object[] p)
