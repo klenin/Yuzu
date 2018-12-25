@@ -1344,6 +1344,11 @@ namespace YuzuTest.Binary
 			var w3 = bd.FromBytes<DateTime>(result3);
 			Assert.AreEqual(v3, w3);
 			Assert.AreEqual(v3.Kind, w3.Kind);
+
+			var v4 = new DateTimeOffset(2013, 4, 25, 3, 2, 1, TimeSpan.FromHours(10));
+			var result4 = bs.ToBytes(v4);
+			var w4 = bd.FromBytes<DateTimeOffset>(result4);
+			Assert.AreEqual(v4, w4);
 		}
 
 		[TestMethod]

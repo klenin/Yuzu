@@ -27,6 +27,12 @@ namespace Yuzu.Binary
 		protected void WriteDecimal(object obj) { writer.Write((decimal)obj); }
 
 		protected void WriteDateTime(object obj) { writer.Write(((DateTime)obj).ToBinary()); }
+		protected void WriteDateTimeOffset(object obj)
+		{
+			var d = (DateTimeOffset)obj;
+			writer.Write(d.DateTime.ToBinary());
+			writer.Write(d.Offset.Ticks);
+		}
 		protected void WriteTimeSpan(object obj) { writer.Write(((TimeSpan)obj).Ticks); }
 
 		protected void WriteString(object obj)
@@ -84,6 +90,7 @@ namespace Yuzu.Binary
 			writerCache[typeof(double)] = WriteDouble;
 			writerCache[typeof(decimal)] = WriteDecimal;
 			writerCache[typeof(DateTime)] = WriteDateTime;
+			writerCache[typeof(DateTimeOffset)] = WriteDateTimeOffset;
 			writerCache[typeof(TimeSpan)] = WriteTimeSpan;
 			writerCache[typeof(string)] = WriteString;
 			writerCache[typeof(object)] = WriteAny;

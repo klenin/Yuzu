@@ -35,13 +35,14 @@ namespace Yuzu.Binary
 		String = 16,
 		Any = 17,
 		Nullable = 18,
+		DateTimeOffset = 19,
 
 		Record = 32,
 		Sequence = 33,
 		Mapping = 34,
 
 		FirstAtom = SByte,
-		LastAtom = Any,
+		LastAtom = DateTimeOffset,
 	}
 
 	internal static class RT
@@ -52,7 +53,7 @@ namespace Yuzu.Binary
 			typeof(int), typeof(uint), typeof(long), typeof(ulong),
 			typeof(bool), typeof(char), typeof(float), typeof(double), typeof(decimal),
 			typeof(DateTime), typeof(TimeSpan), typeof(string),
-			typeof(object),
+			typeof(object), null, typeof(DateTimeOffset),
 		};
 
 		public static bool IsRecord(this Type t)

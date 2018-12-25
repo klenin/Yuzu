@@ -343,6 +343,14 @@ namespace Yuzu.Json
 				s, JsonOptions.DateFormat, CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind);
 		}
 
+		protected DateTimeOffset RequireDateTimeOffset()
+		{
+			var s = JsonOptions.DateFormat == "O" ? RequireUnescapedString() : RequireString();
+			return DateTimeOffset.ParseExact(
+				s, JsonOptions.DateTimeOffsetFormat,
+				CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind);
+		}
+
 		protected TimeSpan RequireTimeSpan()
 		{
 			var s = JsonOptions.TimeSpanFormat == "c" ? RequireUnescapedString() : RequireString();
@@ -559,6 +567,7 @@ namespace Yuzu.Json
 		private object RequireDecimalObj() => RequireDecimal();
 		private object RequireDecimalAsStringObj() => RequireDecimalAsString();
 		private object RequireDateTimeObj() => RequireDateTime();
+		private object RequireDateTimeOffsetObj() => RequireDateTimeOffset();
 		private object RequireTimeSpanObj() => RequireTimeSpan();
 
 		private Dictionary<Type, Func<object>> readerCache = new Dictionary<Type, Func<object>>();
@@ -625,6 +634,8 @@ namespace Yuzu.Json
 			}
 			if (t == typeof(DateTime))
 				return RequireDateTimeObj;
+			if (t == typeof(DateTimeOffset))
+				return RequireDateTimeOffsetObj;
 			if (t == typeof(TimeSpan))
 				return RequireTimeSpanObj;
 			if (t.IsEnum) {

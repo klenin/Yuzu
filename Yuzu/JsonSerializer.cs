@@ -34,6 +34,7 @@ namespace Yuzu.Json
 		public bool IgnoreCompact { get { return ignoreCompact; } set { ignoreCompact = value; generation++; } }
 
 		public string DateFormat = "O";
+		public string DateTimeOffsetFormat = "O";
 		public string TimeSpanFormat = "c";
 
 		private bool int64AsString = false;
@@ -197,6 +198,12 @@ namespace Yuzu.Json
 			}
 			else
 				WriteEscapedString(d.ToString(JsonOptions.DateFormat, CultureInfo.InvariantCulture));
+		}
+
+		private void WriteDateTimeOffset(object obj)
+		{
+			var d = (DateTimeOffset)obj;
+			WriteEscapedString(d.ToString(JsonOptions.DateTimeOffsetFormat, CultureInfo.InvariantCulture));
 		}
 
 		private void WriteTimeSpan(object obj)
@@ -442,6 +449,7 @@ namespace Yuzu.Json
 			else
 				writerCache[typeof(decimal)] = WriteDecimal;
 			writerCache[typeof(DateTime)] = WriteDateTime;
+			writerCache[typeof(DateTimeOffset)] = WriteDateTimeOffset;
 			writerCache[typeof(TimeSpan)] = WriteTimeSpan;
 			writerCache[typeof(string)] = WriteNullableEscapedString;
 			writerCache[typeof(object)] = WriteAny;

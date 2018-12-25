@@ -1264,6 +1264,12 @@ namespace YuzuTest.Json
 			var w3 = jd.FromString<DateTime>(result3);
 			Assert.AreEqual(v3, w3);
 			Assert.AreEqual(v3.Kind, w3.Kind);
+
+			var v4 = new DateTimeOffset(2013, 4, 25, 3, 2, 1, TimeSpan.FromHours(10));
+			var result4 = js.ToString(v4);
+			Assert.AreEqual("\"2013-04-25T03:02:01.0000000+10:00\"", result4);
+			var w4 = jd.FromString<DateTimeOffset>(result4);
+			Assert.AreEqual(v4, w4);
 		}
 
 		[TestMethod]

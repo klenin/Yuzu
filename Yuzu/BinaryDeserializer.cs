@@ -33,6 +33,12 @@ namespace Yuzu.Binary
 		private object ReadDecimal() => Reader.ReadDecimal();
 
 		private DateTime ReadDateTime() => DateTime.FromBinary(Reader.ReadInt64());
+		private DateTimeOffset ReadDateTimeOffset()
+		{
+			var d = DateTime.FromBinary(Reader.ReadInt64());
+			var t = new TimeSpan(Reader.ReadInt64());
+			return new DateTimeOffset(d, t);
+		}
 		private TimeSpan ReadTimeSpan() => new TimeSpan(Reader.ReadInt64());
 
 		private object ReadString()
@@ -44,8 +50,10 @@ namespace Yuzu.Binary
 		private Type ReadType()
 		{
 			var rt = (RoughType)Reader.ReadByte();
-			if (RoughType.FirstAtom <= rt && rt <= RoughType.LastAtom)
-				return RT.roughTypeToType[(int)rt];
+			if (RoughType.FirstAtom <= rt && rt <= RoughType.LastAtom) {
+				var t = RT.roughTypeToType[(int)rt];
+				if (t != null) return t;
+			}
 			if (rt == RoughType.Sequence)
 				return typeof(List<>).MakeGenericType(ReadType());
 			if (rt == RoughType.Mapping) {
@@ -65,8 +73,10 @@ namespace Yuzu.Binary
 			var rt = (RoughType)Reader.ReadByte();
 			if (expectedType.IsEnum)
 				return rt == RoughType.Int;
-			if (RoughType.FirstAtom <= rt && rt <= RoughType.LastAtom)
-				return RT.roughTypeToType[(int)rt] == expectedType;
+			if (RoughType.FirstAtom <= rt && rt <= RoughType.LastAtom) {
+				var t = RT.roughTypeToType[(int)rt];
+				if (t != null) return t == expectedType;
+			}
 			if (expectedType.IsArray)
 				return rt == RoughType.Sequence && ReadCompatibleType(expectedType.GetElementType());
 
@@ -111,6 +121,7 @@ namespace Yuzu.Binary
 			readerCache[typeof(double)] = ReadDouble;
 			readerCache[typeof(decimal)] = ReadDecimal;
 			readerCache[typeof(DateTime)] = ReadDateTimeObj;
+			readerCache[typeof(DateTimeOffset)] = ReadDateTimeOffsetObj;
 			readerCache[typeof(TimeSpan)] = ReadTimeSpanObj;
 			readerCache[typeof(string)] = ReadString;
 			readerCache[typeof(object)] = ReadAny;
@@ -118,6 +129,7 @@ namespace Yuzu.Binary
 		}
 
 		private object ReadDateTimeObj() => ReadDateTime();
+		private object ReadDateTimeOffsetObj() => ReadDateTimeOffset();
 		private object ReadTimeSpanObj() => ReadTimeSpan();
 
 		protected void ReadIntoCollection<T>(ICollection<T> list)
