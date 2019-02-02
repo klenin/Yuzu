@@ -391,14 +391,14 @@ namespace Yuzu.Metadata
 						readAliases = new Dictionary<string, Type>();
 						readAliasCache.Add(options, readAliases);
 					}
-					foreach (var a in aliases)
-						try {
-							if (String.IsNullOrWhiteSpace(a))
-								throw Error("Empty read alias");
-							readAliases.Add(a, t);
-						} catch (ArgumentException) {
-							throw Error("Duplicate read alias '{0}'", a);
-						}
+					foreach (var a in aliases) {
+						if (String.IsNullOrWhiteSpace(a))
+							throw Error("Empty read alias");
+						Type duplicate;
+						if (readAliases.TryGetValue(a, out duplicate))
+							throw Error("Read alias '{0}' was already defined for '{1}'", a, duplicate.Name);
+						readAliases.Add(a, t);
+					}
 				}
 				WriteAlias = Options.GetWriteAlias(alias);
 				if (WriteAlias != null && WriteAlias == "")
