@@ -443,7 +443,7 @@ namespace YuzuTest.Binary
 				XS("StarterPackOfferEndTime", RoughType.Int) +
 				" 01 00 01 02 00 0B 00 00 00 00 00", XS(result1));
 
-			Meta.Get(typeof(SampleOrderExt), bd.Options);
+			bd.Options.Meta = new MetaOptions(); // Avoid duplicate alias.
 			var v2 = bd.FromBytes<SampleOrderExt>(result1);
 			Assert.AreEqual(11, v2.StarterPackOfferEndTime);
 			Assert.IsTrue(v2.StartGoldInitialized);

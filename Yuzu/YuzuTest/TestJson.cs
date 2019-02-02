@@ -391,7 +391,7 @@ namespace YuzuTest.Json
 				"\"StartGoldInitialized\":true,\n\"StarterPackOfferEndTime\":11\n}",
 				result1);
 
-			Meta.Get(typeof(SampleOrderExt), jd.Options);
+			jd.Options.Meta = new MetaOptions(); // Avoid duplicate alias.
 			var v2 = jd.FromString<SampleOrderExt>(result1);
 			Assert.AreEqual(11, v2.StarterPackOfferEndTime);
 		}

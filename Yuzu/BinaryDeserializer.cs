@@ -600,8 +600,10 @@ namespace Yuzu.Binary
 				return MakeDelegate(Utils.GetPrivateGeneric(GetType(), nameof(ReadCollection), t, elemType));
 			}
 
-			if (t.IsClass || t.IsInterface)
+			if (t.IsClass || t.IsInterface) {
+				Meta.Get(t, Options); // Populate aliases etc.
 				return MakeDelegate(Utils.GetPrivateGeneric(GetType(), nameof(ReadObject), t));
+			}
 			if (Utils.IsStruct(t))
 				return MakeDelegate(Utils.GetPrivateGeneric(GetType(), nameof(ReadStruct), t));
 			throw new NotImplementedException(t.Name);

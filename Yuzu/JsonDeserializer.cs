@@ -678,8 +678,10 @@ namespace Yuzu.Json
 			}
 			if (t == typeof(object))
 				return ReadAnyObject;
-			if (t.IsClass && !t.IsAbstract)
+			if (t.IsClass && !t.IsAbstract) {
+				Meta.Get(t, Options); // Populate aliases etc.
 				return MakeDelegate(Utils.GetPrivateGeneric(GetType(), nameof(ReadObject), t));
+			}
 			if (t.IsInterface || t.IsAbstract)
 				return MakeDelegate(Utils.GetPrivateGeneric(GetType(), nameof(ReadInterface), t));
 			if (Utils.IsStruct(t))
