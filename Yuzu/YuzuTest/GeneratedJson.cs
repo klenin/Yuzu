@@ -28,6 +28,7 @@ namespace YuzuGen.YuzuTest
 			JsonOptions.ClassTag = "class";
 			JsonOptions.ArrayLengthPrefix = false;
 			JsonOptions.DateFormat = "O";
+			JsonOptions.DateTimeOffsetFormat = "O";
 			JsonOptions.TimeSpanFormat = "c";
 			JsonOptions.Unordered = false;
 			JsonOptions.BOM = false;
@@ -79,6 +80,7 @@ namespace YuzuGen.YuzuTest
 			JsonOptions.ClassTag = "class";
 			JsonOptions.ArrayLengthPrefix = false;
 			JsonOptions.DateFormat = "O";
+			JsonOptions.DateTimeOffsetFormat = "O";
 			JsonOptions.TimeSpanFormat = "c";
 			JsonOptions.Unordered = false;
 			JsonOptions.BOM = false;
@@ -130,6 +132,7 @@ namespace YuzuGen.YuzuTest
 			JsonOptions.ClassTag = "class";
 			JsonOptions.ArrayLengthPrefix = false;
 			JsonOptions.DateFormat = "O";
+			JsonOptions.DateTimeOffsetFormat = "O";
 			JsonOptions.TimeSpanFormat = "c";
 			JsonOptions.Unordered = false;
 			JsonOptions.BOM = false;
@@ -185,6 +188,7 @@ namespace YuzuGen.YuzuTest
 			JsonOptions.ClassTag = "class";
 			JsonOptions.ArrayLengthPrefix = false;
 			JsonOptions.DateFormat = "O";
+			JsonOptions.DateTimeOffsetFormat = "O";
 			JsonOptions.TimeSpanFormat = "c";
 			JsonOptions.Unordered = false;
 			JsonOptions.BOM = false;
@@ -233,6 +237,7 @@ namespace YuzuGen.YuzuTest
 			JsonOptions.ClassTag = "class";
 			JsonOptions.ArrayLengthPrefix = false;
 			JsonOptions.DateFormat = "O";
+			JsonOptions.DateTimeOffsetFormat = "O";
 			JsonOptions.TimeSpanFormat = "c";
 			JsonOptions.Unordered = false;
 			JsonOptions.BOM = false;
@@ -280,6 +285,7 @@ namespace YuzuGen.YuzuTest
 			JsonOptions.ClassTag = "class";
 			JsonOptions.ArrayLengthPrefix = false;
 			JsonOptions.DateFormat = "O";
+			JsonOptions.DateTimeOffsetFormat = "O";
 			JsonOptions.TimeSpanFormat = "c";
 			JsonOptions.Unordered = false;
 			JsonOptions.BOM = false;
@@ -333,6 +339,7 @@ namespace YuzuGen.YuzuTest
 			JsonOptions.ClassTag = "class";
 			JsonOptions.ArrayLengthPrefix = false;
 			JsonOptions.DateFormat = "O";
+			JsonOptions.DateTimeOffsetFormat = "O";
 			JsonOptions.TimeSpanFormat = "c";
 			JsonOptions.Unordered = false;
 			JsonOptions.BOM = false;
@@ -380,6 +387,7 @@ namespace YuzuGen.YuzuTest
 			JsonOptions.ClassTag = "class";
 			JsonOptions.ArrayLengthPrefix = false;
 			JsonOptions.DateFormat = "O";
+			JsonOptions.DateTimeOffsetFormat = "O";
 			JsonOptions.TimeSpanFormat = "c";
 			JsonOptions.Unordered = false;
 			JsonOptions.BOM = false;
@@ -438,6 +446,7 @@ namespace YuzuGen.YuzuTest
 			JsonOptions.ClassTag = "class";
 			JsonOptions.ArrayLengthPrefix = false;
 			JsonOptions.DateFormat = "O";
+			JsonOptions.DateTimeOffsetFormat = "O";
 			JsonOptions.TimeSpanFormat = "c";
 			JsonOptions.Unordered = false;
 			JsonOptions.BOM = false;
@@ -485,6 +494,7 @@ namespace YuzuGen.YuzuTest
 			JsonOptions.ClassTag = "class";
 			JsonOptions.ArrayLengthPrefix = false;
 			JsonOptions.DateFormat = "O";
+			JsonOptions.DateTimeOffsetFormat = "O";
 			JsonOptions.TimeSpanFormat = "c";
 			JsonOptions.Unordered = false;
 			JsonOptions.BOM = false;
@@ -549,6 +559,7 @@ namespace YuzuGen.YuzuTest
 			JsonOptions.ClassTag = "class";
 			JsonOptions.ArrayLengthPrefix = false;
 			JsonOptions.DateFormat = "O";
+			JsonOptions.DateTimeOffsetFormat = "O";
 			JsonOptions.TimeSpanFormat = "c";
 			JsonOptions.Unordered = false;
 			JsonOptions.BOM = false;
@@ -610,6 +621,7 @@ namespace YuzuGen.YuzuTest
 			JsonOptions.ClassTag = "class";
 			JsonOptions.ArrayLengthPrefix = false;
 			JsonOptions.DateFormat = "O";
+			JsonOptions.DateTimeOffsetFormat = "O";
 			JsonOptions.TimeSpanFormat = "c";
 			JsonOptions.Unordered = false;
 			JsonOptions.BOM = false;
@@ -702,6 +714,7 @@ namespace YuzuGen.YuzuTest
 			JsonOptions.ClassTag = "class";
 			JsonOptions.ArrayLengthPrefix = false;
 			JsonOptions.DateFormat = "O";
+			JsonOptions.DateTimeOffsetFormat = "O";
 			JsonOptions.TimeSpanFormat = "c";
 			JsonOptions.Unordered = false;
 			JsonOptions.BOM = false;
@@ -750,6 +763,7 @@ namespace YuzuGen.YuzuTest
 			JsonOptions.ClassTag = "class";
 			JsonOptions.ArrayLengthPrefix = false;
 			JsonOptions.DateFormat = "O";
+			JsonOptions.DateTimeOffsetFormat = "O";
 			JsonOptions.TimeSpanFormat = "c";
 			JsonOptions.Unordered = false;
 			JsonOptions.BOM = false;
@@ -802,6 +816,7 @@ namespace YuzuGen.System.Collections.Generic
 			JsonOptions.ClassTag = "class";
 			JsonOptions.ArrayLengthPrefix = false;
 			JsonOptions.DateFormat = "O";
+			JsonOptions.DateTimeOffsetFormat = "O";
 			JsonOptions.TimeSpanFormat = "c";
 			JsonOptions.Unordered = false;
 			JsonOptions.BOM = false;
@@ -866,6 +881,7 @@ namespace YuzuGen.YuzuTest
 			JsonOptions.ClassTag = "class";
 			JsonOptions.ArrayLengthPrefix = true;
 			JsonOptions.DateFormat = "O";
+			JsonOptions.DateTimeOffsetFormat = "O";
 			JsonOptions.TimeSpanFormat = "c";
 			JsonOptions.Unordered = false;
 			JsonOptions.BOM = false;
@@ -924,6 +940,7 @@ namespace YuzuGen.YuzuTest
 			JsonOptions.ClassTag = "class";
 			JsonOptions.ArrayLengthPrefix = false;
 			JsonOptions.DateFormat = "O";
+			JsonOptions.DateTimeOffsetFormat = "O";
 			JsonOptions.TimeSpanFormat = "c";
 			JsonOptions.Unordered = false;
 			JsonOptions.BOM = false;
@@ -997,6 +1014,7 @@ namespace YuzuGen.YuzuTest
 			JsonOptions.ClassTag = "class";
 			JsonOptions.ArrayLengthPrefix = false;
 			JsonOptions.DateFormat = "O";
+			JsonOptions.DateTimeOffsetFormat = "O";
 			JsonOptions.TimeSpanFormat = "c";
 			JsonOptions.Unordered = false;
 			JsonOptions.BOM = false;
@@ -1044,6 +1062,7 @@ namespace YuzuGen.YuzuTest
 			JsonOptions.ClassTag = "class";
 			JsonOptions.ArrayLengthPrefix = false;
 			JsonOptions.DateFormat = "O";
+			JsonOptions.DateTimeOffsetFormat = "O";
 			JsonOptions.TimeSpanFormat = "c";
 			JsonOptions.Unordered = false;
 			JsonOptions.BOM = false;
@@ -1094,6 +1113,7 @@ namespace YuzuGen.YuzuTest
 			JsonOptions.ClassTag = "class";
 			JsonOptions.ArrayLengthPrefix = false;
 			JsonOptions.DateFormat = "O";
+			JsonOptions.DateTimeOffsetFormat = "O";
 			JsonOptions.TimeSpanFormat = "c";
 			JsonOptions.Unordered = false;
 			JsonOptions.BOM = false;
@@ -1144,6 +1164,7 @@ namespace YuzuGen.YuzuTest
 			JsonOptions.ClassTag = "class";
 			JsonOptions.ArrayLengthPrefix = false;
 			JsonOptions.DateFormat = "O";
+			JsonOptions.DateTimeOffsetFormat = "O";
 			JsonOptions.TimeSpanFormat = "c";
 			JsonOptions.Unordered = false;
 			JsonOptions.BOM = false;
@@ -1213,6 +1234,7 @@ namespace YuzuGen.YuzuTest
 			JsonOptions.ClassTag = "class";
 			JsonOptions.ArrayLengthPrefix = false;
 			JsonOptions.DateFormat = "O";
+			JsonOptions.DateTimeOffsetFormat = "O";
 			JsonOptions.TimeSpanFormat = "c";
 			JsonOptions.Unordered = false;
 			JsonOptions.BOM = false;
@@ -1273,6 +1295,7 @@ namespace YuzuGen.YuzuTest
 			JsonOptions.ClassTag = "class";
 			JsonOptions.ArrayLengthPrefix = false;
 			JsonOptions.DateFormat = "O";
+			JsonOptions.DateTimeOffsetFormat = "O";
 			JsonOptions.TimeSpanFormat = "c";
 			JsonOptions.Unordered = false;
 			JsonOptions.BOM = false;
@@ -1323,6 +1346,7 @@ namespace YuzuGen.YuzuTest
 			JsonOptions.ClassTag = "class";
 			JsonOptions.ArrayLengthPrefix = false;
 			JsonOptions.DateFormat = "O";
+			JsonOptions.DateTimeOffsetFormat = "O";
 			JsonOptions.TimeSpanFormat = "c";
 			JsonOptions.Unordered = false;
 			JsonOptions.BOM = false;
@@ -1373,6 +1397,7 @@ namespace YuzuGen.YuzuTest
 			JsonOptions.ClassTag = "class";
 			JsonOptions.ArrayLengthPrefix = false;
 			JsonOptions.DateFormat = "O";
+			JsonOptions.DateTimeOffsetFormat = "O";
 			JsonOptions.TimeSpanFormat = "c";
 			JsonOptions.Unordered = false;
 			JsonOptions.BOM = false;
@@ -1442,6 +1467,7 @@ namespace YuzuGen.System.Collections.Generic
 			JsonOptions.ClassTag = "class";
 			JsonOptions.ArrayLengthPrefix = false;
 			JsonOptions.DateFormat = "O";
+			JsonOptions.DateTimeOffsetFormat = "O";
 			JsonOptions.TimeSpanFormat = "c";
 			JsonOptions.Unordered = false;
 			JsonOptions.BOM = false;
@@ -1517,6 +1543,7 @@ namespace YuzuGen.YuzuTest
 			JsonOptions.ClassTag = "class";
 			JsonOptions.ArrayLengthPrefix = false;
 			JsonOptions.DateFormat = "O";
+			JsonOptions.DateTimeOffsetFormat = "O";
 			JsonOptions.TimeSpanFormat = "c";
 			JsonOptions.Unordered = false;
 			JsonOptions.BOM = false;
@@ -1575,6 +1602,7 @@ namespace YuzuGen.YuzuTest
 			JsonOptions.ClassTag = "class";
 			JsonOptions.ArrayLengthPrefix = false;
 			JsonOptions.DateFormat = "O";
+			JsonOptions.DateTimeOffsetFormat = "O";
 			JsonOptions.TimeSpanFormat = "c";
 			JsonOptions.Unordered = false;
 			JsonOptions.BOM = false;
@@ -1634,6 +1662,7 @@ namespace YuzuGen.YuzuTest
 			JsonOptions.ClassTag = "class";
 			JsonOptions.ArrayLengthPrefix = false;
 			JsonOptions.DateFormat = "O";
+			JsonOptions.DateTimeOffsetFormat = "O";
 			JsonOptions.TimeSpanFormat = "c";
 			JsonOptions.Unordered = false;
 			JsonOptions.BOM = false;
@@ -1689,6 +1718,7 @@ namespace YuzuGen.YuzuTest
 			JsonOptions.ClassTag = "class";
 			JsonOptions.ArrayLengthPrefix = false;
 			JsonOptions.DateFormat = "O";
+			JsonOptions.DateTimeOffsetFormat = "O";
 			JsonOptions.TimeSpanFormat = "c";
 			JsonOptions.Unordered = false;
 			JsonOptions.BOM = false;
@@ -1737,6 +1767,7 @@ namespace YuzuGen.YuzuTest
 			JsonOptions.ClassTag = "class";
 			JsonOptions.ArrayLengthPrefix = false;
 			JsonOptions.DateFormat = "O";
+			JsonOptions.DateTimeOffsetFormat = "O";
 			JsonOptions.TimeSpanFormat = "c";
 			JsonOptions.Unordered = false;
 			JsonOptions.BOM = false;
@@ -1804,6 +1835,7 @@ namespace YuzuGen.YuzuTest
 			JsonOptions.ClassTag = "class";
 			JsonOptions.ArrayLengthPrefix = false;
 			JsonOptions.DateFormat = "O";
+			JsonOptions.DateTimeOffsetFormat = "O";
 			JsonOptions.TimeSpanFormat = "c";
 			JsonOptions.Unordered = false;
 			JsonOptions.BOM = false;
@@ -1871,6 +1903,7 @@ namespace YuzuGen.YuzuTest
 			JsonOptions.ClassTag = "class";
 			JsonOptions.ArrayLengthPrefix = false;
 			JsonOptions.DateFormat = "O";
+			JsonOptions.DateTimeOffsetFormat = "O";
 			JsonOptions.TimeSpanFormat = "c";
 			JsonOptions.Unordered = false;
 			JsonOptions.BOM = false;
@@ -1915,6 +1948,7 @@ namespace YuzuGen.YuzuTest
 			JsonOptions.ClassTag = "class";
 			JsonOptions.ArrayLengthPrefix = false;
 			JsonOptions.DateFormat = "O";
+			JsonOptions.DateTimeOffsetFormat = "O";
 			JsonOptions.TimeSpanFormat = "c";
 			JsonOptions.Unordered = false;
 			JsonOptions.BOM = false;
@@ -1962,6 +1996,7 @@ namespace YuzuGen.YuzuTest
 			JsonOptions.ClassTag = "class";
 			JsonOptions.ArrayLengthPrefix = false;
 			JsonOptions.DateFormat = "O";
+			JsonOptions.DateTimeOffsetFormat = "O";
 			JsonOptions.TimeSpanFormat = "c";
 			JsonOptions.Unordered = false;
 			JsonOptions.BOM = false;
@@ -2009,6 +2044,7 @@ namespace YuzuGen.YuzuTest
 			JsonOptions.ClassTag = "class";
 			JsonOptions.ArrayLengthPrefix = false;
 			JsonOptions.DateFormat = "O";
+			JsonOptions.DateTimeOffsetFormat = "O";
 			JsonOptions.TimeSpanFormat = "c";
 			JsonOptions.Unordered = false;
 			JsonOptions.BOM = false;
@@ -2059,6 +2095,7 @@ namespace YuzuGen.YuzuTest
 			JsonOptions.ClassTag = "class";
 			JsonOptions.ArrayLengthPrefix = false;
 			JsonOptions.DateFormat = "O";
+			JsonOptions.DateTimeOffsetFormat = "O";
 			JsonOptions.TimeSpanFormat = "c";
 			JsonOptions.Unordered = false;
 			JsonOptions.BOM = false;
@@ -2103,6 +2140,7 @@ namespace YuzuGen.YuzuTest
 			JsonOptions.ClassTag = "class";
 			JsonOptions.ArrayLengthPrefix = false;
 			JsonOptions.DateFormat = "O";
+			JsonOptions.DateTimeOffsetFormat = "O";
 			JsonOptions.TimeSpanFormat = "c";
 			JsonOptions.Unordered = false;
 			JsonOptions.BOM = false;
@@ -2150,6 +2188,7 @@ namespace YuzuGen.YuzuTest
 			JsonOptions.ClassTag = "class";
 			JsonOptions.ArrayLengthPrefix = false;
 			JsonOptions.DateFormat = "O";
+			JsonOptions.DateTimeOffsetFormat = "O";
 			JsonOptions.TimeSpanFormat = "c";
 			JsonOptions.Unordered = false;
 			JsonOptions.BOM = false;
@@ -2210,6 +2249,7 @@ namespace YuzuGen.YuzuTest
 			JsonOptions.ClassTag = "class";
 			JsonOptions.ArrayLengthPrefix = false;
 			JsonOptions.DateFormat = "O";
+			JsonOptions.DateTimeOffsetFormat = "O";
 			JsonOptions.TimeSpanFormat = "c";
 			JsonOptions.Unordered = false;
 			JsonOptions.BOM = false;
@@ -2270,6 +2310,7 @@ namespace YuzuGen.YuzuTest
 			JsonOptions.ClassTag = "class";
 			JsonOptions.ArrayLengthPrefix = false;
 			JsonOptions.DateFormat = "O";
+			JsonOptions.DateTimeOffsetFormat = "O";
 			JsonOptions.TimeSpanFormat = "c";
 			JsonOptions.Unordered = false;
 			JsonOptions.BOM = false;
@@ -2343,6 +2384,7 @@ namespace YuzuGen.YuzuTest
 			JsonOptions.ClassTag = "class";
 			JsonOptions.ArrayLengthPrefix = false;
 			JsonOptions.DateFormat = "O";
+			JsonOptions.DateTimeOffsetFormat = "O";
 			JsonOptions.TimeSpanFormat = "c";
 			JsonOptions.Unordered = false;
 			JsonOptions.BOM = false;
@@ -2403,6 +2445,7 @@ namespace YuzuGen.YuzuTest
 			JsonOptions.ClassTag = "class";
 			JsonOptions.ArrayLengthPrefix = false;
 			JsonOptions.DateFormat = "O";
+			JsonOptions.DateTimeOffsetFormat = "O";
 			JsonOptions.TimeSpanFormat = "c";
 			JsonOptions.Unordered = false;
 			JsonOptions.BOM = false;
@@ -2453,6 +2496,7 @@ namespace YuzuGen.YuzuTest
 			JsonOptions.ClassTag = "class";
 			JsonOptions.ArrayLengthPrefix = false;
 			JsonOptions.DateFormat = "O";
+			JsonOptions.DateTimeOffsetFormat = "O";
 			JsonOptions.TimeSpanFormat = "c";
 			JsonOptions.Unordered = false;
 			JsonOptions.BOM = false;
@@ -2527,6 +2571,7 @@ namespace YuzuGen.YuzuTest
 			JsonOptions.ClassTag = "class";
 			JsonOptions.ArrayLengthPrefix = false;
 			JsonOptions.DateFormat = "O";
+			JsonOptions.DateTimeOffsetFormat = "O";
 			JsonOptions.TimeSpanFormat = "c";
 			JsonOptions.Unordered = false;
 			JsonOptions.BOM = false;
@@ -2579,6 +2624,7 @@ namespace YuzuGen.YuzuTest
 			JsonOptions.ClassTag = "class";
 			JsonOptions.ArrayLengthPrefix = false;
 			JsonOptions.DateFormat = "O";
+			JsonOptions.DateTimeOffsetFormat = "O";
 			JsonOptions.TimeSpanFormat = "c";
 			JsonOptions.Unordered = false;
 			JsonOptions.BOM = false;
@@ -2630,6 +2676,7 @@ namespace YuzuGen.System.Collections.Generic
 			JsonOptions.ClassTag = "class";
 			JsonOptions.ArrayLengthPrefix = false;
 			JsonOptions.DateFormat = "O";
+			JsonOptions.DateTimeOffsetFormat = "O";
 			JsonOptions.TimeSpanFormat = "c";
 			JsonOptions.Unordered = false;
 			JsonOptions.BOM = false;
@@ -2694,6 +2741,7 @@ namespace YuzuGen.YuzuTestAssembly
 			JsonOptions.ClassTag = "class";
 			JsonOptions.ArrayLengthPrefix = false;
 			JsonOptions.DateFormat = "O";
+			JsonOptions.DateTimeOffsetFormat = "O";
 			JsonOptions.TimeSpanFormat = "c";
 			JsonOptions.Unordered = false;
 			JsonOptions.BOM = false;
@@ -2742,6 +2790,7 @@ namespace YuzuGen.YuzuTestAssembly
 			JsonOptions.ClassTag = "class";
 			JsonOptions.ArrayLengthPrefix = false;
 			JsonOptions.DateFormat = "O";
+			JsonOptions.DateTimeOffsetFormat = "O";
 			JsonOptions.TimeSpanFormat = "c";
 			JsonOptions.Unordered = false;
 			JsonOptions.BOM = false;
@@ -2798,6 +2847,7 @@ namespace YuzuGen.YuzuTest2
 			JsonOptions.ClassTag = "class";
 			JsonOptions.ArrayLengthPrefix = false;
 			JsonOptions.DateFormat = "O";
+			JsonOptions.DateTimeOffsetFormat = "O";
 			JsonOptions.TimeSpanFormat = "c";
 			JsonOptions.Unordered = false;
 			JsonOptions.BOM = false;
