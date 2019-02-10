@@ -187,9 +187,9 @@ Default value is `false`.
 Globally controls `[YuzuCompact]` attribute. If `true`, `[YuzuCompact]` attribute has no effect.
 Default value is `false`.
 
-#### `DateFormat`
+#### `DateFormat`, `DateOffsetFormat`
 
-Controls the format of date values. Note that not all formats guarantee roundrtip due to possible information loss and culture differences.
+Controls the format of date and date offset values. Note that not all formats guarantee roundrtip due to possible information loss and culture differences.
 Default value is `"O"`, which does guarantee roundrtip.
 
 #### `TimeSpanFormat`
@@ -225,6 +225,11 @@ Default value is `false`.
 #### `BOM`
 If `true`, UTF-8 byte order mark (bytes `EF BB BF`) is allowed before the first byte of input stream during deserialization.
 Default value is `false`.
+
+#### `FloatingPointFormat`
+If empty, `float` and `double` values are serialized by internal code. Otherwise, `ToString(FloatingPointFormat)` is used.
+Note that roundtrip is only guaranteed when using internal serializer.
+Default value is empty string.
 
 ## `BinarySerializeOptions`
 
