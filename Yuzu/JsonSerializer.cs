@@ -49,6 +49,11 @@ namespace Yuzu.Json
 		public bool Comments { get { return comments; } set { comments = value; generation++; } }
 
 		public bool BOM = false;
+
+		private string floatingPointFormat = "";
+		public string FloatingPointFormat {
+			get { return floatingPointFormat; } set { floatingPointFormat = value; generation++; }
+		}
 	};
 
 	public class JsonSerializer : AbstractWriterSerializer
@@ -109,11 +114,13 @@ namespace Yuzu.Json
 			writer.Write((byte)'"');
 		}
 
-		//WriteStr(((double)obj).ToString("R", CultureInfo.InvariantCulture));
 		private void WriteDouble(object obj) => DoubleWriter.Write((double)obj, writer);
+		private void WriteDoubleFormat(object obj) =>
+			WriteStr(((double)obj).ToString(JsonOptions.FloatingPointFormat, CultureInfo.InvariantCulture));
 
-		//WriteStr(((float)obj).ToString("R", CultureInfo.InvariantCulture));
 		private void WriteSingle(object obj) => DoubleWriter.Write((float)obj, writer);
+		private void WriteSingleFormat(object obj) =>
+			WriteStr(((float)obj).ToString(JsonOptions.FloatingPointFormat, CultureInfo.InvariantCulture));
 
 		private void WriteDecimal(object obj) =>
 			WriteStr(((decimal)obj).ToString(CultureInfo.InvariantCulture));
@@ -442,8 +449,14 @@ namespace Yuzu.Json
 			}
 			writerCache[typeof(bool)] = WriteBool;
 			writerCache[typeof(char)] = WriteEscapedString;
-			writerCache[typeof(float)] = WriteSingle;
-			writerCache[typeof(double)] = WriteDouble;
+			if (string.IsNullOrEmpty(JsonOptions.FloatingPointFormat)) {
+				writerCache[typeof(double)] = WriteDouble;
+				writerCache[typeof(float)] = WriteSingle;
+			}
+			else {
+				writerCache[typeof(double)] = WriteDoubleFormat;
+				writerCache[typeof(float)] = WriteSingleFormat;
+			}
 			if (JsonOptions.DecimalAsString)
 				writerCache[typeof(decimal)] = WriteDecimalAsString;
 			else

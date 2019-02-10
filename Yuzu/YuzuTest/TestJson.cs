@@ -281,6 +281,13 @@ namespace YuzuTest.Json
 			jd.FromString(w, result1);
 			Assert.AreEqual(v.F, w.F);
 			Assert.AreEqual(v.D, w.D);
+
+			js.JsonOptions.FloatingPointFormat = "R";
+			var result2 = js.ToString(v);
+			Assert.AreEqual("{\n\"F\":1E-20,\n\"D\":-3.1415E+100\n}", result2);
+			js.JsonOptions.FloatingPointFormat = "F";
+			var result3 = js.ToString(v);
+			Assert.AreEqual("{\n\"F\":0.00,\n\"D\":-31415" + new string('0', 96) + ".00\n}", result3);
 		}
 
 		[TestMethod]
