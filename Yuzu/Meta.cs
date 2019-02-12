@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -10,10 +11,10 @@ namespace Yuzu.Metadata
 {
 	public class Meta
 	{
-		private static Dictionary<Tuple<Type, CommonOptions>, Meta> cache =
-			new Dictionary<Tuple<Type, CommonOptions>, Meta>();
-		private static Dictionary<CommonOptions, Dictionary<string, Type>> readAliasCache =
-			new Dictionary<CommonOptions, Dictionary<string, Type>>();
+		private static ConcurrentDictionary<Tuple<Type, CommonOptions>, Meta> cache =
+			new ConcurrentDictionary<Tuple<Type, CommonOptions>, Meta>();
+		private static ConcurrentDictionary<CommonOptions, Dictionary<string, Type>> readAliasCache =
+			new ConcurrentDictionary<CommonOptions, Dictionary<string, Type>>();
 
 		public class Item : IComparable<Item>
 		{
@@ -321,6 +322,8 @@ namespace Yuzu.Metadata
 			Options = MetaOptions.Default;
 		}
 
+		private static Func<CommonOptions, Dictionary<string, Type>> MakeReadAliases =
+			CommonOptions => new Dictionary<string, Type>();
 		private Meta(Type t, CommonOptions options)
 		{
 			Type = t;
@@ -386,11 +389,7 @@ namespace Yuzu.Metadata
 			if (alias != null) {
 				var aliases = Options.GetReadAliases(alias);
 				if (aliases != null) {
-					Dictionary<string, Type> readAliases;
-					if (!readAliasCache.TryGetValue(options, out readAliases)) {
-						readAliases = new Dictionary<string, Type>();
-						readAliasCache.Add(options, readAliases);
-					}
+					Dictionary<string, Type> readAliases = readAliasCache.GetOrAdd(options, MakeReadAliases);
 					foreach (var a in aliases) {
 						if (String.IsNullOrWhiteSpace(a))
 							throw Error("Empty read alias");
@@ -406,15 +405,9 @@ namespace Yuzu.Metadata
 			}
 		}
 
-		public static Meta Get(Type t, CommonOptions options)
-		{
-			Meta meta;
-			if (cache.TryGetValue(Tuple.Create(t, options), out meta))
-				return meta;
-			meta = new Meta(t, options);
-			cache.Add(Tuple.Create(t, options), meta);
-			return meta;
-		}
+		private static Func<Tuple<Type, CommonOptions>, Meta> MakeMeta = key => new Meta(key.Item1, key.Item2);
+		public static Meta Get(Type t, CommonOptions options) =>
+			cache.GetOrAdd(Tuple.Create(t, options), MakeMeta);
 
 		public static Type GetTypeByReadAlias(string alias, CommonOptions options)
 		{

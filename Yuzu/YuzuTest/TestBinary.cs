@@ -4,6 +4,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -1674,6 +1675,39 @@ namespace YuzuTest.Binary
 			var bd = new BinaryDeserializer();
 			bd.FromBytes(w1, result1);
 			Assert.AreEqual(v1.X, w1.X);
+		}
+
+		[TestMethod]
+		public void TestMultithreading()
+		{
+			var threadTestData = new byte[50][];
+			var threads = new Task[threadTestData.Length];
+			for (int i = 0; i < threads.Length; ++i) {
+				var j = i;
+				threads[i] = new Task(() => {
+					var bs = new BinarySerializer();
+					threadTestData[j] = bs.ToBytes(new object[] {
+						new Sample1 { X = j },
+						new Sample2(),
+						new Sample3(),
+						new Sample4(),
+					});
+				});
+				threads[i].Start();
+			}
+			foreach (var t in threads)
+				t.Wait(1000);
+			for (int i = 0; i < threads.Length; ++i) {
+				var j = i;
+				threads[i] = new Task(() => {
+					var bd = new BinaryDeserializer();
+					var w = bd.FromBytes(threadTestData[j]);
+					Assert.AreEqual(j, ((Sample1)((List<object>)w)[0]).X);
+				});
+				threads[i].Start();
+			}
+			foreach (var t in threads)
+				t.Wait(1000);
 		}
 
 		[TestMethod]

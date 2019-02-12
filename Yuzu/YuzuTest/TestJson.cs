@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -1586,6 +1587,39 @@ namespace YuzuTest.Json
 			var jd = new JsonDeserializer();
 			jd.FromString(w1, result1);
 			Assert.AreEqual(v1.X, w1.X);
+		}
+
+		[TestMethod]
+		public void TestMultithreading()
+		{
+			var threadTestData = new string[50];
+			var threads = new Task[threadTestData.Length];
+			for (int i = 0; i < threads.Length; ++i) {
+				var j = i;
+				threads[i] = new Task(() => {
+					var js = new JsonSerializer();
+					threadTestData[j] = js.ToString(new object[] {
+						new Sample1 { X = j },
+						new Sample2(),
+						new Sample3(),
+						new Sample4(),
+					});
+				});
+				threads[i].Start();
+			}
+			foreach (var t in threads)
+				t.Wait(1000);
+			for (int i = 0; i < threads.Length; ++i) {
+				var j = i;
+				threads[i] = new Task(() => {
+					var jd = new JsonDeserializer();
+					var w = jd.FromString(threadTestData[j]);
+					Assert.AreEqual(j, ((Sample1)((List<object>)w)[0]).X);
+				});
+				threads[i].Start();
+			}
+			foreach (var t in threads)
+				t.Wait(1000);
 		}
 
 		[TestMethod]

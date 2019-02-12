@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Reflection;
 
@@ -15,8 +16,8 @@ namespace Yuzu.Metadata
 			Both = 3,
 		}
 
-		private static Dictionary<Tuple<Type, MetaOptions>, State> surrogateTypes =
-			new Dictionary<Tuple<Type, MetaOptions>, State>();
+		private static ConcurrentDictionary<Tuple<Type, MetaOptions>, State> surrogateTypes =
+			new ConcurrentDictionary<Tuple<Type, MetaOptions>, State>();
 
 		private MethodInfo methodIf;
 		private MethodInfo methodTo;
@@ -73,10 +74,8 @@ namespace Yuzu.Metadata
 		private void SetTypeState(Type t, State newState)
 		{
 			var k = Tuple.Create(t, options);
-			State oldState;
-			if (!surrogateTypes.TryGetValue(k, out oldState))
-				surrogateTypes.Add(k, newState);
-			else if ((oldState | newState) == State.Both)
+			State oldState = surrogateTypes.GetOrAdd(k, newState);
+			if ((oldState | newState) == State.Both)
 				throw Error("Surrogate chain for type '{0}'", t.Name);
 		}
 
