@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -147,7 +148,7 @@ namespace Yuzu.Util
 	public static class TypeSerializer
 	{
 		private static LinkedList<Assembly> assembliesLru = new LinkedList<Assembly>();
-		private static Dictionary<string, Type> cache = new Dictionary<string, Type>();
+		private static ConcurrentDictionary<string, Type> cache = new ConcurrentDictionary<string, Type>();
 
 		static TypeSerializer()
 		{
