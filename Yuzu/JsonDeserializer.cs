@@ -598,6 +598,22 @@ namespace Yuzu.Json
 			return mergerCache[t] = MakeMergerFunc(t);
 		}
 
+		private Func<object> MakeEnumReaderFunc(Type t)
+		{
+			if (JsonOptions.EnumAsString)
+				return () => Enum.Parse(t, RequireString());
+			var ut = t.GetEnumUnderlyingType();
+			if (ut == typeof(int))
+				return () => Enum.ToObject(t, RequireInt());
+			if (ut == typeof(uint))
+				return () => Enum.ToObject(t, RequireUInt());
+			if (ut == typeof(long))
+				return () => Enum.ToObject(t, RequireLong());
+			if (ut == typeof(ulong))
+				return () => Enum.ToObject(t, RequireULong());
+			return () => Enum.ToObject(t, RequireInt());
+		}
+
 		private Func<object> MakeReaderFunc(Type t)
 		{
 			if (t == typeof(int))
@@ -638,12 +654,8 @@ namespace Yuzu.Json
 				return RequireDateTimeOffsetObj;
 			if (t == typeof(TimeSpan))
 				return RequireTimeSpanObj;
-			if (t.IsEnum) {
-				if (JsonOptions.EnumAsString)
-					return () => Enum.Parse(t, RequireString());
-				else
-					return () => Enum.ToObject(t, RequireInt());
-			}
+			if (t.IsEnum)
+				return MakeEnumReaderFunc(t);
 			if (t.IsGenericType) {
 				var g = t.GetGenericTypeDefinition();
 				if (g == typeof(List<>))

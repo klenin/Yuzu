@@ -79,11 +79,20 @@ namespace YuzuTest
 	}
 
 	public enum SampleEnum { E1, E2, E3 };
-
 	public class Sample4
 	{
 		[YuzuOptional]
 		public SampleEnum E;
+	}
+
+	public enum SampleEnumByte : byte { EB1, EB2, EB3 };
+	public enum SampleEnumLong : long { EL1, EL2, Large = 1L << 50 };
+	public class SampleEnumMemberTyped
+	{
+		[YuzuOptional]
+		public SampleEnumByte Eb;
+		[YuzuOptional]
+		public SampleEnumLong El;
 	}
 
 	public class SampleLong

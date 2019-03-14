@@ -256,8 +256,8 @@ namespace Yuzu.Json
 				cw.PutPart(
 					JsonOptions.EnumAsString ?
 						"({0})Enum.Parse(typeof({0}), RequireString());\n" :
-						"({0})RequireInt();\n",
-					Utils.GetTypeSpec(t));
+						"({0}){1};\n",
+					Utils.GetTypeSpec(t), simpleValueReader[Enum.GetUnderlyingType(t)]);
 				return;
 			}
 			if (t.IsGenericType && t.GetGenericTypeDefinition() == typeof(Nullable<>)) {

@@ -128,8 +128,6 @@ namespace Yuzu.Json
 		private void WriteDecimalAsString(object obj) =>
 			WriteUnescapedString(((decimal)obj).ToString(CultureInfo.InvariantCulture));
 
-		private void WriteEnumAsInt(object obj) => WriteStrCached(((int)obj).ToString());
-
 		private void WriteUnescapedString(object obj)
 		{
 			writer.Write((byte)'"');
@@ -528,7 +526,7 @@ namespace Yuzu.Json
 				if (JsonOptions.EnumAsString)
 					return WriteUnescapedString;
 				else
-					return WriteEnumAsInt;
+					return GetWriteFunc(Enum.GetUnderlyingType(t));
 			}
 			if (t.IsGenericType) {
 				var g = t.GetGenericTypeDefinition();

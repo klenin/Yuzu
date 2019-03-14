@@ -89,6 +89,7 @@ namespace YuzuTest
 				jd.Generate<Sample1>();
 				jd.Generate<Sample2>();
 				jd.Generate<Sample3>();
+				jd.Generate<SampleEnumMemberTyped>();
 				jd.JsonOptions.EnumAsString = true;
 				jd.Generate<Sample4>();
 				jd.Generate<SampleDecimal>();

@@ -226,6 +226,11 @@ namespace YuzuTest.Json
 			var result1 = js.ToString(v);
 			Assert.AreEqual("{\n\"E\":2\n}", result1);
 
+			var vb = new SampleEnumMemberTyped { Eb = SampleEnumByte.EB2, El = SampleEnumLong.Large };
+
+			var result1b = js.ToString(vb);
+			Assert.AreEqual("{\n\"Eb\":1,\n\"El\":1125899906842624\n}", result1b);
+
 			js.JsonOptions.EnumAsString = true;
 			var result2 = js.ToString(v);
 			Assert.AreEqual("{\n\"E\":\"E3\"\n}", result2);
@@ -234,6 +239,15 @@ namespace YuzuTest.Json
 			var w = new Sample4();
 			jd.FromString(w, result1);
 			Assert.AreEqual(SampleEnum.E3, w.E);
+
+			var wb = jd.FromString<SampleEnumMemberTyped>(result1b);
+			Assert.AreEqual(vb.Eb, wb.Eb);
+			Assert.AreEqual(vb.El, wb.El);
+
+			wb = (SampleEnumMemberTyped)
+				SampleEnumMemberTyped_JsonDeserializer.Instance.FromString(result1b);
+			Assert.AreEqual(vb.Eb, wb.Eb);
+			Assert.AreEqual(vb.El, wb.El);
 
 			w.E = SampleEnum.E1;
 			jd.JsonOptions.EnumAsString = true;
