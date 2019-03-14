@@ -287,6 +287,22 @@ namespace YuzuTest.Binary
 				bd.FromBytes(w, result1);
 				Assert.AreEqual(SampleEnum.E3, w.E);
 			});
+
+			var vb = new SampleEnumMemberTyped { Eb = SampleEnumByte.EB3, El = SampleEnumLong.Large };
+
+			var result1b = (new BinarySerializer()).ToBytes(vb);
+			Assert.AreEqual(
+				"20 01 00 " + XS(typeof(SampleEnumMemberTyped)) +
+				" 02 00 " + XS("Eb", RoughType.Byte, "El", RoughType.Long) +
+				" 01 00 02 02 00 00 00 00 00 00 00 04 00 00 00",
+				XS(result1b));
+
+			CheckDeserializers(bd => {
+				var w = new SampleEnumMemberTyped();
+				bd.FromBytes(w, result1b);
+				Assert.AreEqual(vb.Eb, w.Eb);
+				Assert.AreEqual(vb.El, w.El);
+			});
 		}
 
 		[TestMethod]

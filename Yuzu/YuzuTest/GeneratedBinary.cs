@@ -83,6 +83,30 @@ namespace YuzuGenBin
 			return result;
 		}
 
+		private static void Read_YuzuTest__SampleEnumMemberTyped(BinaryDeserializer d, ReaderClassDef def, object obj)
+		{
+			var result = (global::YuzuTest.SampleEnumMemberTyped)obj;
+			var dg = (BinaryDeserializerGen)d;
+			ReaderClassDef.FieldDef fd;
+			fd = def.Fields[d.Reader.ReadInt16()];
+			if (1 == fd.OurIndex) {
+				result.Eb = (global::YuzuTest.SampleEnumByte)d.Reader.ReadByte();
+				fd = def.Fields[d.Reader.ReadInt16()];
+			}
+			if (2 == fd.OurIndex) {
+				result.El = (global::YuzuTest.SampleEnumLong)d.Reader.ReadInt64();
+				fd = def.Fields[d.Reader.ReadInt16()];
+			}
+			if (fd.OurIndex != ReaderClassDef.EOF) throw dg.Error("Unfinished object");
+		}
+
+		private static object Make_YuzuTest__SampleEnumMemberTyped(BinaryDeserializer d, ReaderClassDef def)
+		{
+			var result = new global::YuzuTest.SampleEnumMemberTyped();
+			Read_YuzuTest__SampleEnumMemberTyped(d, def, result);
+			return result;
+		}
+
 		private static void Read_YuzuTest__Sample4(BinaryDeserializer d, ReaderClassDef def, object obj)
 		{
 			var result = (global::YuzuTest.Sample4)obj;
@@ -1052,6 +1076,7 @@ namespace YuzuGenBin
 			readCache[typeof(global::YuzuTest.Sample1)] = Read_YuzuTest__Sample1;
 			readCache[typeof(global::YuzuTest.Sample2)] = Read_YuzuTest__Sample2;
 			readCache[typeof(global::YuzuTest.Sample3)] = Read_YuzuTest__Sample3;
+			readCache[typeof(global::YuzuTest.SampleEnumMemberTyped)] = Read_YuzuTest__SampleEnumMemberTyped;
 			readCache[typeof(global::YuzuTest.Sample4)] = Read_YuzuTest__Sample4;
 			readCache[typeof(global::YuzuTest.SampleDecimal)] = Read_YuzuTest__SampleDecimal;
 			readCache[typeof(global::YuzuTest.SampleNullable)] = Read_YuzuTest__SampleNullable;
@@ -1091,6 +1116,7 @@ namespace YuzuGenBin
 			makeCache[typeof(global::YuzuTest.Sample1)] = Make_YuzuTest__Sample1;
 			makeCache[typeof(global::YuzuTest.Sample2)] = Make_YuzuTest__Sample2;
 			makeCache[typeof(global::YuzuTest.Sample3)] = Make_YuzuTest__Sample3;
+			makeCache[typeof(global::YuzuTest.SampleEnumMemberTyped)] = Make_YuzuTest__SampleEnumMemberTyped;
 			makeCache[typeof(global::YuzuTest.Sample4)] = Make_YuzuTest__Sample4;
 			makeCache[typeof(global::YuzuTest.SampleDecimal)] = Make_YuzuTest__SampleDecimal;
 			makeCache[typeof(global::YuzuTest.SampleNullable)] = Make_YuzuTest__SampleNullable;

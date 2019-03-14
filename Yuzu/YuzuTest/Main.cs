@@ -151,6 +151,7 @@ namespace YuzuTest
 				bd.Generate<Sample1>();
 				bd.Generate<Sample2>();
 				bd.Generate<Sample3>();
+				bd.Generate<SampleEnumMemberTyped>();
 				bd.Generate<Sample4>();
 				bd.Generate<SampleDecimal>();
 				bd.Generate<SampleNullable>();

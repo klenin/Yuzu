@@ -157,7 +157,7 @@ namespace Yuzu.Binary
 				return;
 			}
 			if (t.IsEnum) {
-				cw.PutPart("({0})d.Reader.ReadInt32();\n", Utils.GetTypeSpec(t));
+				cw.PutPart("({0}){1};\n", Utils.GetTypeSpec(t), simpleValueReader[Enum.GetUnderlyingType(t)]);
 				return;
 			}
 			if (t.IsGenericType && t.GetGenericTypeDefinition() == typeof(Nullable<>)) {

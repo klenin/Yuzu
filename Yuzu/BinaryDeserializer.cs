@@ -70,9 +70,9 @@ namespace Yuzu.Binary
 
 		private bool ReadCompatibleType(Type expectedType)
 		{
-			var rt = (RoughType)Reader.ReadByte();
 			if (expectedType.IsEnum)
-				return rt == RoughType.Int;
+				return ReadCompatibleType(Enum.GetUnderlyingType(expectedType));
+			var rt = (RoughType)Reader.ReadByte();
 			if (RoughType.FirstAtom <= rt && rt <= RoughType.LastAtom) {
 				var t = RT.roughTypeToType[(int)rt];
 				if (t != null) return t == expectedType;
@@ -563,10 +563,32 @@ namespace Yuzu.Binary
 			return mergerCache[t] = MakeMergerFunc(t);
 		}
 
+		private Func<object> MakeEnumReaderFunc(Type t)
+		{
+			var ut = Enum.GetUnderlyingType(t);
+			if (ut == typeof(sbyte))
+				return () => Enum.ToObject(t, Reader.ReadSByte());
+			if (ut == typeof(byte))
+				return () => Enum.ToObject(t, Reader.ReadByte());
+			if (ut == typeof(short))
+				return () => Enum.ToObject(t, Reader.ReadInt16());
+			if (ut == typeof(ushort))
+				return () => Enum.ToObject(t, Reader.ReadUInt16());
+			if (ut == typeof(int))
+				return () => Enum.ToObject(t, Reader.ReadInt32());
+			if (ut == typeof(uint))
+				return () => Enum.ToObject(t, Reader.ReadUInt32());
+			if (ut == typeof(long))
+				return () => Enum.ToObject(t, Reader.ReadInt64());
+			if (ut == typeof(ulong))
+				return () => Enum.ToObject(t, Reader.ReadUInt64());
+			throw new YuzuException();
+		}
+
 		private Func<object> MakeReaderFunc(Type t)
 		{
 			if (t.IsEnum)
-				return () => Enum.ToObject(t, ReadInt());
+				return MakeEnumReaderFunc(t);
 			if (t.IsGenericType) {
 				var g = t.GetGenericTypeDefinition();
 				if (g == typeof(List<>))

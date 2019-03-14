@@ -108,7 +108,7 @@ namespace Yuzu.Binary
 					return;
 				}
 			if (t.IsEnum) {
-				writer.Write((byte)RoughType.Int);
+				WriteRoughType(Enum.GetUnderlyingType(t));
 				return;
 			}
 			if (t.IsGenericType) {
@@ -536,7 +536,7 @@ namespace Yuzu.Binary
 		private Action<object> MakeWriteFunc(Type t)
 		{
 			if (t.IsEnum)
-				return WriteInt;
+				return GetWriteFunc(Enum.GetUnderlyingType(t));
 			if (t.IsGenericType) {
 				var g = t.GetGenericTypeDefinition();
 				if (g == typeof(Action<>))
