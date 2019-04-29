@@ -304,6 +304,12 @@ namespace YuzuTest
 		public TimeSpan T;
 	}
 
+	internal class SampleGuid
+	{
+		[YuzuRequired]
+		public Guid G;
+	}
+
 	public class SampleWithNullField
 	{
 		[YuzuRequired]

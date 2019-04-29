@@ -1295,6 +1295,22 @@ namespace YuzuTest.Json
 		}
 
 		[TestMethod]
+		public void TestGuid()
+		{
+			var js = new JsonSerializer();
+			js.JsonOptions.Indent = "";
+			js.JsonOptions.FieldSeparator = "";
+			var jd = new JsonDeserializer();
+
+			var v = new SampleGuid { G = new Guid("5727b607-dcee-445f-856c-fd8ebb4b4573") };
+			var result = js.ToString(v);
+			Assert.AreEqual("{\"G\":\"" + v.G + "\"}", result);
+
+			var w = jd.FromString<SampleGuid>(result);
+			Assert.AreEqual(v.G, w.G);
+		}
+
+		[TestMethod]
 		public void TestDelegate()
 		{
 			var js = new JsonSerializer();

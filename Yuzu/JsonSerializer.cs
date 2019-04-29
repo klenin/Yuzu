@@ -462,6 +462,7 @@ namespace Yuzu.Json
 			writerCache[typeof(DateTime)] = WriteDateTime;
 			writerCache[typeof(DateTimeOffset)] = WriteDateTimeOffset;
 			writerCache[typeof(TimeSpan)] = WriteTimeSpan;
+			writerCache[typeof(Guid)] = WriteUnescapedString;
 			writerCache[typeof(string)] = WriteNullableEscapedString;
 			writerCache[typeof(object)] = WriteAny;
 			writerCache[typeof(YuzuUnknown)] = WriteUnknown;

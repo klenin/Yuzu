@@ -357,6 +357,8 @@ namespace Yuzu.Json
 			return TimeSpan.ParseExact(s, JsonOptions.TimeSpanFormat, CultureInfo.InvariantCulture);
 		}
 
+		protected Guid RequireGuid() => Guid.Parse(RequireUnescapedString());
+
 		protected string GetNextName(bool first)
 		{
 			var ch = SkipSpaces();
@@ -569,6 +571,7 @@ namespace Yuzu.Json
 		private object RequireDateTimeObj() => RequireDateTime();
 		private object RequireDateTimeOffsetObj() => RequireDateTimeOffset();
 		private object RequireTimeSpanObj() => RequireTimeSpan();
+		private object RequireGuidObj() => RequireGuid();
 
 		private Dictionary<Type, Func<object>> readerCache = new Dictionary<Type, Func<object>>();
 		private Dictionary<Type, Action<object>> mergerCache = new Dictionary<Type, Action<object>>();
@@ -654,6 +657,8 @@ namespace Yuzu.Json
 				return RequireDateTimeOffsetObj;
 			if (t == typeof(TimeSpan))
 				return RequireTimeSpanObj;
+			if (t == typeof(Guid))
+				return RequireGuidObj;
 			if (t.IsEnum)
 				return MakeEnumReaderFunc(t);
 			if (t.IsGenericType) {
