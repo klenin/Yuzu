@@ -41,6 +41,8 @@ namespace Yuzu.Binary
 		}
 		private TimeSpan ReadTimeSpan() => new TimeSpan(Reader.ReadInt64());
 
+		private Guid ReadGuid() => new Guid(Reader.ReadBytes(16));
+
 		private object ReadString()
 		{
 			var s = Reader.ReadString();
@@ -123,6 +125,7 @@ namespace Yuzu.Binary
 			readerCache[typeof(DateTime)] = ReadDateTimeObj;
 			readerCache[typeof(DateTimeOffset)] = ReadDateTimeOffsetObj;
 			readerCache[typeof(TimeSpan)] = ReadTimeSpanObj;
+			readerCache[typeof(Guid)] = ReadGuidObj;
 			readerCache[typeof(string)] = ReadString;
 			readerCache[typeof(object)] = ReadAny;
 			readerCache[typeof(Record)] = ReadObject<object>;
@@ -131,6 +134,7 @@ namespace Yuzu.Binary
 		private object ReadDateTimeObj() => ReadDateTime();
 		private object ReadDateTimeOffsetObj() => ReadDateTimeOffset();
 		private object ReadTimeSpanObj() => ReadTimeSpan();
+		private object ReadGuidObj() => ReadGuid();
 
 		protected void ReadIntoCollection<T>(ICollection<T> list)
 		{

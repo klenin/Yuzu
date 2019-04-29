@@ -35,6 +35,8 @@ namespace Yuzu.Binary
 		}
 		protected void WriteTimeSpan(object obj) { writer.Write(((TimeSpan)obj).Ticks); }
 
+		protected void WriteGuid(object obj) => writer.Write(((Guid)obj).ToByteArray());
+
 		protected void WriteString(object obj)
 		{
 			if (obj == null) {
@@ -92,6 +94,7 @@ namespace Yuzu.Binary
 			writerCache[typeof(DateTime)] = WriteDateTime;
 			writerCache[typeof(DateTimeOffset)] = WriteDateTimeOffset;
 			writerCache[typeof(TimeSpan)] = WriteTimeSpan;
+			writerCache[typeof(Guid)] = WriteGuid;
 			writerCache[typeof(string)] = WriteString;
 			writerCache[typeof(object)] = WriteAny;
 

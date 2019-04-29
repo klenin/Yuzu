@@ -1369,6 +1369,25 @@ namespace YuzuTest.Binary
 		}
 
 		[TestMethod]
+		public void TestGuid()
+		{
+			var bs = new BinarySerializer();
+			var bd = new BinaryDeserializer();
+
+			var v = new SampleGuid { G = new Guid("5727b607-dcee-445f-856c-fd8ebb4b4573") };
+			var result = bs.ToBytes(v);
+			Assert.AreEqual(
+				"\n20 01 00 " + XS(typeof(SampleGuid)) + " 01 00 " +
+				XS("G", RoughType.Guid) +
+				" 01 00 07 B6 27 57 EE DC 5F 44 85 6C FD 8E BB 4B 45 73 00 00",
+				"\n" + XS(result));
+
+
+			var w = bd.FromBytes<SampleGuid>(result);
+			Assert.AreEqual(v.G, w.G);
+		}
+
+		[TestMethod]
 		public void TestDelegate()
 		{
 			var bs = new BinarySerializer();
