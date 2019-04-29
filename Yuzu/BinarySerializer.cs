@@ -12,28 +12,28 @@ namespace Yuzu.Binary
 	{
 		public BinarySerializeOptions BinaryOptions = new BinarySerializeOptions();
 
-		protected void WriteSByte(object obj) { writer.Write((sbyte)obj); }
-		protected void WriteByte(object obj) { writer.Write((byte)obj); }
-		protected void WriteShort(object obj) { writer.Write((short)obj); }
-		protected void WriteUShort(object obj) { writer.Write((ushort)obj); }
-		protected void WriteInt(object obj) { writer.Write((int)obj); }
-		protected void WriteUInt(object obj) { writer.Write((uint)obj); }
-		protected void WriteLong(object obj) { writer.Write((long)obj); }
-		protected void WriteULong(object obj) { writer.Write((ulong)obj); }
-		protected void WriteBool(object obj) { writer.Write((bool)obj); }
-		protected void WriteChar(object obj) { writer.Write((char)obj); }
-		protected void WriteFloat(object obj) { writer.Write((float)obj); }
-		protected void WriteDouble(object obj) { writer.Write((double)obj); }
-		protected void WriteDecimal(object obj) { writer.Write((decimal)obj); }
+		protected void WriteSByte(object obj) => writer.Write((sbyte)obj);
+		protected void WriteByte(object obj) => writer.Write((byte)obj);
+		protected void WriteShort(object obj) => writer.Write((short)obj);
+		protected void WriteUShort(object obj) => writer.Write((ushort)obj);
+		protected void WriteInt(object obj) => writer.Write((int)obj);
+		protected void WriteUInt(object obj) => writer.Write((uint)obj);
+		protected void WriteLong(object obj) => writer.Write((long)obj);
+		protected void WriteULong(object obj) => writer.Write((ulong)obj);
+		protected void WriteBool(object obj) => writer.Write((bool)obj);
+		protected void WriteChar(object obj) => writer.Write((char)obj);
+		protected void WriteFloat(object obj) => writer.Write((float)obj);
+		protected void WriteDouble(object obj) => writer.Write((double)obj);
+		protected void WriteDecimal(object obj) => writer.Write((decimal)obj);
 
-		protected void WriteDateTime(object obj) { writer.Write(((DateTime)obj).ToBinary()); }
+		protected void WriteDateTime(object obj) => writer.Write(((DateTime)obj).ToBinary());
 		protected void WriteDateTimeOffset(object obj)
 		{
 			var d = (DateTimeOffset)obj;
 			writer.Write(d.DateTime.ToBinary());
 			writer.Write(d.Offset.Ticks);
 		}
-		protected void WriteTimeSpan(object obj) { writer.Write(((TimeSpan)obj).Ticks); }
+		protected void WriteTimeSpan(object obj) => writer.Write(((TimeSpan)obj).Ticks);
 
 		protected void WriteGuid(object obj) => writer.Write(((Guid)obj).ToByteArray());
 
@@ -57,7 +57,7 @@ namespace Yuzu.Binary
 			GetWriteFunc(t)(obj);
 		}
 
-		protected void WriteRecord(object obj) { GetWriteFunc(obj.GetType())(obj); }
+		protected void WriteRecord(object obj) => GetWriteFunc(obj.GetType())(obj);
 
 		private Dictionary<Type, Action<object>> writerCache = new Dictionary<Type, Action<object>>();
 
