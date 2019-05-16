@@ -152,6 +152,10 @@ namespace Yuzu.Util
 
 		static TypeSerializer()
 		{
+			// TODO: Remove when/if compatibility not needed.
+			if (!Compatibility)
+				return;
+
 			var visited = new HashSet<Assembly>();
 			var queue = new Queue<Assembly>();
 
