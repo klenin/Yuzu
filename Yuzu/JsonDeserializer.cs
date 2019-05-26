@@ -617,48 +617,43 @@ namespace Yuzu.Json
 			return () => Enum.ToObject(t, RequireInt());
 		}
 
+		private Dictionary<Type, Func<object>> simpleReaders;
+		private void InitSimpleReaders() => simpleReaders = new Dictionary<Type, Func<object>> {
+			{ typeof(int), RequireIntObj },
+			{ typeof(uint), RequireUIntObj },
+			{ typeof(long), RequireLongObj },
+			{ typeof(ulong), RequireULongObj },
+			{ typeof(short), RequireShortObj },
+			{ typeof(ushort), RequireUShortObj },
+			{ typeof(sbyte), RequireSByteObj },
+			{ typeof(byte), RequireByteObj },
+			{ typeof(char), RequireCharObj },
+			{ typeof(string), RequireStringObj },
+			{ typeof(bool), RequireBoolObj },
+			{ typeof(float), RequireSingleObj },
+			{ typeof(double), RequireDoubleObj },
+			{ typeof(DateTime), RequireDateTimeObj },
+			{ typeof(DateTimeOffset), RequireDateTimeOffsetObj },
+			{ typeof(TimeSpan), RequireTimeSpanObj },
+			{ typeof(Guid), RequireGuidObj },
+			{ typeof(object), ReadAnyObject },
+		};
+
 		private Func<object> MakeReaderFunc(Type t)
 		{
-			if (t == typeof(int))
-				return RequireIntObj;
-			if (t == typeof(uint))
-				return RequireUIntObj;
-			if (t == typeof(long))
-				return RequireLongObj;
-			if (t == typeof(ulong))
-				return RequireULongObj;
-			if (t == typeof(short))
-				return RequireShortObj;
-			if (t == typeof(ushort))
-				return RequireUShortObj;
-			if (t == typeof(sbyte))
-				return RequireSByteObj;
-			if (t == typeof(byte))
-				return RequireByteObj;
-			if (t == typeof(char))
-				return RequireCharObj;
-			if (t == typeof(string))
-				return RequireStringObj;
-			if (t == typeof(bool))
-				return RequireBoolObj;
-			if (t == typeof(float))
-				return RequireSingleObj;
-			if (t == typeof(double))
-				return RequireDoubleObj;
+			{
+				if (simpleReaders == null)
+					InitSimpleReaders();
+				Func<object> result;
+				if (simpleReaders.TryGetValue(t, out result))
+					return result;
+			}
 			if (t == typeof(decimal)) {
 				if (JsonOptions.DecimalAsString)
 					return RequireDecimalAsStringObj;
 				else
 					return RequireDecimalObj;
 			}
-			if (t == typeof(DateTime))
-				return RequireDateTimeObj;
-			if (t == typeof(DateTimeOffset))
-				return RequireDateTimeOffsetObj;
-			if (t == typeof(TimeSpan))
-				return RequireTimeSpanObj;
-			if (t == typeof(Guid))
-				return RequireGuidObj;
 			if (t.IsEnum)
 				return MakeEnumReaderFunc(t);
 			if (t.IsGenericType) {
@@ -693,8 +688,6 @@ namespace Yuzu.Json
 					return list;
 				};
 			}
-			if (t == typeof(object))
-				return ReadAnyObject;
 			if (t.IsClass && !t.IsAbstract) {
 				Meta.Get(t, Options); // Populate aliases etc.
 				return MakeDelegate(Utils.GetPrivateGeneric(GetType(), nameof(ReadObject), t));
