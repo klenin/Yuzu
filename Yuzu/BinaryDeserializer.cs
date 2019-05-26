@@ -56,18 +56,20 @@ namespace Yuzu.Binary
 				var t = RT.roughTypeToType[(int)rt];
 				if (t != null) return t;
 			}
-			if (rt == RoughType.Sequence)
-				return typeof(List<>).MakeGenericType(ReadType());
-			if (rt == RoughType.Mapping) {
-				var k = ReadType();
-				var v = ReadType();
-				return typeof(Dictionary<,>).MakeGenericType(k, v);
+			switch (rt) {
+				case RoughType.Sequence:
+					return typeof(List<>).MakeGenericType(ReadType());
+				case RoughType.Mapping:
+					var k = ReadType();
+					var v = ReadType();
+					return typeof(Dictionary<,>).MakeGenericType(k, v);
+				case RoughType.Record:
+					return typeof(Record);
+				case RoughType.Nullable:
+					return typeof(Nullable<>).MakeGenericType(ReadType());
+				default:
+					throw Error("Unknown rough type {0}", rt);
 			}
-			if (rt == RoughType.Record)
-				return typeof(Record);
-			if (rt == RoughType.Nullable)
-				return typeof(Nullable<>).MakeGenericType(ReadType());
-			throw Error("Unknown rough type {0}", rt);
 		}
 
 		private bool ReadCompatibleType(Type expectedType)

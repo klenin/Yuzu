@@ -595,7 +595,7 @@ namespace Yuzu.Binary
 				if (ienum != null)
 					return MakeWriteIEnumerable(ienum);
 			}
-			if (Utils.IsStruct(t) || t.IsClass || t.IsInterface) {
+			if (t.IsRecord()) {
 				Action<object> normalWrite = MakeObjectWriteFunc(meta);
 				var sg = meta.Surrogate;
 				if (sg.SurrogateType == null || sg.FuncTo == null)
