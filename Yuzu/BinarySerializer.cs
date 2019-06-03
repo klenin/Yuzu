@@ -121,6 +121,10 @@ namespace Yuzu.Binary
 					WriteRoughType(t.GetGenericArguments()[0]);
 					return;
 				}
+				if (g == typeof(Action<>)) {
+					writer.Write((byte)RoughType.Record);
+					return;
+				}
 			}
 			if (t.IsArray) {
 				writer.Write((byte)RoughType.Sequence);

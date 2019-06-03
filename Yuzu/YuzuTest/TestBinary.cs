@@ -1757,13 +1757,14 @@ namespace YuzuTest.Binary
 			var v1 = new SampleSurrogateColor { R = 255, G = 0, B = 161 };
 			var result1 = bs.ToBytes(v1);
 			Assert.AreEqual(XS(RoughType.String) + " " + XS("#FF00A1"), XS(result1));
-			return;
-			/*
-			var w1 = jd.FromString<SampleSurrogateColor>(result1);
+
+			var w1 = bd.FromBytes<SampleSurrogateColor>(result1);
 			Assert.AreEqual(v1.R, w1.R);
 			Assert.AreEqual(v1.G, w1.G);
 			Assert.AreEqual(v1.B, w1.B);
+			return;
 
+			/*
 			var v2 = new SampleSurrogateColorIf { R = 77, G = 88, B = 99 };
 			Assert.AreEqual("[\n99,\n88,\n77\n]", js.ToString(v2));
 
@@ -1778,6 +1779,37 @@ namespace YuzuTest.Binary
 			Assert.AreEqual(v2.G, w2.G);
 			Assert.AreEqual(v2.B, w2.B);
 			*/
+		}
+
+		[TestMethod]
+		public void TestSurrogateClass()
+		{
+			var bs = new BinarySerializer();
+			var bd = new BinaryDeserializer();
+
+			var v1 = new SampleSurrogateClass { FB = true };
+			var result1 = bs.ToBytes(v1);
+			Assert.AreEqual(
+				"20 01 00 " + XS(typeof(SampleBool)) + " 01 00 " +
+				XS("B", RoughType.Bool) + " 01 00 01 00 00",
+				XS(result1));
+			Assert.AreEqual(
+				"21 11 01 00 00 00 20 01 00 01 00 01 00 00", XS(bs.ToBytes(new List<object> { v1 })));
+			var w1 = bd.FromBytes<SampleSurrogateClass>(result1);
+			Assert.IsTrue(w1.FB);
+
+			var v2 = new SampleCompactSurrogate { X = 24, Y = 25 };
+			var result2 = bs.ToBytes(v2);
+			Assert.AreEqual(
+				"20 02 00 " + XS(typeof(SamplePoint)) + " 02 00 " +
+				XS("X", RoughType.Int, "Y", RoughType.Int) + " 18 00 00 00 19 00 00 00",
+				XS(result2));
+			Assert.AreEqual(
+				"21 11 01 00 00 00 20 02 00 18 00 00 00 19 00 00 00",
+				XS(bs.ToBytes(new List<object> { v2 })));
+			var w2 = bd.FromBytes<SampleCompactSurrogate>(result2);
+			Assert.AreEqual(v2.X, w2.X);
+			Assert.AreEqual(v2.Y, w2.Y);
 		}
 
 		[TestMethod]

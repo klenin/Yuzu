@@ -628,8 +628,13 @@ namespace Yuzu.Binary
 				return MakeDelegate(Utils.GetPrivateGeneric(GetType(), nameof(ReadCollection), t, elemType));
 			}
 
+			var meta = Meta.Get(t, Options);
+			var sg = meta.Surrogate;
+			if (sg.SurrogateType != null && sg.FuncFrom != null) {
+				var rf = ReadValueFunc(sg.SurrogateType);
+				return () => sg.FuncFrom(rf());
+			}
 			if (t.IsClass || t.IsInterface) {
-				Meta.Get(t, Options); // Populate aliases etc.
 				return MakeDelegate(Utils.GetPrivateGeneric(GetType(), nameof(ReadObject), t));
 			}
 			if (Utils.IsStruct(t))
