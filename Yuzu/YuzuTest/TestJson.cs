@@ -1843,6 +1843,21 @@ namespace YuzuTest.Json
 		}
 
 		[TestMethod]
+		public void TestClassAliasNested()
+		{
+			var js = new JsonSerializer();
+			js.JsonOptions.Indent = "";
+			js.JsonOptions.FieldSeparator = " ";
+			var jd = new JsonDeserializer();
+
+			var v1 = new SampleWithAliasedField { F = new SampleAliasField { X = 99 } };
+			var result1 = js.ToString(v1);
+			Assert.AreEqual("{ \"F\":{ \"class\":\"NewNameForAliasField\", \"X\":99 } }", result1);
+			var w1 = jd.FromString<SampleWithAliasedField>(result1);
+			Assert.AreEqual(v1.F.X, w1.F.X);
+		}
+
+		[TestMethod]
 		public void TestComments()
 		{
 			var jd = new JsonDeserializer();

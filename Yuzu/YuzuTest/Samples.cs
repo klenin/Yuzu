@@ -634,6 +634,18 @@ namespace YuzuTest
 		public bool StarterPackOffered;
 	}
 
+	[YuzuAlias("NewNameForAliasField")]
+	class SampleAliasField
+	{
+		[YuzuMember]
+		public int X;
+	}
+
+	class SampleWithAliasedField
+	{
+		[YuzuMember]
+		public SampleAliasField F;
+	}
 
 	public class SampleUnknown
 	{

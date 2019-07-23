@@ -1849,36 +1849,57 @@ namespace YuzuTest.Binary
 			var bs = new BinarySerializer();
 			var bd = new BinaryDeserializer();
 			var bdg = new BinaryDeserializerGen();
+			{
+				var v1 = new SampleAlias { X = 77 };
+				var result1 = bs.ToBytes(v1);
+				Assert.AreEqual(
+					"20 01 00 " + XS("DifferentName") + " 01 00 " + XS("X", RoughType.Int) +
+					" 01 00 4D 00 00 00 00 00",
+					XS(result1));
+				var w1 = bd.FromBytes<SampleAlias>(result1);
+				Assert.AreEqual(v1.X, w1.X);
+			}
+			{
+				var v2 = new SampleAliasMany { X = 76 };
+				var result2 = bs.ToBytes(v2);
+				Assert.AreEqual(
+					"\n20 02 00 " + XS(typeof(SampleAliasMany)) + " 01 00 " + XS("X", RoughType.Int) +
+					" 01 00 4C 00 00 00 00 00",
+					"\n" + XS(result2));
+				var w2 = bd.FromBytes<SampleAliasMany>(result2);
+				Assert.AreEqual(v2.X, w2.X);
 
-			var v1 = new SampleAlias { X = 77 };
-			var result1 = bs.ToBytes(v1);
-			Assert.AreEqual(
-				"20 01 00 " + XS("DifferentName") + " 01 00 " + XS("X", RoughType.Int) +
-				" 01 00 4D 00 00 00 00 00",
-				XS(result1));
-			var w1 = bd.FromBytes<SampleAlias>(result1);
-			Assert.AreEqual(v1.X, w1.X);
+				var w2n1 = bd.FromBytes<SampleAliasMany>(SX(
+					"20 03 00 " + XS("Name1") + " 01 00 " + XS("X", RoughType.Int) +
+					" 01 00 4C 00 00 00 00 00"
+				));
+				Assert.AreEqual(v2.X, w2n1.X);
 
-			var v2 = new SampleAliasMany { X = 76 };
-			var result2 = bs.ToBytes(v2);
-			Assert.AreEqual(
-				"\n20 02 00 " + XS(typeof(SampleAliasMany)) + " 01 00 " + XS("X", RoughType.Int) +
-				" 01 00 4C 00 00 00 00 00",
-				"\n" + XS(result2));
-			var w2 = bd.FromBytes<SampleAliasMany>(result2);
-			Assert.AreEqual(v2.X, w2.X);
+				var w2n2 = bdg.FromBytes<SampleAliasMany>(SX(
+					"20 01 00 " + XS("Name2") + " 01 00 " + XS("X", RoughType.Int) +
+					" 01 00 4C 00 00 00 00 00"
+				));
+				Assert.AreEqual(v2.X, w2n2.X);
+			}
+		}
 
-			var w2n1 = bd.FromBytes<SampleAliasMany>(SX(
-				"20 03 00 " + XS("Name1") + " 01 00 " + XS("X", RoughType.Int) +
-				" 01 00 4C 00 00 00 00 00"
-			));
-			Assert.AreEqual(v2.X, w2n1.X);
+		[TestMethod]
+		public void TestClassAliasNested()
+		{
+			var bs = new BinarySerializer();
+			var bd = new BinaryDeserializer();
+			{
+				var v1 = new SampleWithAliasedField { F = new SampleAliasField { X = 99 } };
+				var expected =
+					"20 01 00 " + XS(typeof(SampleWithAliasedField)) + " 01 00 " + XS("F", RoughType.Record) +
+					" 01 00 02 00 " + XS("NewNameForAliasField") + " 01 00 " + XS("X", RoughType.Int) +
+					" 01 00 63 00 00 00 00 00 00 00";
+				var w1 = bd.FromBytes<SampleWithAliasedField>(SX(expected));
+				Assert.AreEqual(v1.F.X, w1.F.X);
+				var result1 = bs.ToBytes(v1);
+				Assert.AreEqual("\n" + expected, "\n" + XS(result1));
+			}
 
-			var w2n2 = bdg.FromBytes<SampleAliasMany>(SX(
-				"20 01 00 " + XS("Name2") + " 01 00 " + XS("X", RoughType.Int) +
-				" 01 00 4C 00 00 00 00 00"
-			));
-			Assert.AreEqual(v2.X, w2n2.X);
 		}
 
 		[TestMethod]
