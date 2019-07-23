@@ -476,18 +476,25 @@ namespace Yuzu.Binary
 			def.ReadFields(this, def, obj);
 		}
 
+		private void CheckAssignable(Type dest, Type src, object value)
+		{
+			if (!dest.IsAssignableFrom(src))
+				throw Error("Unable to assign type \"{0}\" to \"{1}\"",
+					src == typeof(YuzuUnknown) ? ((YuzuUnknownBinary)value).ClassTag : src.ToString(), dest);
+		}
+
 		protected object ReadObject<T>() where T : class
 		{
 			var classId = Reader.ReadInt16();
 			if (classId == 0)
 				return null;
 			var def = GetClassDef(classId);
-			if (!typeof(T).IsAssignableFrom(def.Meta.Type))
-				throw Error("Unable to assign type {0} to {1}", def.Meta.Type, typeof(T));
-			if (def.Make != null)
-				return def.Make(this, def);
-			var result = Activator.CreateInstance(def.Meta.Type);
-			def.ReadFields(this, def, result);
+			var result = def.Make?.Invoke(this, def);
+			CheckAssignable(typeof(T), def.Meta.Type, result);
+			if (result == null) {
+				result = Activator.CreateInstance(def.Meta.Type);
+				def.ReadFields(this, def, result);
+			}
 			return result;
 		}
 
@@ -517,12 +524,12 @@ namespace Yuzu.Binary
 			if (classId == 0)
 				return null;
 			var def = GetClassDef(classId);
-			if (!typeof(T).IsAssignableFrom(def.Meta.Type))
-				throw Error("Unable to assign type {0} to {1}", def.Meta.Type, typeof(T));
-			if (def.Make != null)
-				return def.Make(this, def);
-			var result = Activator.CreateInstance(def.Meta.Type);
-			def.ReadFields(this, def, result);
+			var result = def.Make?.Invoke(this, def);
+			CheckAssignable(typeof(T), def.Meta.Type, result);
+			if (result == null) {
+				result = Activator.CreateInstance(def.Meta.Type);
+				def.ReadFields(this, def, result);
+			}
 			return result;
 		}
 
@@ -532,14 +539,13 @@ namespace Yuzu.Binary
 			if (classId == 0)
 				return;
 			var def = GetClassDef(classId);
-			if (!typeof(T).IsAssignableFrom(def.Meta.Type))
-				throw Error("Unable to assign type {0} to {1}", def.Meta.Type, typeof(T));
-			if (def.Make != null) {
-				s = (T)def.Make(this, def);
-				return;
+
+			var result = def.Make?.Invoke(this, def);
+			CheckAssignable(typeof(T), def.Meta.Type, result);
+			if (result == null) {
+				result = Activator.CreateInstance(def.Meta.Type);
+				def.ReadFields(this, def, result);
 			}
-			var result = Activator.CreateInstance(def.Meta.Type);
-			def.ReadFields(this, def, result);
 			s = (T)result;
 		}
 
