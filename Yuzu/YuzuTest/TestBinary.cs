@@ -1810,6 +1810,20 @@ namespace YuzuTest.Binary
 		}
 
 		[TestMethod]
+		public void TestSurrogateHash()
+		{
+			var bs = new BinarySerializer();
+			var bd = new BinaryDeserializer();
+
+			var v1 = new SampleSurrogateHashSet { 'a', 'z', 'x' };
+			var result1 = bs.ToBytes(v1);
+			Assert.AreEqual("10 " + XS("axz"), XS(result1));
+
+			var w1 = bd.FromBytes<SampleSurrogateHashSet>(result1);
+			CollectionAssert.AreEqual(v1.OrderBy(ch => ch).ToList(), w1.OrderBy(ch => ch).ToList());
+		}
+
+		[TestMethod]
 		public void TestSignature()
 		{
 			var bs = new BinarySerializer();

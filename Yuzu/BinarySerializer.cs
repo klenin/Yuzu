@@ -134,7 +134,7 @@ namespace Yuzu.Binary
 				return;
 			}
 
-			if (t != typeof(YuzuUnknownBinary) && t != typeof(Record) && t != typeof(YuzuUnknown)) {
+			if (t != typeof(YuzuUnknown) && !t.IsSubclassOf(typeof(YuzuUnknown)) && t != typeof(Record)) {
 				var sg = Meta.Get(t, Options).Surrogate;
 				if (sg.SurrogateType != null && sg.FuncTo != null) {
 					WriteRoughType(sg.SurrogateType);
@@ -574,6 +574,20 @@ namespace Yuzu.Binary
 				var d = MakeDelegateParam<Action<object>>(m);
 				return obj => d(obj, wf);
 			}
+			var meta = Meta.Get(t, Options);
+			Action<object> normalWrite = MakeObjectWriteFunc(meta);
+			var sg = meta.Surrogate;
+			if (sg.SurrogateType != null && sg.FuncTo != null) {
+				var sw = GetWriteFunc(sg.SurrogateType);
+				if (sg.FuncIf == null)
+					return obj => sw(sg.FuncTo(obj));
+				return obj => {
+					if (sg.FuncIf(obj))
+						sw(sg.FuncTo(obj));
+					else
+						normalWrite(obj);
+				};
+			}
 			{
 				var idict = Utils.GetIDictionary(t);
 				if (idict != null) {
@@ -585,7 +599,6 @@ namespace Yuzu.Binary
 					return obj => d(obj, wk, wv);
 				}
 			}
-			var meta = Meta.Get(t, Options);
 			if (meta.SerializeItemIf != null) {
 				// Two passes are required anyway, so it is useless to optimize Count.
 				var ienum = Utils.GetIEnumerable(t);
@@ -610,21 +623,8 @@ namespace Yuzu.Binary
 				if (ienum != null)
 					return MakeWriteIEnumerable(ienum);
 			}
-			if (t.IsRecord()) {
-				Action<object> normalWrite = MakeObjectWriteFunc(meta);
-				var sg = meta.Surrogate;
-				if (sg.SurrogateType == null || sg.FuncTo == null)
-					return normalWrite;
-				var sw = GetWriteFunc(sg.SurrogateType);
-				if (sg.FuncIf == null)
-					return obj => sw(sg.FuncTo(obj));
-				return obj => {
-					if (sg.FuncIf(obj))
-						sw(sg.FuncTo(obj));
-					else
-						normalWrite(obj);
-				};
-			}
+			if (t.IsRecord())
+				return normalWrite;
 			throw new NotImplementedException(t.Name);
 		}
 

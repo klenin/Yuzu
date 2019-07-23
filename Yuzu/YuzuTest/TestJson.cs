@@ -1707,6 +1707,21 @@ namespace YuzuTest.Json
 		}
 
 		[TestMethod]
+		public void TestSurrogateHash()
+		{
+			return;
+			var js = new JsonSerializer();
+			var jd = new JsonDeserializer();
+
+			var v1 = new SampleSurrogateHashSet { 'a', 'z', 'x' };
+			var result1 = js.ToString(v1);
+			Assert.AreEqual("axz", result1);
+
+			var w1 = jd.FromString<SampleSurrogateHashSet>(result1);
+			CollectionAssert.AreEqual(v1.OrderBy(ch => ch).ToList(), w1.OrderBy(ch => ch).ToList());
+		}
+
+		[TestMethod]
 		public void TestIndentation()
 		{
 			var js = new JsonSerializer();

@@ -622,6 +622,13 @@ namespace Yuzu.Binary
 			if (t.IsArray)
 				return MakeDelegate(Utils.GetPrivateCovariantGeneric(GetType(), nameof(ReadArray), t));
 
+			var meta = Meta.Get(t, Options);
+			var sg = meta.Surrogate;
+			if (sg.SurrogateType != null && sg.FuncFrom != null) {
+				var rf = ReadValueFunc(sg.SurrogateType);
+				return () => sg.FuncFrom(rf());
+			}
+
 			var idict = Utils.GetIDictionary(t);
 			if (idict != null) {
 				var kv = idict.GetGenericArguments();
@@ -634,12 +641,6 @@ namespace Yuzu.Binary
 				return MakeDelegate(Utils.GetPrivateGeneric(GetType(), nameof(ReadCollection), t, elemType));
 			}
 
-			var meta = Meta.Get(t, Options);
-			var sg = meta.Surrogate;
-			if (sg.SurrogateType != null && sg.FuncFrom != null) {
-				var rf = ReadValueFunc(sg.SurrogateType);
-				return () => sg.FuncFrom(rf());
-			}
 			if (t.IsClass || t.IsInterface) {
 				return MakeDelegate(Utils.GetPrivateGeneric(GetType(), nameof(ReadObject), t));
 			}

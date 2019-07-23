@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Text;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -712,6 +713,22 @@ namespace YuzuTest
 		public static SampleCompactSurrogate FromSurrogate(SamplePoint obj)
 		{
 			return new SampleCompactSurrogate { X = obj.X, Y = obj.Y };
+		}
+	}
+
+	public class SampleSurrogateHashSet: HashSet<char>
+	{
+		[YuzuToSurrogate]
+		public static string ToSurrogate(SampleSurrogateHashSet obj) =>
+			string.Join("", obj.OrderBy(ch => ch));
+
+		[YuzuFromSurrogate]
+		public static SampleSurrogateHashSet FromSurrogate(string s)
+		{
+			var result = new SampleSurrogateHashSet();
+			foreach (var ch in s)
+				result.Add(ch);
+			return result;
 		}
 	}
 
