@@ -79,6 +79,12 @@ If the function returns `true`, the item is serialized, otherwise the item is om
 
 Can be substituted by changing `MetaOptions.SerializeItemIfAttribute`.
 
+#### `[YuzuFactory]`
+Denotes a static method without arguments, which will be called to create an instance of this class during deserialization.
+Only one factory per class is allowed.
+
+Can be substituted by changing `MetaOptions.FactoryAttribute`.
+
 ## Class attributes
 
 #### `[YuzuCompact]`
