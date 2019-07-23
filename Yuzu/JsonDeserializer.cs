@@ -544,7 +544,8 @@ namespace Yuzu.Json
 							ReadIntoDictionary(result.Fields);
 						return result;
 					}
-					return ReadFields(Activator.CreateInstance(t), GetNextName(first: false));
+					var meta = Meta.Get(t, Options);
+					return ReadFields(meta.Factory(), GetNextName(first: false));
 				case '[':
 					return ReadList<object>();
 				default:
@@ -861,7 +862,7 @@ namespace Yuzu.Json
 		}
 
 		// T is neither a collection nor a bare object.
-		private T ReadObject<T>() where T: class, new() {
+		private T ReadObject<T>() where T: class {
 			KillBuf();
 			var ch = SkipSpaces();
 			switch (ch) {
@@ -870,16 +871,22 @@ namespace Yuzu.Json
 					return null;
 				case '{':
 					var name = GetNextName(first: true);
-					if (name != JsonOptions.ClassTag)
-						return (T)ReadFields(new T(), name);
+					if (name != JsonOptions.ClassTag) {
+						var meta = Meta.Get(typeof(T), Options);
+						return (T)ReadFields(meta.Factory(), name);
+					}
 					var typeName = RequireUnescapedString();
 					var t = FindType(typeName);
-					if (typeof(T).IsAssignableFrom(t))
-						return (T)ReadFields(Activator.CreateInstance(t), GetNextName(first: false));
+					if (typeof(T).IsAssignableFrom(t)) {
+						var meta = Meta.Get(t, Options);
+						return (T)ReadFields(meta.Factory(), GetNextName(first: false));
+					}
 					return (T)GetSurrogate<T>(t).FuncFrom(
 						ReadFields(Activator.CreateInstance(t), GetNextName(first: false)));
-				case '[':
-					return (T)ReadFieldsCompact(new T());
+				case '[': {
+					var meta = Meta.Get(typeof(T), Options);
+					return (T)ReadFieldsCompact(meta.Factory());
+				}
 				case '"':
 					PutBack(ch);
 					return (T)GetSurrogate<T>(typeof(string)).FuncFrom(RequireString());
@@ -926,7 +933,8 @@ namespace Yuzu.Json
 			var t = FindType(typeName);
 			if (!typeof(T).IsAssignableFrom(t))
 				throw Error("Expected interface '{0}', but got '{1}'", typeof(T).Name, typeName);
-			return (T)ReadFields(Activator.CreateInstance(t), GetNextName(first: false));
+			var meta = Meta.Get(t, Options);
+			return (T)ReadFields(meta.Factory(), GetNextName(first: false));
 		}
 
 		private object ReadStruct<T>() where T : new()

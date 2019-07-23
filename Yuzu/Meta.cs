@@ -76,6 +76,10 @@ namespace Yuzu.Metadata
 		public int RequiredCount { get; private set; }
 		public Func<object, int, object, bool> SerializeItemIf;
 
+		private object defaultFactory() => Activator.CreateInstance(Type);
+		private MethodInfo factoryMethod;
+		public Func<object> Factory;
+
 		public Dictionary<string, Item> TagToItem = new Dictionary<string, Item>();
 		public Func<object, YuzuUnknownStorage> GetUnknownStorage;
 
@@ -158,7 +162,7 @@ namespace Yuzu.Metadata
 		private Func<object, object, bool> GetSerializeIf(Item item, CommonOptions options)
 		{
 			if (Default == null)
-				Default = Activator.CreateInstance(Type);
+				Default = Factory();
 			var d = item.GetValue(Default);
 			var icoll = Utils.GetICollection(item.Type);
 			if (d == null || icoll == null)
@@ -266,6 +270,16 @@ namespace Yuzu.Metadata
 			}
 			BeforeSerialization.MaybeAdd(m, Options.BeforeSerializationAttribute);
 			AfterDeserialization.MaybeAdd(m, Options.AfterDeserializationAttribute);
+
+			if (Options.FactoryAttribute != null && m.IsDefined(Options.FactoryAttribute, false)) {
+				if (factoryMethod != null)
+					throw Error("Duplicate Factory: '{0}' and '{1}'", factoryMethod.Name, m.Name);
+				if (!m.IsStatic || m.GetParameters().Length > 0)
+					throw Error("Factory '{0}' must be a static method without parameters", m.Name);
+				factoryMethod = m;
+				Factory = (Func<object>)Delegate.CreateDelegate(typeof(Func<object>), m);
+			}
+
 			Surrogate.ProcessMethod(m);
 		}
 
@@ -327,6 +341,7 @@ namespace Yuzu.Metadata
 		private Meta(Type t, CommonOptions options)
 		{
 			Type = t;
+			Factory = defaultFactory;
 			Options = options.Meta ?? MetaOptions.Default;
 			IsCompact = t.IsDefined(Options.CompactAttribute, false);
 			var must = t.GetCustomAttribute_Compat(Options.MustAttribute, false);
@@ -345,7 +360,7 @@ namespace Yuzu.Metadata
 			ExploreType(t, options);
 			Surrogate.Complete();
 
-			if (Utils.GetICollection(t) != null) {
+			if (Utils.GetIEnumerable(t) != null) {
 				if (Items.Count > 0)
 					throw Error("Serializable fields in collection are not supported");
 			}

@@ -1903,6 +1903,24 @@ namespace YuzuTest.Binary
 		}
 
 		[TestMethod]
+		public void TestFactory()
+		{
+			var bd = new BinaryDeserializer();
+			{
+				var w1 = bd.FromBytes<SamplePrivateConstructor>(SX(
+					"20 01 00 " + XS(typeof(SamplePrivateConstructor)) + " 01 00 " + XS("X", RoughType.Int) +
+					" 01 00 47 00 00 00 00 00"));
+				Assert.AreEqual(71, w1.X);
+			}
+			{
+				var w1 = bd.FromBytes<SampleConstructorParam>(SX(
+					"20 02 00 " + XS(typeof(SampleConstructorParam)) + " 01 00 " + XS("X", RoughType.Int) +
+					" 00 00"));
+				Assert.AreEqual(72, w1.X);
+			}
+		}
+
+		[TestMethod]
 		public void TestErrors()
 		{
 			var bs = new BinarySerializer();

@@ -286,6 +286,28 @@ namespace YuzuTest.Metadata
 			XAssert.Throws<YuzuException>(() => Meta.Get(typeof(SampleItemIfDup), opt), "Duplicate");
 		}
 
+		internal class BadFactory
+		{
+			[YuzuFactory]
+			public object F() => null;
+		}
+
+		internal class DuplicateFactory
+		{
+			[YuzuFactory]
+			public static object F() => null;
+			[YuzuFactory]
+			public static object FDup() => null;
+		}
+
+		[TestMethod]
+		public void TestFactoryErrors()
+		{
+			var opt = new CommonOptions();
+			XAssert.Throws<YuzuException>(() => Meta.Get(typeof(BadFactory), opt), "static");
+			XAssert.Throws<YuzuException>(() => Meta.Get(typeof(DuplicateFactory), opt), "FDup");
+		}
+
 	}
 
 }

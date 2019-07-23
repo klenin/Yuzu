@@ -1858,6 +1858,20 @@ namespace YuzuTest.Json
 		}
 
 		[TestMethod]
+		public void TestFactory()
+		{
+			var jd = new JsonDeserializer();
+			{
+				var w1 = jd.FromString<SamplePrivateConstructor>("{\"X\":71}");
+				Assert.AreEqual(71, w1.X);
+			}
+			{
+				var w1 = jd.FromString<SampleConstructorParam>("{}");
+				Assert.AreEqual(72, w1.X);
+			}
+		}
+
+		[TestMethod]
 		public void TestComments()
 		{
 			var jd = new JsonDeserializer();

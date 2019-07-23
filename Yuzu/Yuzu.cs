@@ -146,6 +146,7 @@ namespace Yuzu
 	public class YuzuExclude : Attribute { }
 
 	public class YuzuAllowReadingFromAncestor : Attribute { }
+	public class YuzuFactory : Attribute { }
 
 	public class YuzuSurrogateIf : Attribute { }
 	public class YuzuToSurrogate : Attribute { }
@@ -208,6 +209,7 @@ namespace Yuzu
 		public Type ExcludeAttribute = typeof(YuzuExclude);
 		public Type AllowReadingFromAncestorAttribute = typeof(YuzuAllowReadingFromAncestor);
 		public Type AliasAttribute = typeof(YuzuAlias);
+		public Type FactoryAttribute = typeof(YuzuFactory);
 
 		public Type SurrogateIfAttribute = typeof(YuzuSurrogateIf);
 		public Type ToSurrogateAttribute = typeof(YuzuToSurrogate);

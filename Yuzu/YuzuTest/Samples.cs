@@ -753,6 +753,28 @@ namespace YuzuTest
 		public SamplePoint P { get; set; }
 	}
 
+	public class SamplePrivateConstructor
+	{
+		[YuzuRequired]
+		public int X;
+
+		private SamplePrivateConstructor() {}
+
+		[YuzuFactory]
+		public static SamplePrivateConstructor Make() => new SamplePrivateConstructor();
+	}
+
+	public class SampleConstructorParam
+	{
+		[YuzuOptional]
+		public int X;
+
+		public SampleConstructorParam(int x) { X = x; }
+
+		[YuzuFactory]
+		public static SampleConstructorParam Make() => new SampleConstructorParam(72);
+	}
+
 	[ProtoContract]
 	public class SampleAoS
 	{

@@ -492,7 +492,7 @@ namespace Yuzu.Binary
 			var result = def.Make?.Invoke(this, def);
 			CheckAssignable(typeof(T), def.Meta.Type, result);
 			if (result == null) {
-				result = Activator.CreateInstance(def.Meta.Type);
+				result = def.Meta.Factory();
 				def.ReadFields(this, def, result);
 			}
 			return result;
@@ -506,7 +506,7 @@ namespace Yuzu.Binary
 			var def = GetClassDef(classId);
 			if (def.Make != null)
 				return def.Make(this, def);
-			var result = Activator.CreateInstance(def.Meta.Type);
+			var result = def.Meta.Factory();
 			def.ReadFields(this, def, result);
 			return result;
 		}
@@ -527,7 +527,7 @@ namespace Yuzu.Binary
 			var result = def.Make?.Invoke(this, def);
 			CheckAssignable(typeof(T), def.Meta.Type, result);
 			if (result == null) {
-				result = Activator.CreateInstance(def.Meta.Type);
+				result = def.Meta.Factory();
 				def.ReadFields(this, def, result);
 			}
 			return result;
@@ -543,7 +543,7 @@ namespace Yuzu.Binary
 			var result = def.Make?.Invoke(this, def);
 			CheckAssignable(typeof(T), def.Meta.Type, result);
 			if (result == null) {
-				result = Activator.CreateInstance(def.Meta.Type);
+				result = def.Meta.Factory();
 				def.ReadFields(this, def, result);
 			}
 			s = (T)result;
@@ -557,7 +557,7 @@ namespace Yuzu.Binary
 			var def = GetClassDef(classId);
 			if (def.Make != null)
 				return def.Make(this, def);
-			var result = Activator.CreateInstance(def.Meta.Type);
+			var result = def.Meta.Factory();
 			def.ReadFields(this, def, result);
 			return result;
 		}
