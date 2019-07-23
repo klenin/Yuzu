@@ -1873,6 +1873,9 @@ namespace YuzuTest.Binary
 		[TestMethod]
 		public void TestErrors()
 		{
+			var bs = new BinarySerializer();
+			XAssert.Throws<YuzuException>(() => bs.ToBytes(new object()), "unknown");
+
 			var bd = new BinaryDeserializer();
 			bd.Options.AllowEmptyTypes = true;
 			var bdg = new BinaryDeserializerGenerator();

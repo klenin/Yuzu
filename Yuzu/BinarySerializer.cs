@@ -53,6 +53,8 @@ namespace Yuzu.Binary
 		protected void WriteAny(object obj)
 		{
 			var t = obj.GetType();
+			if (t == typeof(object))
+				throw new YuzuException("WriteAny of unknown type");
 			WriteRoughType(t);
 			GetWriteFunc(t)(obj);
 		}
