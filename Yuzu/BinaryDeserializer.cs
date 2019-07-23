@@ -76,6 +76,12 @@ namespace Yuzu.Binary
 		{
 			if (expectedType.IsEnum)
 				return ReadCompatibleType(Enum.GetUnderlyingType(expectedType));
+			if (expectedType.IsRecord() && expectedType.Namespace != "System") {
+				var sg = Meta.Get(expectedType, Options).Surrogate;
+				if (sg.SurrogateType != null && sg.FuncFrom != null)
+					return ReadCompatibleType(sg.SurrogateType);
+			}
+
 			var rt = (RoughType)Reader.ReadByte();
 			if (RoughType.FirstAtom <= rt && rt <= RoughType.LastAtom) {
 				var t = RT.roughTypeToType[(int)rt];

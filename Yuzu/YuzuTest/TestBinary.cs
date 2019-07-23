@@ -1748,11 +1748,8 @@ namespace YuzuTest.Binary
 		[TestMethod]
 		public void TestSurrogateStr()
 		{
-			return;
 			var bs = new BinarySerializer();
 			var bd = new BinaryDeserializer();
-
-			var result2 = bs.ToBytes(new object());
 
 			var v1 = new SampleSurrogateColor { R = 255, G = 0, B = 161 };
 			var result1 = bs.ToBytes(v1);

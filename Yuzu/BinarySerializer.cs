@@ -133,6 +133,15 @@ namespace Yuzu.Binary
 				WriteRoughType(t.GetElementType());
 				return;
 			}
+
+			if (t != typeof(YuzuUnknownBinary) && t != typeof(Record) && t != typeof(YuzuUnknown)) {
+				var sg = Meta.Get(t, Options).Surrogate;
+				if (sg.SurrogateType != null && sg.FuncTo != null) {
+					WriteRoughType(sg.SurrogateType);
+					return;
+				}
+			}
+
 			var idict = Utils.GetIDictionary(t);
 			if (idict != null) {
 				writer.Write((byte)RoughType.Mapping);
