@@ -1979,5 +1979,33 @@ namespace YuzuTest.Binary
 
 		}
 
+		[TestMethod]
+		public void TestErrorWhenRenamingClassInDictionaryWithClassContainingDictionaryOfListOfClass()
+		{
+			CommonOptions defaultYuzuCommonOptions = new CommonOptions { AllowUnknownFields = true };
+			// used this class to generate serialized data, then renamed ClassWithDictionaryOfListOfClass to ClassWithDictionaryOfListOfClassRenamed
+			//var sample = new ClassWithDictionaryOfClassWithDictionaryOfListOfClass {
+			//	DictionaryOfClass = new Dictionary<int, ClassWithDictionaryOfListOfClass> {
+			//	{ 1, new ClassWithDictionaryOfListOfClass { DictionaryOfList = new Dictionary<int, List<Sample5>> {
+			//	  { 1,  new List<Sample5> { new Sample5 { A = 3 } } }
+			//	} } },
+			//	{ 2, new ClassWithDictionaryOfListOfClass { DictionaryOfList = new Dictionary<int, List<Sample5>> {
+			//	  { 2,  new List<Sample5> { new Sample5 { A = 4 } } }
+			//	} } },
+			//  }
+			//};
+			//var jbs = new Yuzu.Binary.BinarySerializer() {
+			//	Options = defaultYuzuCommonOptions,
+			//};
+			//var s = jbs.ToString(sample);
+			var s = " \u0001\0HYuzuTest.ClassWithDictionaryOfClassWithDictionaryOfListOfClass, YuzuTest\u0001\0\u0011DictionaryOfClass\"\u0005 \u0001\0\u0002\0\0\0\u0001\0\0\0\u0002\03YuzuTest.ClassWithDictionaryOfListOfClass, YuzuTest\u0001\0\u0010DictionaryOfList\"\u0005! \u0001\0\u0001\0\0\0\u0001\0\0\0\u0001\0\0\0\u0003\0\u001aYuzuTest.Sample5, YuzuTest\u0001\0\u0001A\u0005\u0001\0\u0003\0\0\0\0\0\0\0\u0002\0\0\0\u0002\0\u0001\0\u0001\0\0\0\u0002\0\0\0\u0001\0\0\0\u0003\0\u0001\0\u0004\0\0\0\0\0\0\0\0\0";
+			XAssert.Throws<YuzuException>(() => {
+				var jbd = new Yuzu.Binary.BinaryDeserializer {
+					Options = defaultYuzuCommonOptions,
+				};
+				var p = jbd.FromString<ClassWithDictionaryOfClassWithDictionaryOfListOfClass>(s);
+			}, "not sure what exact message should be");
+		}
+
 	}
 }

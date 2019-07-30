@@ -882,6 +882,24 @@ namespace YuzuTest
 		public int F;
 	}
 
+	public class Sample5
+	{
+		[YuzuMember]
+		public int A;
+	}
+
+	internal class ClassWithDictionaryOfListOfClassRenamed
+	{
+		[YuzuMember]
+		public Dictionary<int, List<Sample5>> DictionaryOfList = new Dictionary<int, List<Sample5>>();
+	}
+
+	internal class ClassWithDictionaryOfClassWithDictionaryOfListOfClass
+	{
+		[YuzuMember]
+		public Dictionary<int, ClassWithDictionaryOfListOfClassRenamed> DictionaryOfClass = new Dictionary<int, ClassWithDictionaryOfListOfClassRenamed>();
+	}
+
 	public static class XAssert
 	{
 		public static void Throws<TExpectedException>(Action exceptionThrower, string expectedExceptionMessage = "")
