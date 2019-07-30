@@ -34,50 +34,32 @@ namespace YuzuTest.Binary
 			return result;
 		}
 
-		private string XS(IEnumerable<byte> bytes)
-		{
-			return String.Join(" ", bytes.Select(b => b.ToString("X2")));
-		}
+		private string XS(IEnumerable<byte> bytes) =>
+			String.Join(" ", bytes.Select(b => b.ToString("X2")));
 
-		private byte[] SX(string s)
-		{
-			return s.Split(' ').Select(p => Byte.Parse(p, NumberStyles.AllowHexSpecifier)).ToArray();
-		}
+		private byte[] SX(string s) =>
+			s.Split(' ').Select(p => Byte.Parse(p, NumberStyles.AllowHexSpecifier)).ToArray();
 
-		private string XS(string s)
-		{
-			return VarintXS(s.Length) + XS(s.ToCharArray().Select(ch => (byte)ch));
-		}
+		private string XS(string s) =>
+			VarintXS(s.Length) + XS(s.ToCharArray().Select(ch => (byte)ch));
 
-		private string XS(Type t)
-		{
-			return XS("YuzuTest." + t.Name + ", YuzuTest");
-		}
+		private string XS(Type t) =>
+			XS("YuzuTest." + t.Name + ", YuzuTest");
 
-		private string XS(RoughType rt)
-		{
-			return ((byte)rt).ToString("X2");
-		}
+		private string XS(RoughType rt) =>
+			((byte)rt).ToString("X2");
 
-		private string XS(params string[] s)
-		{
-			return String.Join(" ", s.Select(XS));
-		}
+		private string XS(params string[] s) =>
+			String.Join(" ", s.Select(XS));
 
-		private string XS(string s, RoughType rt)
-		{
-			return XS(s) + " " + XS(rt);
-		}
+		private string XS(string s, RoughType rt) =>
+			XS(s) + " " + XS(rt);
 
-		private string XS(string s1, RoughType rt1, string s2, RoughType rt2)
-		{
-			return XS(s1, rt1) + " " + XS(s2, rt2);
-		}
+		private string XS(string s1, RoughType rt1, string s2, RoughType rt2) =>
+			XS(s1, rt1) + " " + XS(s2, rt2);
 
-		private string XS(string s1, RoughType rt1, string s2, RoughType rt2, string s3, RoughType rt3)
-		{
-			return XS(s1, rt1) + " " + XS(s2, rt2) + " " + XS(s3, rt3);
-		}
+		private string XS(string s1, RoughType rt1, string s2, RoughType rt2, string s3, RoughType rt3) =>
+			XS(s1, rt1) + " " + XS(s2, rt2) + " " + XS(s3, rt3);
 
 		private void CheckDeserializers(Action<BinaryDeserializer> a)
 		{
