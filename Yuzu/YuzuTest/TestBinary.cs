@@ -51,7 +51,7 @@ namespace YuzuTest.Binary
 
 		private string XS(Type t)
 		{
-			return XS("YuzuTest." + t.Name + ", YuzuTest");
+			return XS(t.FullName + ", YuzuTest");
 		}
 
 		private string XS(RoughType rt)
