@@ -212,7 +212,7 @@ namespace Yuzu.Binary
 				var value = rv();
 				if (!(value is V))
 					throw Error("Incompatible type for key {0}, expected: {1} but got {2}",
-						key.ToString(), typeof(V).Name, value.GetType().Name);
+						key.ToString(), typeof(V), value.GetType());
 				dict.Add(key, (V)value);
 			}
 			return dict;
@@ -231,7 +231,7 @@ namespace Yuzu.Binary
 				var value = rv();
 				if (!(value is V))
 					throw Error("Incompatible type for key {0}, expected: {1} but got {2}",
-						key.ToString(), typeof(V).Name, value.GetType().Name);
+						key.ToString(), typeof(V), value.GetType());
 				dict.Add(key, (V)value);
 			}
 			return dict;
@@ -344,7 +344,7 @@ namespace Yuzu.Binary
 				else {
 					if (!ReadCompatibleType(yi.Type))
 						throw Error(
-							"Incompatible type for field {0}, expected {1}", ourName, yi.Type.Name);
+							"Incompatible type for field {0}, expected {1}", ourName, yi.Type);
 					def.Fields.Add(new ReaderClassDef.FieldDef {
 						Name = theirName, OurIndex = ourIndex + 1, Type = yi.Type,
 						ReadFunc = MakeReadOrMergeFunc(yi),
@@ -378,7 +378,7 @@ namespace Yuzu.Binary
 				if (def.Meta.TagToItem.TryGetValue(theirName, out yi)) {
 					if (!ReadCompatibleType(yi.Type))
 						throw Error(
-							"Incompatible type for field {0}, expected {1}", theirName, yi.Type.Name);
+							"Incompatible type for field {0}, expected {1}", theirName, yi.Type);
 					def.Fields.Add(new ReaderClassDef.FieldDef {
 						Name = theirName,
 						OurIndex = def.Meta.Items.IndexOf(yi) + 1,
@@ -515,7 +515,7 @@ namespace Yuzu.Binary
 		{
 			var def = GetClassDef(Reader.ReadInt16());
 			if (def.Meta.Type != t)
-				throw Error("Expected type {0}, but found {1}", def.Meta.Type, t.Name);
+				throw Error("Expected type {0}, but found {1}", def.Meta.Type, t);
 		}
 
 		protected object ReadStruct<T>() where T : struct
@@ -667,7 +667,7 @@ namespace Yuzu.Binary
 					Utils.GetPrivateCovariantGeneric(GetType(), nameof(ReadIntoCollectionNG), icoll));
 			if ((t.IsClass || t.IsInterface || Utils.IsStruct(t)) && t != typeof(object))
 				return MakeDelegateAction(Utils.GetPrivateGeneric(GetType(), nameof(ReadIntoObject), t));
-			throw Error("Unable to merge field of type {0}", t.Name);
+			throw Error("Unable to merge field of type {0}", t);
 		}
 
 		public override object FromReaderInt()
@@ -697,7 +697,7 @@ namespace Yuzu.Binary
 			if (typeof(T) == typeof(object))
 				return (T)ReadAny();
 			if (!ReadCompatibleType(typeof(T)))
-				throw Error("Incompatible type to read into {0}", typeof(T).Name);
+				throw Error("Incompatible type to read into {0}", typeof(T));
 			return (T)ReadValueFunc(typeof(T))();
 		}
 

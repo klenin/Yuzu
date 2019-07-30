@@ -1941,7 +1941,7 @@ namespace YuzuTest.Json
 			XAssert.Throws<YuzuException>(() => jd.FromString(w, "{ ,}"), ",");
 			XAssert.Throws<YuzuException>(() => jd.FromString(w, "{ \"Y\": \"q\" }"), "'X'");
 			XAssert.Throws<YuzuException>(() => jd.FromString<SampleMemberI>("{ \"Z\": 1 }"), "'Z'");
-			XAssert.Throws<YuzuException>(() => jd.FromString(w, "[]"), "'Sample1'");
+			XAssert.Throws<YuzuException>(() => jd.FromString(w, "[]"), ".Sample1");
 			XAssert.Throws<YuzuException>(() => jd.FromString(w, "{ \"class\": \"Q\" }"), "'Q'");
 			XAssert.Throws<YuzuException>(() => jd.FromString(w, "{ \"class\": \"YuzuTest.Sample2, YuzuTest\" }"), ".Sample2");
 			XAssert.Throws<YuzuException>(() => jd.FromString(

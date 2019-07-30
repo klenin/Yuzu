@@ -717,7 +717,7 @@ namespace Yuzu.Json
 				var m = Utils.GetPrivateGeneric(GetType(), nameof(ReadIntoObject), t);
 				return MakeDelegateAction(m);
 			}
-			throw Error("Unable to merge field of type {0}", t.Name);
+			throw Error("Unable to merge field of type {0}", t);
 		}
 
 		protected void ReadUnknownFieldsTail(YuzuUnknownStorage storage, string name)
@@ -769,8 +769,8 @@ namespace Yuzu.Json
 					}
 					if (requiredCountActiual != meta.RequiredCount)
 						throw Error(
-							"Expected {0} required field(s), but found {1} for class {2}",
-							meta.RequiredCount, requiredCountActiual, obj.GetType().Name);
+							"Expected {0} required field(s), but found {1} for type {2}",
+							meta.RequiredCount, requiredCountActiual, obj.GetType());
 				}
 				else if (Options.AllowUnknownFields) {
 					var storage = meta.GetUnknownStorage == null ?
@@ -819,7 +819,7 @@ namespace Yuzu.Json
 			var meta = Meta.Get(obj.GetType(), Options);
 			if (!meta.IsCompact) {
 				if (meta.Surrogate.FuncFrom == null)
-					throw Error("Attempt to read non-compact type '{0}' from compact format", obj.GetType().Name);
+					throw Error("Attempt to read non-compact type '{0}' from compact format", obj.GetType());
 				return meta.Surrogate.FuncFrom(
 					ReadFieldsCompact(Activator.CreateInstance(meta.Surrogate.SurrogateType)));
 			}
@@ -853,11 +853,11 @@ namespace Yuzu.Json
 			if (sg.FuncFrom == null)
 				throw Error(
 					"Expected type '{0}', but got '{1}'",
-					typeof(T).Name, actualType == null ? "number" : actualType.Name);
+					typeof(T), actualType == null ? "number" : TypeSerializer.Serialize(actualType));
 			if (actualType != null && !sg.SurrogateType.IsAssignableFrom(actualType))
 				throw Error(
 					"Expected type '{0}' or '{1}', but got '{2}'",
-					typeof(T).Name, sg.SurrogateType.Name, actualType.Name);
+					typeof(T), sg.SurrogateType.Name, actualType);
 			return sg;
 		}
 
@@ -932,7 +932,7 @@ namespace Yuzu.Json
 			var typeName = RequireUnescapedString();
 			var t = FindType(typeName);
 			if (!typeof(T).IsAssignableFrom(t))
-				throw Error("Expected interface '{0}', but got '{1}'", typeof(T).Name, typeName);
+				throw Error("Expected interface '{0}', but got '{1}'", typeof(T), typeName);
 			var meta = Meta.Get(t, Options);
 			return (T)ReadFields(meta.Factory(), GetNextName(first: false));
 		}

@@ -86,6 +86,9 @@ namespace Yuzu.Deserializer
 
 		protected YuzuException Error(string message, params object[] args)
 		{
+			for (int i = 0; i < args.Length; ++i)
+				if (args[i] is Type)
+					args[i] = TypeSerializer.Serialize((Type)args[i]);
 			return new YuzuException(
 				String.Format(message, args),
 				Options.ReportErrorPosition ? new YuzuPosition(Reader.BaseStream.Position) : null);
