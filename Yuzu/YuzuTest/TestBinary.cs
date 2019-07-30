@@ -1976,8 +1976,62 @@ namespace YuzuTest.Binary
 				"20 03 00 " + XS(typeof(SampleList)) + " 01 00 " + XS("E", RoughType.Sequence) + " 05 01 00" +
 				" 00 00 00 00 00 00"
 			)), "List");
-
 		}
 
+		[TestMethod]
+		public void TestAliasForNestedClassWhenEnclosingClassRenamed()
+		{
+			var bytes = SX("20 01 00 " + XS(typeof(EnclosingClassForEnclosingClass)) +
+				" 01 00 01 46 20 01 00 02 00 " + XS("YuzuTest.SampleAliasForNestedClassWhenEnclosingClassRenamed, YuzuTest") +
+				" 01 00 " + XS(nameof(SampleAliasForNestedClassWhenEnclosingClassRenamed_Renamed.NestedClassField)) + " 20 01 00 03 00 " +
+				XS("YuzuTest.SampleAliasForNestedClassWhenEnclosingClassRenamed+NestedClass, YuzuTest") +
+				" 01 00 01 46 05 01 00 9A 02 00 00 00 00 00 00 00 00");
+			var bd = new BinaryDeserializer();
+			var v = bd.FromBytes<EnclosingClassForEnclosingClass>(bytes);
+			Assert.IsTrue(v.F.NestedClassField.F == 666);
+		}
+
+		[TestMethod]
+		public void TestAliasForGenericArguments()
+		{
+			var bs = new BinarySerializer();
+
+			var b1Etalon = SX("20 01 00 " + XS(typeof(RenameDictionaryValue)) +
+				" 01 00 " + XS(nameof(RenameDictionaryValue.Samples)) + " 22 05 20 01 00 01 00 00 00 01 00 00 00 02 00 " +
+				XS("YuzuTest.RenameDictionaryValue+Sample, YuzuTest") + " 01 00 01 46 05 01 00 01 00 00 00 00 00 00 00");
+
+			var b2Etalon = SX("20 03 00 " + XS(typeof(RenameDictionaryKey)) + " 01 00 " +
+				XS(nameof(RenameDictionaryKey.Samples)) + " 22 20 05 01 00 01 00 00 00 04 00 " +
+				XS("YuzuTest.RenameDictionaryKey+Sample, YuzuTest") + " 01 00 01 46 05 01 00 02 00 00 00 00 00 02 00 00 00 00 00");
+
+			var b3Etalon = SX("20 05 00 " + XS(typeof(RenameListType)) + " 01 00 " +
+				XS(nameof(RenameListType.Samples)) + " 21 20 01 00 01 00 00 00 06 00 " +
+				XS("YuzuTest.RenameListType+Sample, YuzuTest") + " 01 00 01 46 05 01 00 03 00 00 00 00 00 00 00");
+
+
+			var b4Etalon = SX("20 07 00 " + XS(typeof(RenameHashSetType)) + " 01 00 " +
+				XS(nameof(RenameHashSetType.Samples)) + " 21 20 01 00 01 00 00 00 08 00 "
+				+ XS("YuzuTest.RenameHashSetType+Sample, YuzuTest") + " 01 00 01 46 05 01 00 04 00 00 00 00 00 00 00");
+
+			var b5Etalon = SX("20 09 00 " + XS(typeof(RenameCustomGenericType)) + " 01 00 " +
+				XS(nameof(RenameCustomGenericType.Samples)) + " 20 01 00 0A 00 " +
+				XS("YuzuTest.RenameCustomGenericType+GenericSample`1[[YuzuTest.RenameCustomGenericType+Sample, YuzuTest]], YuzuTest") +
+				" 01 00 " +  XS("Type") + " 20 01 00 0B 00 " +
+				XS("YuzuTest.RenameCustomGenericType+Sample, YuzuTest") + " 01 00 01 46 05 01 00 05 00 00 00 00 00 00 00 00 00");
+
+			var b6Etalon = SX("20 0C 00 " + XS(typeof(RenameCustomGenericTypeGenericArgumentType)) + " 01 00 " +
+				XS(nameof(RenameCustomGenericTypeGenericArgumentType.Samples)) + " 20 01 00 0D 00 " +
+				XS("YuzuTest.RenameCustomGenericTypeGenericArgumentType+GenericSample`1[[YuzuTest.RenameCustomGenericTypeGenericArgumentType+Sample, YuzuTest]], YuzuTest") +
+				" 01 00 " + XS("Type") + " 20 01 00 0E 00 " +
+				XS("YuzuTest.RenameCustomGenericTypeGenericArgumentType+Sample, YuzuTest") + " 01 00 01 46 05 01 00 06 00 00 00 00 00 00 00 00 00");
+
+			var bd = new BinaryDeserializer();
+			var s1 = bd.FromBytes<RenameDictionaryValue>(b1Etalon);
+			var s2 = bd.FromBytes<RenameDictionaryKey>(b2Etalon);
+			var s3 = bd.FromBytes<RenameListType>(b3Etalon);
+			var s4 = bd.FromBytes<RenameHashSetType>(b4Etalon);
+			var s5 = bd.FromBytes<RenameCustomGenericType>(b5Etalon);
+			var s6 = bd.FromBytes<RenameCustomGenericTypeGenericArgumentType>(b6Etalon);
+		}
 	}
 }
