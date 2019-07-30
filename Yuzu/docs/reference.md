@@ -42,7 +42,7 @@ Denotes default value for serialization. Can only be applied to `YuzuOptional` i
 
 #### `[YuzuMerge]`
 Denotes that the deserialized value must be merged with the original item value instead of replacing it. Can only be applied to items of structured types: `class`, `struct`, `interface` or `object`.
-When deserializing an item of structured type without merging, a new object is constructed, then sub-item values are deserialized into this new object, and finally new object if assigned to the item of the containing object.
+When deserializing an item of structured type without merging, a new object is constructed, then sub-item values are deserialized into this new object, and finally new object is assigned to the item of the containing object.
 When deserializing an item of structured type with merging, sub-item values are deserialized into the existing object. If some of the sub-items are omitted, previous values are retained.
 
 Can be substituted by changing `MetaOptions.MergeAttribute`.
@@ -252,5 +252,5 @@ Default value is `false`.
 #### `Unordered`
 
 If `true`, deserialization accepts fields in arbitrary order.
-This mode is slow and not supported by generated deseriializers. Use for compatibility only.
+This mode is slow and not supported by generated deserializers. Use for compatibility only.
 Default value is `false`.
