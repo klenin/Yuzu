@@ -1604,6 +1604,20 @@ namespace YuzuTest.Json
 		}
 
 		[TestMethod]
+		public void TestUnknownDictOfLists()
+		{
+			var js = new JsonSerializer();
+			var jd = new JsonDeserializer();
+			{
+				var w1 = (YuzuUnknown)jd.FromString(
+					"{\"class\":\"Something\",\"F\":{" +
+					"\"7\":[{\"class\":\"YuzuTest.SampleBool, YuzuTest\",\"B\":true}]}}");
+				var w1e = (List<object>)((Dictionary<string, object>)w1.Fields["F"])["7"];
+				Assert.IsTrue(((SampleBool)w1e[0]).B);
+			}
+		}
+
+		[TestMethod]
 		public void TestAllowReadingFromAncestor()
 		{
 			var js = new JsonSerializer();
@@ -1715,7 +1729,7 @@ namespace YuzuTest.Json
 
 			var v1 = new SampleSurrogateHashSet { 'a', 'z', 'x' };
 			var result1 = js.ToString(v1);
-			Assert.AreEqual("axz", result1);
+			Assert.AreEqual("\"axz\"", result1);
 
 			var w1 = jd.FromString<SampleSurrogateHashSet>(result1);
 			CollectionAssert.AreEqual(v1.OrderBy(ch => ch).ToList(), w1.OrderBy(ch => ch).ToList());

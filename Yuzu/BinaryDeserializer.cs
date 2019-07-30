@@ -177,14 +177,14 @@ namespace Yuzu.Binary
 			return list;
 		}
 
-		protected List<object> ReadListRecord()
+		protected List<object> ReadListRecord(Func<object> readValue)
 		{
 			var count = Reader.ReadInt32();
 			if (count == -1)
 				return null;
 			var list = new List<object>();
 			for (int i = 0; i < count; ++i)
-				list.Add(ReadObject<object>());
+				list.Add(readValue());
 			return list;
 		}
 
@@ -237,7 +237,7 @@ namespace Yuzu.Binary
 			return dict;
 		}
 
-		protected Dictionary<K, object> ReadDictionaryRecord<K>()
+		protected Dictionary<K, object> ReadDictionaryRecord<K>(Func<object> readValue)
 		{
 			var count = Reader.ReadInt32();
 			if (count == -1)
@@ -245,7 +245,7 @@ namespace Yuzu.Binary
 			var dict = new Dictionary<K, object>();
 			var rk = ReadValueFunc(typeof(K));
 			for (int i = 0; i < count; ++i)
-				dict.Add((K)rk(), ReadObject<object>());
+				dict.Add((K)rk(), readValue());
 			return dict;
 		}
 
@@ -603,21 +603,45 @@ namespace Yuzu.Binary
 			throw new YuzuException();
 		}
 
+		private Func<object> ReadDataStructureOfRecord(Type t)
+		{
+			if (t == typeof(Record))
+				return ReadObject<object>;
+			if (!t.IsGenericType)
+				return null;
+			var g = t.GetGenericTypeDefinition();
+			if (g == typeof(List<>)) {
+				var readValue = ReadDataStructureOfRecord(t.GetGenericArguments()[0]);
+				if (readValue == null) return null;
+				return () => ReadListRecord(readValue);
+			}
+			if (g == typeof(Dictionary<,>)) {
+				var readValue = ReadDataStructureOfRecord(t.GetGenericArguments()[1]);
+				if (readValue == null) return null;
+				var d = (Func<Func<object>, object>)Delegate.CreateDelegate(
+					typeof(Func<Func<object>, object>), this,
+					Utils.GetPrivateCovariantGeneric(GetType(), nameof(ReadDictionaryRecord), t)
+				);
+				return () => d(readValue);
+			}
+			return null;
+		}
+
 		private Func<object> MakeReaderFunc(Type t)
 		{
 			if (t.IsEnum)
 				return MakeEnumReaderFunc(t);
 			if (t.IsGenericType) {
+				var readRecord = ReadDataStructureOfRecord(t);
+				if (readRecord != null)
+					return readRecord;
 				var g = t.GetGenericTypeDefinition();
 				if (g == typeof(List<>))
-					return t.GetGenericArguments()[0] == typeof(Record) ?
-						ReadListRecord :
-						MakeDelegate(Utils.GetPrivateCovariantGeneric(GetType(), nameof(ReadList), t));
+					return MakeDelegate(
+						Utils.GetPrivateCovariantGeneric(GetType(), nameof(ReadList), t));
 				if (g == typeof(Dictionary<,>))
 					return MakeDelegate(
-						t.GetGenericArguments()[1] == typeof(Record) ?
-							Utils.GetPrivateCovariantGeneric(GetType(), nameof(ReadDictionaryRecord), t) :
-							Utils.GetPrivateCovariantGenericAll(GetType(), nameof(ReadDictionary), t));
+						Utils.GetPrivateCovariantGenericAll(GetType(), nameof(ReadDictionary), t));
 				if (g == typeof(Action<>))
 					return MakeDelegate(Utils.GetPrivateCovariantGeneric(GetType(), nameof(ReadAction), t));
 				if (g == typeof(Nullable<>)) {

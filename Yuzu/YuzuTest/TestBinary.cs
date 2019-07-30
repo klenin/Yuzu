@@ -1697,6 +1697,22 @@ namespace YuzuTest.Binary
 		}
 
 		[TestMethod]
+		public void TestUnknownDictOfLists()
+		{
+			var bs = new BinarySerializer();
+			var bd = new BinaryDeserializer();
+			{
+				var w1 = (YuzuUnknown)bd.FromBytes<object>(SX(
+					"20 01 00 " + XS("Something") + " 01 00 " + XS("F", RoughType.Mapping) + " 05 21 20" +
+					" 01 00 01 00 00 00 07 00 00 00 01 00 00 00 02 00 " +
+					XS(typeof(SampleBool)) + " 01 00 " + XS("B", RoughType.Bool) +
+					" 01 00 01 00 00 00 00"));
+				var w1e = (List<object>)((Dictionary<int, object>)w1.Fields["F"])[7];
+				Assert.IsTrue(((SampleBool)w1e[0]).B);
+			}
+		}
+
+		[TestMethod]
 		public void TestAllowReadingFromAncestor()
 		{
 			var bs = new BinarySerializer();
