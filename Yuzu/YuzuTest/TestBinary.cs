@@ -44,7 +44,7 @@ namespace YuzuTest.Binary
 			VarintXS(s.Length) + XS(s.ToCharArray().Select(ch => (byte)ch));
 
 		private string XS(Type t) =>
-			XS("YuzuTest." + t.Name + ", YuzuTest");
+			XS(t.FullName + ", YuzuTest");
 
 		private string XS(RoughType rt) =>
 			((byte)rt).ToString("X2");
@@ -1518,7 +1518,7 @@ namespace YuzuTest.Binary
 			Assert.AreEqual(
 				"20 01 00 " + XS(typeof(SampleNested)) + " 03 00 " +
 				XS("C", RoughType.Record, "E", RoughType.Int, "Z", RoughType.Sequence) + " 05" +
-				" 01 00 02 00 " + XS("YuzuTest.SampleNested+NestedClass, YuzuTest") +
+				" 01 00 02 00 " + XS(typeof(SampleNested.NestedClass)) +
 				" 01 00 " + XS("Z", RoughType.Int) +
 				" 01 00 00 00 00 00 00 00 " +
 				"02 00 00 00 00 00 00 00",
