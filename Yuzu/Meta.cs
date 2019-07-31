@@ -77,7 +77,7 @@ namespace Yuzu.Metadata
 		public Func<object, int, object, bool> SerializeItemIf;
 
 		private object defaultFactory() => Activator.CreateInstance(Type);
-		private MethodInfo factoryMethod;
+		public MethodInfo FactoryMethod;
 		public Func<object> Factory;
 
 		public Dictionary<string, Item> TagToItem = new Dictionary<string, Item>();
@@ -272,11 +272,11 @@ namespace Yuzu.Metadata
 			AfterDeserialization.MaybeAdd(m, Options.AfterDeserializationAttribute);
 
 			if (Options.FactoryAttribute != null && m.IsDefined(Options.FactoryAttribute, false)) {
-				if (factoryMethod != null)
-					throw Error("Duplicate Factory: '{0}' and '{1}'", factoryMethod.Name, m.Name);
+				if (FactoryMethod != null)
+					throw Error("Duplicate Factory: '{0}' and '{1}'", FactoryMethod.Name, m.Name);
 				if (!m.IsStatic || m.GetParameters().Length > 0)
 					throw Error("Factory '{0}' must be a static method without parameters", m.Name);
-				factoryMethod = m;
+				FactoryMethod = m;
 				Factory = (Func<object>)Delegate.CreateDelegate(typeof(Func<object>), m);
 			}
 

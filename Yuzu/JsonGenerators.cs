@@ -79,15 +79,19 @@ namespace Yuzu.Json
 			return FromReaderIntGenerated();
 		}
 
-		public T FromReaderTyped<T>(BinaryReader reader) where T: new()
+		public T DefaultFactory<T>() where T : new() => new T();
+		public T FromReaderTyped<T>(BinaryReader reader) where T : new() =>
+			FromReaderTypedFactory(reader, DefaultFactory<T>);
+
+		public T FromReaderTypedFactory<T>(BinaryReader reader, Func<T> factory)
 		{
 			Reader = reader;
 			KillBuf();
 			var ch = RequireBracketOrNull();
 			if (ch == 'n') return default(T);
-			if (ch == '[') return (T)ReadFieldsCompact(new T());
+			if (ch == '[') return (T)ReadFieldsCompact(factory());
 			var name = GetNextName(true);
-			if (name != JsonOptions.ClassTag) return (T)ReadFields(new T(), name);
+			if (name != JsonOptions.ClassTag) return (T)ReadFields(factory(), name);
 			var typeName = RequireUnescapedString();
 			return (T)MaybeReadObject(typeName, GetNextName(first: false));
 		}
@@ -241,6 +245,15 @@ namespace Yuzu.Json
 			simpleValueReader[typeof(object)] = "ReadAnyObject()";
 		}
 
+		private string GenerateFromReader(Meta meta) =>
+			String.Format(
+				meta.Type.IsInterface || meta.Type.IsAbstract ?
+					"FromReaderInterface<{0}>(Reader);" :
+				meta.FactoryMethod == null ?
+					"FromReaderTyped<{0}>(Reader);" :
+					"FromReaderTypedFactory(Reader, {0}.{1});",
+				Utils.GetTypeSpec(meta.Type), meta.FactoryMethod?.Name);
+
 		private void GenerateValue(Type t, string name)
 		{
 			string sr;
@@ -322,10 +335,8 @@ namespace Yuzu.Json
 				return;
 			}
 			if (t.IsClass || t.IsInterface || Utils.IsStruct(t)) {
-				var fmt = t.IsInterface || t.IsAbstract ?
-					"{0}.Instance.FromReaderInterface<{1}>(Reader);\n" :
-					"{0}.Instance.FromReaderTyped<{1}>(Reader);\n";
-				cw.PutPart(fmt, GetDeserializerName(t), Utils.GetTypeSpec(t));
+				var meta = Meta.Get(t, Options);
+				cw.PutPart("{0}.Instance.{1}\n", GetDeserializerName(t), GenerateFromReader(meta));
 				return;
 			}
 			throw new NotImplementedException(t.Name);
@@ -386,10 +397,8 @@ namespace Yuzu.Json
 			cw.Put("{\n");
 			if (icoll != null)
 				cw.Put("return FromReaderInt(new {0}());\n", typeSpec);
-			else if (t.IsInterface || t.IsAbstract)
-				cw.Put("return FromReaderInterface<{0}>(Reader);\n", typeSpec);
 			else
-				cw.Put("return FromReaderTyped<{0}>(Reader);\n", typeSpec);
+				cw.Put("return {0}\n", GenerateFromReader(meta));
 			cw.Put("}\n");
 			cw.Put("\n");
 
@@ -408,8 +417,10 @@ namespace Yuzu.Json
 			cw.Put("{\n");
 			if (t.IsInterface || t.IsAbstract)
 				cw.Put("return null;\n");
-			else
+			else if (meta.FactoryMethod == null)
 				cw.Put("return ReadFields(new {0}(), name);\n", typeSpec);
+			else
+				cw.Put("return ReadFields({0}.{1}(), name);\n", typeSpec, meta.FactoryMethod.Name);
 			cw.Put("}\n");
 			cw.Put("\n");
 

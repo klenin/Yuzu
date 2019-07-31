@@ -1880,6 +1880,11 @@ namespace YuzuTest.Json
 				Assert.AreEqual(71, w1.X);
 			}
 			{
+				var w1 = (SamplePrivateConstructor)
+					SamplePrivateConstructor_JsonDeserializer.Instance.FromString("{\"X\":73}");
+				Assert.AreEqual(73, w1.X);
+			}
+			{
 				var w1 = jd.FromString<SampleConstructorParam>("{}");
 				Assert.AreEqual(72, w1.X);
 			}

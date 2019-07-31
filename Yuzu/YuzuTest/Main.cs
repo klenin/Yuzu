@@ -139,6 +139,7 @@ namespace YuzuTest
 				jd.Generate<SampleMerge>();
 				jd.Generate<SampleAssemblyDerivedR>();
 				jd.Generate<SampleAliasMany>();
+				jd.Generate<SamplePrivateConstructor>();
 				jd.Generate<List<YuzuTestAssembly.SampleAssemblyBase>>();
 				jd.Generate<YuzuTestAssembly.SampleAssemblyBase>();
 				jd.Generate<YuzuTestAssembly.SampleAssemblyDerivedQ>();

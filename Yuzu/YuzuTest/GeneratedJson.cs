@@ -2750,6 +2750,55 @@ namespace YuzuGen.YuzuTest
 		}
 	}
 
+	class SamplePrivateConstructor_JsonDeserializer : JsonDeserializerGenBase
+	{
+		public static new SamplePrivateConstructor_JsonDeserializer Instance = new SamplePrivateConstructor_JsonDeserializer();
+
+		public SamplePrivateConstructor_JsonDeserializer()
+		{
+			Options.AllowUnknownFields = false;
+			Options.AllowEmptyTypes = false;
+			Options.ReportErrorPosition = false;
+			Options.CheckForEmptyCollections = false;
+			JsonOptions.MaxOnelineFields = 0;
+			JsonOptions.EnumAsString = true;
+			JsonOptions.SaveRootClass = false;
+			JsonOptions.IgnoreCompact = false;
+			JsonOptions.Int64AsString = false;
+			JsonOptions.DecimalAsString = false;
+			JsonOptions.Comments = false;
+			JsonOptions.FloatingPointFormat = "";
+			JsonOptions.FieldSeparator = "\n";
+			JsonOptions.Indent = "\t";
+			JsonOptions.ClassTag = "class";
+			JsonOptions.ArrayLengthPrefix = false;
+			JsonOptions.DateFormat = "O";
+			JsonOptions.DateTimeOffsetFormat = "O";
+			JsonOptions.TimeSpanFormat = "c";
+			JsonOptions.Unordered = false;
+			JsonOptions.BOM = false;
+		}
+
+		public override object FromReaderInt()
+		{
+			return FromReaderTypedFactory(Reader, global::YuzuTest.SamplePrivateConstructor.Make);
+		}
+
+		public override object FromReaderIntPartial(string name)
+		{
+			return ReadFields(global::YuzuTest.SamplePrivateConstructor.Make(), name);
+		}
+
+		protected override object ReadFields(object obj, string name)
+		{
+			var result = (global::YuzuTest.SamplePrivateConstructor)obj;
+			if ("X" != name) throw new YuzuException("X!=" + name);
+			result.X = RequireInt();
+			name = GetNextName(false);
+			return result;
+		}
+	}
+
 }
 
 namespace YuzuGen.System.Collections.Generic
