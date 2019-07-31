@@ -1609,9 +1609,16 @@ namespace YuzuTest.Json
 			var js = new JsonSerializer();
 			var jd = new JsonDeserializer();
 			{
-				var w1 = (YuzuUnknown)jd.FromString(
+				js.JsonOptions.Indent = js.JsonOptions.FieldSeparator = "";
+				js.JsonOptions.SaveRootClass = true;
+				js.Options.AllowEmptyTypes = true;
+				js.Options.Meta = SampleUnknownDictOfLists.Override();
+				var actual = js.ToString(SampleUnknownDictOfLists.Sample);
+				var expected =
 					"{\"class\":\"Something\",\"F\":{" +
-					"\"7\":[{\"class\":\"YuzuTest.SampleBool, YuzuTest\",\"B\":true}]}}");
+					"\"7\":[{\"class\":\"YuzuTest.SampleBool, YuzuTest\",\"B\":true}]}}";
+				Assert.AreEqual(expected, actual);
+				var w1 = (YuzuUnknown)jd.FromString(expected);
 				var w1e = (List<object>)((Dictionary<string, object>)w1.Fields["F"])["7"];
 				Assert.IsTrue(((SampleBool)w1e[0]).B);
 			}

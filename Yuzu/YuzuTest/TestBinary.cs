@@ -1684,11 +1684,16 @@ namespace YuzuTest.Binary
 			var bs = new BinarySerializer();
 			var bd = new BinaryDeserializer();
 			{
-				var w1 = (YuzuUnknown)bd.FromBytes<object>(SX(
+				bs.Options.AllowEmptyTypes = true;
+				bs.Options.Meta = SampleUnknownDictOfLists.Override();
+				var actual = bs.ToBytes(SampleUnknownDictOfLists.Sample);
+				var expected = SX(
 					"20 01 00 " + XS("Something") + " 01 00 " + XS("F", RoughType.Mapping) + " 05 21 20" +
 					" 01 00 01 00 00 00 07 00 00 00 01 00 00 00 02 00 " +
 					XS(typeof(SampleBool)) + " 01 00 " + XS("B", RoughType.Bool) +
-					" 01 00 01 00 00 00 00"));
+					" 01 00 01 00 00 00 00");
+				Assert.AreEqual("\n" + XS(expected), "\n" + XS(actual));
+				var w1 = (YuzuUnknown)bd.FromBytes<object>(expected);
 				var w1e = (List<object>)((Dictionary<int, object>)w1.Fields["F"])[7];
 				Assert.IsTrue(((SampleBool)w1e[0]).B);
 			}

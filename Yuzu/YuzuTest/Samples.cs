@@ -104,7 +104,9 @@ namespace YuzuTest
 		public ulong U;
 	}
 
-	public class SampleBool
+	public class SampleBoolBase { }
+
+	public class SampleBool : SampleBoolBase
 	{
 		[YuzuRequired]
 		public bool B;
@@ -653,6 +655,22 @@ namespace YuzuTest
 		public int X;
 		public YuzuUnknownStorage Storage = new YuzuUnknownStorage();
 	}
+
+	public class SampleUnknownDictOfLists
+	{
+		[YuzuMember]
+		public Dictionary<int, List<SampleBoolBase>> F;
+
+		public static MetaOptions Override() =>
+			new MetaOptions().AddOverride(
+				typeof(SampleUnknownDictOfLists),
+				o => o.AddAttr(new YuzuAlias("Something")));
+
+		public static SampleUnknownDictOfLists Sample = new SampleUnknownDictOfLists {
+			F = new Dictionary<int, List<SampleBoolBase>> {
+				{ 7, new List<SampleBoolBase>{ new SampleBool { B = true } } } }
+		};
+}
 
 	public class SampleSurrogateColor
 	{
