@@ -6,6 +6,7 @@
   * [Options](#options)
   * [JsonOptions](#json-options)
   * [BinarySerializeOptions](#binaryserializeoptions)
+  * [Meta overrides](#meta-overrides)
 
 ## Item attributes
 
@@ -254,3 +255,43 @@ Default value is `false`.
 If `true`, deserialization accepts fields in arbitrary order.
 This mode is slow and not supported by generated deserializers. Use for compatibility only.
 Default value is `false`.
+
+## Meta overrides
+
+Class `MetaOptions` provides an API for specifying Yuzu attributes at runtime.
+Note that changing `MetaOptions` does not directly affect `Meta` cache,
+so either change global options (as in example 1) before any call to `Meta.Get`,
+or create a new `MetaOptions` instance for a localized change (as in example 2).
+
+Example 1:
+```cs
+MetaOptions.Default.AddOverride(typeof(MyClass), o => o.AddAttr(new YuzuAll()));
+```
+
+Example 2:
+```cs
+var opt = new CommonOptions() { Meta = new MetaOptions().AddOverride(
+    typeof(MyClass), o => o.
+        AddAttr(new YuzuAlias("MyAlias")).
+        AddItem(nameof(MyClass.MyField), i => i.
+            AddAttr(new YuzuMember("FieldAlias")).
+            AddAttr(new YuzuSerializeIf(nameof(MyClass.CondFunc)))
+        ).
+        AddItem(nameof(MyClass.MyMethod), i => i.AddAttr(new YuzuFactory()))
+) };
+```
+
+### `AddOverride(Type t, Action after)`
+
+Creates an override for type `t`. Upon success, executes `after` action with newly created override as an argument.
+Returns `this` to allow chaining.
+
+### `AddAttr(Attribute attr)`
+
+Adds an attribute to either type or item override.
+Returns `this` to allow chaining.
+
+### `AddItem(string itemName, Action after)`
+
+Creates an override for item `itemName`. Upon success, executes `after` action with newly created override as an argument.
+Returns `this` to allow chaining.
