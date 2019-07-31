@@ -43,9 +43,9 @@ namespace Yuzu.Metadata
 			return new YuzuException("In type '" + ownerType.FullName + "': " + String.Format(format, args));
 		}
 
-		private void MaybeSet(MethodInfo m, Type attr, string name, ref MethodInfo dest)
+		private void MaybeSet(MethodInfo m, MetaItemOverride item, Type attr, string name, ref MethodInfo dest)
 		{
-			if (attr != null && m.IsDefined(attr, false)) {
+			if (attr != null && item.HasAttr(attr)) {
 				if (dest != null)
 					throw Error("Duplicate {0}: '{1}' and '{2}'", name, dest.Name, m.Name);
 				dest = m;
@@ -54,9 +54,10 @@ namespace Yuzu.Metadata
 
 		public void ProcessMethod(MethodInfo m)
 		{
-			MaybeSet(m, options.SurrogateIfAttribute, "SurrogateIf", ref methodIf);
-			MaybeSet(m, options.ToSurrogateAttribute, "ToSurrogate", ref methodTo);
-			MaybeSet(m, options.FromSurrogateAttribute, "FromSurrogate", ref methodFrom);
+			var attrs = options.GetItem(m);
+			MaybeSet(m, attrs, options.SurrogateIfAttribute, "SurrogateIf", ref methodIf);
+			MaybeSet(m, attrs, options.ToSurrogateAttribute, "ToSurrogate", ref methodTo);
+			MaybeSet(m, attrs, options.FromSurrogateAttribute, "FromSurrogate", ref methodFrom);
 		}
 
 		private void CheckAccepts(MethodInfo m, string name, Type paramType)

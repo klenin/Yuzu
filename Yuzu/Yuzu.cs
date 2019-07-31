@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Dynamic;
 using System.IO;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Text;
@@ -191,6 +193,58 @@ namespace Yuzu
 
 	}
 
+	public class MetaItemOverride
+	{
+		public MemberInfo Info;
+		public ConcurrentBag<Attribute> Attributes = new ConcurrentBag<Attribute>();
+
+		public MetaItemOverride AddAttr(Attribute attr)
+		{
+			Attributes.Add(attr);
+			return this;
+		}
+
+		public Attribute Attr(Type attrType) =>
+			attrType == null ? null :
+				Attributes.SingleOrDefault(a => a.GetType() == attrType) ??
+				Info.GetCustomAttribute(attrType);
+
+		public bool HasAttr(Type attrType) =>
+			attrType != null &&
+				(Attributes.Any(a => a.GetType() == attrType) || Info.IsDefined(attrType));
+
+	}
+
+	public class MetaOverride: MetaItemOverride {
+		public Type TypeInfo() => Info as Type;
+		public ConcurrentDictionary<string, MetaItemOverride> Items =
+			new ConcurrentDictionary<string, MetaItemOverride>();
+
+		public new MetaOverride AddAttr(Attribute attr)
+		{
+			Attributes.Add(attr);
+			return this;
+		}
+
+		public MetaOverride AddItem(string itemName, Action<MetaItemOverride> after = null)
+		{
+			var m = TypeInfo().GetMember(itemName);
+			var item = new MetaItemOverride { Info = m[0] };
+			if (Items.TryAdd(itemName, item))
+				after?.Invoke(item);
+			return this;
+		}
+
+		public MetaItemOverride Item(MemberInfo m)
+		{
+			MetaItemOverride item;
+			if (Items.TryGetValue(m.Name, out item))
+				return item;
+			return new MetaItemOverride { Info = m };
+		}
+		public MetaItemOverride Item(string itemName) => Item(TypeInfo().GetMember(itemName)[0]);
+	}
+
 	public class MetaOptions
 	{
 		public static MetaOptions Default = new MetaOptions();
@@ -223,8 +277,32 @@ namespace Yuzu
 			attr => Tuple.Create((attr as YuzuAll).Optionality, (attr as YuzuAll).Kind);
 		public Func<Attribute, IEnumerable<string>> GetReadAliases = attr => (attr as YuzuAlias).ReadAliases;
 		public Func<Attribute, string> GetWriteAlias = attr => (attr as YuzuAlias).WriteAlias;
-	}
 
+		private ConcurrentDictionary<Type, MetaOverride> overrides =
+			new ConcurrentDictionary<Type, MetaOverride>();
+
+		public MetaOptions AddOverride(Type t, Action<MetaOverride> after = null)
+		{
+			var result = overrides.GetOrAdd(t, t1 => new MetaOverride { Info = t1 });
+			after?.Invoke(result);
+			return this;
+		}
+
+		public MetaOverride GetOverride(Type t)
+		{
+			MetaOverride result;
+			if (overrides.TryGetValue(t, out result))
+				return result;
+			return new MetaOverride { Info = t };
+		}
+		public MetaItemOverride GetItem(MemberInfo m)
+		{
+			MetaOverride over;
+			if (overrides.TryGetValue(m.DeclaringType, out over))
+				return over.Item(m);
+			return new MetaItemOverride { Info = m };
+		}
+	}
 	public struct CommonOptions
 	{
 		public MetaOptions Meta;

@@ -134,7 +134,8 @@ namespace Yuzu.Metadata
 					options.RequiredAttribute,
 					options.MemberAttribute,
 				};
-				attrs = attrTypes.Select(t => m.GetCustomAttribute_Compat(t, false)).ToArray();
+				var over = options.GetItem(m);
+				attrs = attrTypes.Select(t => over.Attr(t)).ToArray();
 				Count = attrs.Count(a => a != null);
 				if (Count == 0 && opt > 0 && attrTypes[(int)opt - 1] != null) {
 					attrs[(int)opt - 1] = Activator.CreateInstance(attrTypes[(int)opt - 1]) as Attribute;
@@ -198,17 +199,18 @@ namespace Yuzu.Metadata
 			}
 			if (ia.Count != 1)
 				throw Error("More than one of optional, required and member attributes for field '{0}'", m.Name);
-			var serializeIf = m.GetCustomAttribute_Compat(Options.SerializeIfAttribute, true);
+			var attrs = Options.GetItem(m);
+			var serializeIf = attrs.Attr(Options.SerializeIfAttribute);
 			var item = new Item {
 				Alias = Options.GetAlias(ia.Any()) ?? m.Name,
 				IsOptional = ia.Required == null,
-				IsCompact = m.IsDefined(Options.CompactAttribute, false),
+				IsCompact = attrs.HasAttr(Options.CompactAttribute),
 				SerializeIf = serializeIf != null ? Options.GetSerializeCondition(serializeIf) : null,
 				Name = m.Name,
 			};
 			if (!item.IsOptional)
 				RequiredCount += 1;
-			var merge = m.IsDefined(Options.MergeAttribute, false);
+			var merge = attrs.HasAttr(Options.MergeAttribute);
 
 			switch (m.MemberType) {
 				case MemberTypes.Field:
@@ -252,7 +254,7 @@ namespace Yuzu.Metadata
 				if (!item.Type.IsClass && !item.Type.IsInterface || item.Type == typeof(object))
 					throw Error("Unable to either set or merge item {0}", item.Name);
 			}
-			if (item.Type.IsDefined(Options.CompactAttribute, false))
+			if (Options.GetOverride(item.Type).HasAttr(Options.CompactAttribute))
 				item.IsCompact = true;
 			if (ia.Member != null && item.SerializeIf == null && !Type.IsAbstract && !Type.IsInterface)
 				item.SerializeIf = GetSerializeIf(item, options);
@@ -261,7 +263,8 @@ namespace Yuzu.Metadata
 
 		private void AddMethod(MethodInfo m)
 		{
-			if (m.IsDefined(Options.SerializeItemIfAttribute, false)) {
+			var attrs = Options.GetItem(m);
+			if (attrs.HasAttr(Options.SerializeItemIfAttribute)) {
 				if (SerializeItemIf != null)
 					throw Error("Duplicate SerializeItemIf");
 				if (Utils.GetIEnumerable(Type) == null)
@@ -271,7 +274,7 @@ namespace Yuzu.Metadata
 			BeforeSerialization.MaybeAdd(m, Options.BeforeSerializationAttribute);
 			AfterDeserialization.MaybeAdd(m, Options.AfterDeserializationAttribute);
 
-			if (Options.FactoryAttribute != null && m.IsDefined(Options.FactoryAttribute, false)) {
+			if (attrs.HasAttr(Options.FactoryAttribute)) {
 				if (FactoryMethod != null)
 					throw Error("Duplicate Factory: '{0}' and '{1}'", FactoryMethod.Name, m.Name);
 				if (!m.IsStatic || m.GetParameters().Length > 0)
@@ -290,7 +293,8 @@ namespace Yuzu.Metadata
 				BindingFlags.Public | BindingFlags.NonPublic |
 				BindingFlags.FlattenHierarchy;
 			foreach (var m in t.GetMembers(bindingFlags)) {
-				if (Options.ExcludeAttribute != null && m.IsDefined(Options.ExcludeAttribute, false))
+				var attrs = Options.GetItem(m);
+				if (attrs.HasAttr(Options.ExcludeAttribute))
 					continue;
 				switch (m.MemberType) {
 					case MemberTypes.Field:
@@ -343,11 +347,12 @@ namespace Yuzu.Metadata
 			Type = t;
 			Factory = defaultFactory;
 			Options = options.Meta ?? MetaOptions.Default;
-			IsCompact = t.IsDefined(Options.CompactAttribute, false);
-			var must = t.GetCustomAttribute_Compat(Options.MustAttribute, false);
+			var over = Options.GetOverride(t);
+			IsCompact = over.HasAttr(Options.CompactAttribute);
+			var must = over.Attr(Options.MustAttribute);
 			if (must != null)
 				Must = Options.GetItemKind(must);
-			var all = t.GetCustomAttribute_Compat(Options.AllAttribute, false);
+			var all = over.Attr(Options.AllAttribute);
 			if (all != null) {
 				var ok = Options.GetItemOptionalityAndKind(all);
 				AllOptionality = ok.Item1;
@@ -391,7 +396,7 @@ namespace Yuzu.Metadata
 				TagToItem.Add(tag, i);
 			}
 
-			AllowReadingFromAncestor = t.IsDefined(Options.AllowReadingFromAncestorAttribute, false);
+			AllowReadingFromAncestor = over.HasAttr(Options.AllowReadingFromAncestorAttribute);
 			if (AllowReadingFromAncestor) {
 				var ancestorMeta = Get(t.BaseType, options);
 				if (ancestorMeta.Items.Count != Items.Count)
@@ -400,7 +405,7 @@ namespace Yuzu.Metadata
 						t.BaseType.Name, Items.Count, ancestorMeta.Items.Count);
 			}
 
-			var alias = t.GetCustomAttribute_Compat(Options.AliasAttribute, false);
+			var alias = over.Attr(Options.AliasAttribute);
 			if (alias != null) {
 				var aliases = Options.GetReadAliases(alias);
 				if (aliases != null) {
@@ -442,12 +447,14 @@ namespace Yuzu.Metadata
 		{
 			const BindingFlags bindingFlags =
 				BindingFlags.Instance | BindingFlags.Public | BindingFlags.FlattenHierarchy;
-			var all = t.GetCustomAttribute_Compat(options.AllAttribute, false);
+			var over = options.GetOverride(t);
+			var all = over.Attr(options.AllAttribute);
 			var k = all != null ? options.GetItemOptionalityAndKind(all).Item2 : YuzuItemKind.None;
 			foreach (var m in t.GetMembers(bindingFlags)) {
+				var attrs = over.Item(m);
 				if (
 					m.MemberType != MemberTypes.Field && m.MemberType != MemberTypes.Property ||
-					options.ExcludeAttribute != null && m.IsDefined(options.ExcludeAttribute, false)
+					attrs.HasAttr(options.ExcludeAttribute)
 				)
 					continue;
 				if (

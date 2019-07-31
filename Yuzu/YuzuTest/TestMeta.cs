@@ -308,6 +308,48 @@ namespace YuzuTest.Metadata
 			XAssert.Throws<YuzuException>(() => Meta.Get(typeof(DuplicateFactory), opt), "FDup");
 		}
 
+		internal class Overridden
+		{
+			public int X;
+			public string Y;
+		}
+
+		[TestMethod]
+		public void TestOverride()
+		{
+			{
+				var metaOptions = new MetaOptions();
+				var opt = new CommonOptions { Meta = metaOptions };
+				metaOptions.AddOverride(typeof(Overridden), over => over.AddAttr(new YuzuAll()));
+				var meta = Meta.Get(typeof(Overridden), opt);
+				Assert.AreEqual(2, meta.Items.Count);
+			}
+			{
+				var metaOptions = new MetaOptions();
+				var opt = new CommonOptions { Meta = metaOptions };
+				metaOptions.AddOverride(
+					typeof(Overridden),
+					over => over.AddItem(nameof(Overridden.X), i => i.AddAttr(new YuzuMember()))
+				);
+				var meta = Meta.Get(typeof(Overridden), opt);
+				Assert.AreEqual(1, meta.Items.Count);
+				Assert.AreEqual("X", meta.Items[0].Name);
+			}
+			{
+				var metaOptions = new MetaOptions();
+				var opt = new CommonOptions { Meta = metaOptions };
+				metaOptions.AddOverride(
+					typeof(Overridden),
+					over => over.
+						AddAttr(new YuzuAll()).
+						AddItem(nameof(Overridden.X), i => i.AddAttr(new YuzuExclude()))
+				);
+				var meta = Meta.Get(typeof(Overridden), opt);
+				Assert.AreEqual(1, meta.Items.Count);
+				Assert.AreEqual("Y", meta.Items[0].Name);
+			}
+		}
+
 	}
 
 }
