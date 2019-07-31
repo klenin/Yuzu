@@ -1905,9 +1905,12 @@ namespace YuzuTest.Binary
 		{
 			var bd = new BinaryDeserializer();
 			{
-				var w1 = bd.FromBytes<SamplePrivateConstructor>(SX(
+				var result1 = SX(
 					"20 01 00 " + XS(typeof(SamplePrivateConstructor)) + " 01 00 " + XS("X", RoughType.Int) +
-					" 01 00 47 00 00 00 00 00"));
+					" 01 00 47 00 00 00 00 00");
+				var w1 = bd.FromBytes<SamplePrivateConstructor>(result1);
+				Assert.AreEqual(71, w1.X);
+				var w2 = (new BinaryDeserializerGen()).FromBytes<SamplePrivateConstructor>(result1);
 				Assert.AreEqual(71, w1.X);
 			}
 			{

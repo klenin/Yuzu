@@ -1008,6 +1008,25 @@ namespace YuzuGenBin
 			return result;
 		}
 
+		private static void Read_YuzuTest__SamplePrivateConstructor(BinaryDeserializer d, ReaderClassDef def, object obj)
+		{
+			var result = (global::YuzuTest.SamplePrivateConstructor)obj;
+			var dg = (BinaryDeserializerGen)d;
+			ReaderClassDef.FieldDef fd;
+			fd = def.Fields[d.Reader.ReadInt16()];
+			if (1 != fd.OurIndex) throw dg.Error("1!=" + fd.OurIndex);
+			result.X = d.Reader.ReadInt32();
+			fd = def.Fields[d.Reader.ReadInt16()];
+			if (fd.OurIndex != ReaderClassDef.EOF) throw dg.Error("Unfinished object");
+		}
+
+		private static object Make_YuzuTest__SamplePrivateConstructor(BinaryDeserializer d, ReaderClassDef def)
+		{
+			var result = global::YuzuTest.SamplePrivateConstructor.Make();
+			Read_YuzuTest__SamplePrivateConstructor(d, def, result);
+			return result;
+		}
+
 		private static void Read_YuzuTestAssembly__SampleAssemblyBase(BinaryDeserializer d, ReaderClassDef def, object obj)
 		{
 			var result = (global::YuzuTestAssembly.SampleAssemblyBase)obj;
@@ -1110,6 +1129,7 @@ namespace YuzuGenBin
 			readCache[typeof(global::YuzuTest.SampleAoS.S)] = Read_YuzuTest__SampleAoS__S;
 			readCache[typeof(global::YuzuTest.SampleAoS)] = Read_YuzuTest__SampleAoS;
 			readCache[typeof(global::YuzuTest.SampleAliasMany)] = Read_YuzuTest__SampleAliasMany;
+			readCache[typeof(global::YuzuTest.SamplePrivateConstructor)] = Read_YuzuTest__SamplePrivateConstructor;
 			readCache[typeof(global::YuzuTestAssembly.SampleAssemblyBase)] = Read_YuzuTestAssembly__SampleAssemblyBase;
 			readCache[typeof(global::YuzuTestAssembly.SampleAssemblyDerivedQ)] = Read_YuzuTestAssembly__SampleAssemblyDerivedQ;
 			readCache[typeof(global::YuzuTest2.SampleNamespace)] = Read_YuzuTest2__SampleNamespace;
@@ -1154,6 +1174,7 @@ namespace YuzuGenBin
 			makeCache[typeof(global::YuzuTest.SampleAoS)] = Make_YuzuTest__SampleAoS;
 			makeCache[typeof(global::YuzuTest.SampleStructWithProps)] = Make_YuzuTest__SampleStructWithProps;
 			makeCache[typeof(global::YuzuTest.SampleAliasMany)] = Make_YuzuTest__SampleAliasMany;
+			makeCache[typeof(global::YuzuTest.SamplePrivateConstructor)] = Make_YuzuTest__SamplePrivateConstructor;
 			makeCache[typeof(global::YuzuTestAssembly.SampleAssemblyBase)] = Make_YuzuTestAssembly__SampleAssemblyBase;
 			makeCache[typeof(global::YuzuTestAssembly.SampleAssemblyDerivedQ)] = Make_YuzuTestAssembly__SampleAssemblyDerivedQ;
 			makeCache[typeof(global::YuzuTest2.SampleNamespace)] = Make_YuzuTest2__SampleNamespace;

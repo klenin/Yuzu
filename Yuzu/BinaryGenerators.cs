@@ -204,6 +204,11 @@ namespace Yuzu.Binary
 			throw new NotImplementedException();
 		}
 
+		private string GenerateFactoryCall(Meta meta) =>
+			meta.FactoryMethod == null ?
+				String.Format("new {0}()", Utils.GetTypeSpec(meta.Type)) :
+				String.Format("{0}.{1}()", Utils.GetTypeSpec(meta.Type), meta.FactoryMethod.Name);
+
 		private bool GenerateSetValueInline(Type t, string name, Meta.Item item)
 		{
 			if (t.IsGenericType || !Utils.IsStruct(t) || item == null || simpleValueReader.ContainsKey(t))
@@ -217,7 +222,7 @@ namespace Yuzu.Binary
 				}
 				else {
 					var tempStructName = cw.GetTempName();
-					cw.Put("var {0} = new {1}();\n", tempStructName, Utils.GetTypeSpec(t));
+					cw.Put("var {0} = {1};\n", tempStructName, GenerateFactoryCall(meta));
 					foreach (var yi in meta.Items)
 						GenerateSetValue(yi.Type, tempStructName + "." + yi.Name, yi);
 					cw.Put("{0} = {1};\n", name, tempStructName);
@@ -337,7 +342,7 @@ namespace Yuzu.Binary
 			var makerName = "Make_" + GetMangledTypeNameNS(t);
 			cw.Put("private static object {0}(BinaryDeserializer d, {1} def)\n", makerName, classDefName);
 			cw.Put("{\n");
-			cw.Put("var result = new {0}();\n", Utils.GetTypeSpec(t));
+			cw.Put("var result = {0};\n", GenerateFactoryCall(meta));
 			if (Utils.IsStruct(t))
 				GenerateReaderBody(meta);
 			else

@@ -190,6 +190,7 @@ namespace YuzuTest
 				bd.Generate<SampleAoS>();
 				bd.Generate<SampleStructWithProps>();
 				bd.Generate<SampleAliasMany>();
+				bd.Generate<SamplePrivateConstructor>();
 				bd.Generate<YuzuTestAssembly.SampleAssemblyBase>();
 				bd.Generate<YuzuTestAssembly.SampleAssemblyDerivedQ>();
 				bd.Generate<YuzuTest2.SampleNamespace>();
