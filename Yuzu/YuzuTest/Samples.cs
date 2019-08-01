@@ -620,35 +620,6 @@ namespace YuzuTest
 		public string R = "R";
 	}
 
-	[YuzuAlias("SampleOrder")]
-	class SampleOrder
-	{
-		[YuzuMember]
-		public int StarterPackOfferEndTime;
-		[YuzuMember]
-		public bool StartGoldInitialized;
-	}
-
-	[YuzuAlias("SampleOrder")]
-	class SampleOrderExt : SampleOrder
-	{
-		[YuzuMember]
-		public bool StarterPackOffered;
-	}
-
-	[YuzuAlias("NewNameForAliasField")]
-	class SampleAliasField
-	{
-		[YuzuMember]
-		public int X;
-	}
-
-	class SampleWithAliasedField
-	{
-		[YuzuMember]
-		public SampleAliasField F;
-	}
-
 	public class SampleUnknown
 	{
 		[YuzuMember]
@@ -838,20 +809,6 @@ namespace YuzuTest
 		[YuzuRequired]
 		[ProtoMember(1)]
 		public List<S> A = new List<S>();
-	}
-
-	[YuzuAlias("DifferentName")]
-	public class SampleAlias
-	{
-		[YuzuRequired]
-		public int X;
-	}
-
-	[YuzuAlias(read: new string[] { "Name1", "Name2" })]
-	public class SampleAliasMany
-	{
-		[YuzuRequired]
-		public int X;
 	}
 
 	public class Bad1
