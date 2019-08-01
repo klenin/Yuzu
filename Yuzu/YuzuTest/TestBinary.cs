@@ -1906,6 +1906,26 @@ namespace YuzuTest.Binary
 		}
 
 		[TestMethod]
+		public void TestAliasForNestedClassWhenEnclosingClassRenamed()
+		{
+			var bs = new BinarySerializer();
+			var bd = new BinaryDeserializer();
+			var v1 = EnclosingClassForEnclosingClass.Sample;
+			var result1 = bs.ToBytes(v1);
+			var expected = "20 01 00 " + XS(typeof(EnclosingClassForEnclosingClass)) +
+				" 01 00 01 46 20 01 00 02 00 " +
+				XS("YuzuTest.SampleAliasForNestedClassWhenEnclosingClassRenamed, YuzuTest") +
+				" 01 00 " +
+				XS(nameof(SampleAliasForNestedClassWhenEnclosingClassRenamed_Renamed.NestedClassField)) +
+				" 20 01 00 03 00 " +
+				XS("YuzuTest.SampleAliasForNestedClassWhenEnclosingClassRenamed+NestedClass, YuzuTest") +
+				" 01 00 01 46 05 01 00 9A 02 00 00 00 00 00 00 00 00";
+			Assert.AreEqual(expected, XS(result1));
+			var w1 = bd.FromBytes<EnclosingClassForEnclosingClass>(SX(expected));
+			Assert.AreEqual(v1.F.NestedClassField.F, w1.F.NestedClassField.F);
+		}
+
+		[TestMethod]
 		public void TestFactory()
 		{
 			var bd = new BinaryDeserializer();

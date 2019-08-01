@@ -1879,6 +1879,29 @@ namespace YuzuTest.Json
 		}
 
 		[TestMethod]
+		public void TestAliasForNestedClassWhenEnclosingClassRenamed()
+		{
+			var js = new JsonSerializer();
+			js.JsonOptions.Indent = "";
+			js.JsonOptions.FieldSeparator = " ";
+			js.JsonOptions.SaveRootClass = true;
+			var jd = new JsonDeserializer();
+
+			var v1 = EnclosingClassForEnclosingClass.Sample;
+			var result1 = js.ToString(v1);
+			var expected =
+				"{ \"class\":\"" + typeof(EnclosingClassForEnclosingClass).FullName +
+				", YuzuTest\", \"F\":{ \"class\":\"" +
+				"YuzuTest.SampleAliasForNestedClassWhenEnclosingClassRenamed, YuzuTest\", " +
+				"\"NestedClassField\":{ \"class\":\"" +
+				"YuzuTest.SampleAliasForNestedClassWhenEnclosingClassRenamed+NestedClass, YuzuTest\", " +
+				"\"F\":666 } } }";
+			Assert.AreEqual(expected, result1);
+			var w1 = jd.FromString<EnclosingClassForEnclosingClass>(expected);
+			Assert.AreEqual(v1.F.NestedClassField.F, w1.F.NestedClassField.F);
+		}
+
+		[TestMethod]
 		public void TestFactory()
 		{
 			var jd = new JsonDeserializer();
