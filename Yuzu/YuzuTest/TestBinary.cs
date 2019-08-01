@@ -1985,5 +1985,58 @@ namespace YuzuTest.Binary
 
 		}
 
+		[TestMethod]
+		public void TestSurrogatesWithGenericsSimple()
+		{
+			var b1Etalon = SX("20 01 00 " + XS(typeof(SurrogateDictionaryKey)) + " 01 00 " +
+				XS(nameof(SurrogateDictionaryKey.F)) +
+				" 22 05 05 01 00 03 00 00 00 01 00 00 00 02 00 00 00 03 00 00 00 04 00 00 00 05 00 00 00 06 00 00 00 00 00");
+
+			var b2Etalon = SX("20 02 00 " + XS(typeof(SurrogateDictionaryValue)) + " 01 00 " +
+				XS(nameof(SurrogateDictionaryValue.F)) +
+				" 22 05 05 01 00 03 00 00 00 07 00 00 00 08 00 00 00 09 00 00 00 0A 00 00 00 0B 00 00 00 0C 00 00 00 00 00");
+
+			var b3Etalon = SX("20 03 00 " + XS(typeof(SurrogateListElement)) + " 01 00 " +
+				XS(nameof(SurrogateListElement.F)) +
+				" 21 05 01 00 04 00 00 00 01 00 00 00 02 00 00 00 03 00 00 00 04 00 00 00 00 00");
+
+			var b4Etalon = SX("20 04 00 " + XS(typeof(SurrogateHashSetElement)) + " 01 00 " +
+				XS(nameof(SurrogateHashSetElement.F)) +
+				" 21 05 01 00 04 00 00 00 06 00 00 00 07 00 00 00 08 00 00 00 09 00 00 00 00 00");
+
+			var b5Etalon = SX("20 05 00 " + XS(typeof(SurrogateCustomGenericArgument)) + " 01 00 " +
+				XS(nameof(SurrogateCustomGenericArgument.F)) + " 20 01 00 06 00 " +
+				XS(Yuzu.Util.TypeSerializer.Serialize(typeof(SurrogateCustomGenericArgument.Generic<string>))) + " 01 00 " +
+				XS(nameof(SurrogateCustomGenericArgument.Generic<string>.F)) + " 10 01 00 02 34 37 00 00 00 00");
+
+			var b6Etalon = SX("20 07 00 " + XS(typeof(SurrogateCustomGeneric)) + " 01 00 " +
+				XS(nameof(SurrogateCustomGeneric.F)) + " 10 01 00 02 33 31 00 00");
+
+			var bd = new BinaryDeserializer();
+			var s1 = bd.FromBytes<SurrogateDictionaryKey>(b1Etalon);
+			Assert.IsTrue(s1.F[new TypedNumberSample(1)] == 2);
+			Assert.IsTrue(s1.F[new TypedNumberSample(3)] == 4);
+			Assert.IsTrue(s1.F[new TypedNumberSample(5)] == 6);
+			var s2 = bd.FromBytes<SurrogateDictionaryValue>(b2Etalon);
+			Assert.IsTrue(s2.F[7] == new TypedNumberSample(8));
+			Assert.IsTrue(s2.F[9] == new TypedNumberSample(10));
+			Assert.IsTrue(s2.F[11] == new TypedNumberSample(12));
+			var s3 = bd.FromBytes<SurrogateListElement>(b3Etalon);
+			Assert.IsTrue(s3.F.SequenceEqual(new List<TypedNumberSample> {
+				new TypedNumberSample(1), new TypedNumberSample(2),
+				new TypedNumberSample(3), new TypedNumberSample(4)
+			}));
+			var s4 = bd.FromBytes<SurrogateHashSetElement>(b4Etalon);
+			Assert.IsTrue(s4.F.Contains(new TypedNumberSample(6)));
+			Assert.IsTrue(s4.F.Contains(new TypedNumberSample(7)));
+			Assert.IsTrue(s4.F.Contains(new TypedNumberSample(8)));
+			Assert.IsTrue(s4.F.Contains(new TypedNumberSample(9)));
+			Assert.IsTrue(s4.F.Count == 4);
+			var s5 = bd.FromBytes<SurrogateCustomGenericArgument>(b5Etalon);
+			Assert.IsTrue(s5.F.F.Number == 47);
+			var s6 = bd.FromBytes<SurrogateCustomGeneric>(b6Etalon);
+			Assert.IsTrue(s6.F.F == 31);
+		}
+
 	}
 }
