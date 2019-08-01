@@ -1926,6 +1926,87 @@ namespace YuzuTest.Binary
 		}
 
 		[TestMethod]
+		public void TestAliasForGenericArguments()
+		{
+			var bs = new BinarySerializer();
+			var bd = new BinaryDeserializer();
+
+			{
+				var result1 = bs.ToBytes(RenameDictionaryValue.Sample);
+				var expected =
+					"20 01 00 " + XS(typeof(RenameDictionaryValue)) +
+					" 01 00 " + XS(nameof(RenameDictionaryValue.Samples)) +
+					" 22 05 20 01 00 01 00 00 00 01 00 00 00 02 00 " +
+					XS("YuzuTest.RenameDictionaryValue+Sample, YuzuTest") +
+					" 01 00 01 46 05 01 00 01 00 00 00 00 00 00 00";
+				Assert.AreEqual(expected, XS(result1));
+				var w1 = bd.FromBytes<RenameDictionaryValue>(result1);
+				Assert.AreEqual(RenameDictionaryValue.Sample.Samples[1].F, w1.Samples[1].F);
+			}
+			{
+				var result1 = bs.ToBytes(RenameDictionaryKey.Sample);
+				var expected =
+					"20 03 00 " + XS(typeof(RenameDictionaryKey)) + " 01 00 " +
+					XS(nameof(RenameDictionaryKey.Samples)) +
+					" 22 20 05 01 00 01 00 00 00 04 00 " +
+					XS("YuzuTest.RenameDictionaryKey+Sample, YuzuTest") +
+					" 01 00 01 46 05 01 00 02 00 00 00 00 00 02 00 00 00 00 00";
+				Assert.AreEqual(expected, XS(result1));
+				var w1 = bd.FromBytes<RenameDictionaryKey>(result1);
+				var k = new RenameDictionaryKey.Sample_Renamed { F = 2 };
+				Assert.AreEqual(RenameDictionaryKey.Sample.Samples[k], w1.Samples[k]);
+			}
+			{
+				var result1 = bs.ToBytes(RenameListType.Sample);
+				var expected =
+					"20 05 00 " + XS(typeof(RenameListType)) + " 01 00 " +
+					XS(nameof(RenameListType.Samples)) + " 21 20 01 00 01 00 00 00 06 00 " +
+					XS("YuzuTest.RenameListType+Sample, YuzuTest") +
+					" 01 00 01 46 05 01 00 03 00 00 00 00 00 00 00";
+				Assert.AreEqual(expected, XS(result1));
+				var w1 = bd.FromBytes<RenameListType>(result1);
+				Assert.AreEqual(RenameListType.Sample.Samples[0].F, w1.Samples[0].F);
+			}
+			{
+				var result1 = bs.ToBytes(RenameHashSetType.Sample);
+				var expected =
+					"20 07 00 " + XS(typeof(RenameHashSetType)) + " 01 00 " +
+					XS(nameof(RenameHashSetType.Samples)) + " 21 20 01 00 01 00 00 00 08 00 " +
+					XS("YuzuTest.RenameHashSetType+Sample, YuzuTest") +
+					" 01 00 01 46 05 01 00 04 00 00 00 00 00 00 00";
+				Assert.AreEqual(expected, XS(result1));
+				var w1 = bd.FromBytes<RenameHashSetType>(result1);
+				Assert.AreEqual(RenameHashSetType.Sample.Samples.First().F, w1.Samples.First().F);
+			}
+
+			var b5 = bs.ToBytes(new RenameCustomGenericType {
+				Samples = new RenameCustomGenericType.GenericSample_Renamed<RenameCustomGenericType.Sample>() {
+					Type = new RenameCustomGenericType.Sample { F = 5 }
+				}
+			});
+			var b5Etalon = SX("20 09 00 " + XS(typeof(RenameCustomGenericType)) + " 01 00 " +
+				XS(nameof(RenameCustomGenericType.Samples)) + " 20 01 00 0A 00 " +
+				XS("YuzuTest.RenameCustomGenericType+GenericSample`1[[YuzuTest.RenameCustomGenericType+Sample, YuzuTest]], YuzuTest") +
+				" 01 00 " + XS("Type") + " 20 01 00 0B 00 " +
+				XS("YuzuTest.RenameCustomGenericType+Sample, YuzuTest") + " 01 00 01 46 05 01 00 05 00 00 00 00 00 00 00 00 00");
+			// TODO
+			// var s5 = bd.FromBytes<RenameCustomGenericType>(b5Etalon);
+
+			var b6 = bs.ToBytes(new RenameCustomGenericTypeGenericArgumentType {
+				Samples = new RenameCustomGenericTypeGenericArgumentType.GenericSample<RenameCustomGenericTypeGenericArgumentType.Sample_Renamed>() {
+					Type = new RenameCustomGenericTypeGenericArgumentType.Sample_Renamed { F = 6 }
+				}
+			});
+			var b6Etalon = SX("20 0C 00 " + XS(typeof(RenameCustomGenericTypeGenericArgumentType)) + " 01 00 " +
+				XS(nameof(RenameCustomGenericTypeGenericArgumentType.Samples)) + " 20 01 00 0D 00 " +
+				XS("YuzuTest.RenameCustomGenericTypeGenericArgumentType+GenericSample`1[[YuzuTest.RenameCustomGenericTypeGenericArgumentType+Sample, YuzuTest]], YuzuTest") +
+				" 01 00 " + XS("Type") + " 20 01 00 0E 00 " +
+				XS("YuzuTest.RenameCustomGenericTypeGenericArgumentType+Sample, YuzuTest") + " 01 00 01 46 05 01 00 06 00 00 00 00 00 00 00 00 00");
+			// TODO
+			// var s6 = bd.FromBytes<RenameCustomGenericTypeGenericArgumentType>(b6Etalon);
+		}
+
+		[TestMethod]
 		public void TestFactory()
 		{
 			var bd = new BinaryDeserializer();

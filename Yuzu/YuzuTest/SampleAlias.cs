@@ -57,18 +57,26 @@ namespace YuzuTest
 		}
 		[YuzuMember]
 		public Dictionary<int, Sample_Renamed> Samples = new Dictionary<int, Sample_Renamed>();
+
+		public static RenameDictionaryValue Sample = new RenameDictionaryValue {
+			Samples = new Dictionary<int, Sample_Renamed> { { 1, new Sample_Renamed { F = 1 } } }
+		};
 	}
 
 	public class RenameDictionaryKey
 	{
 		[YuzuAlias("YuzuTest.RenameDictionaryKey+Sample, YuzuTest")]
-		public class Sample_Renamed
+		public struct Sample_Renamed
 		{
 			[YuzuMember]
 			public int F;
 		}
 		[YuzuMember]
 		public Dictionary<Sample_Renamed, int> Samples = new Dictionary<Sample_Renamed, int>();
+
+		public static RenameDictionaryKey Sample = new RenameDictionaryKey {
+			Samples = new Dictionary<Sample_Renamed, int> { { new Sample_Renamed { F = 2 }, 2 } }
+		};
 	}
 
 	public class RenameListType
@@ -81,6 +89,10 @@ namespace YuzuTest
 		}
 		[YuzuMember]
 		public List<Sample_Renamed> Samples = new List<Sample_Renamed>();
+
+		public static RenameListType Sample = new RenameListType {
+			Samples = new List<Sample_Renamed> { new Sample_Renamed { F = 3 } }
+		};
 	}
 
 	public class RenameHashSetType
@@ -93,6 +105,10 @@ namespace YuzuTest
 		}
 		[YuzuMember]
 		public HashSet<Sample_Renamed> Samples = new HashSet<Sample_Renamed>();
+
+		public static RenameHashSetType Sample = new RenameHashSetType {
+			Samples = new HashSet<Sample_Renamed> { new Sample_Renamed { F = 4 } }
+		};
 	}
 
 	public class RenameCustomGenericType
