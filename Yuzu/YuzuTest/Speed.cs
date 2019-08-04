@@ -388,6 +388,15 @@ namespace YuzuTest
 			Assert.AreEqual(person.Name, p.Name);
 		}
 
+		[TestMethod]
+		public void TestClone()
+		{
+			Assert.AreEqual(28076, SamplePerson.Counter);
+			var cl = new Yuzu.Clone.Cloner();
+			var dst = cl.Deep(person);
+			Assert.AreEqual(person.Children.Count, dst.Children.Count);
+		}
+
 	}
 
 }
