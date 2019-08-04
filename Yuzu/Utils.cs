@@ -143,6 +143,10 @@ namespace Yuzu.Util
 			var args = String.Join("__", t.GetGenericArguments().Select(a => GetMangledTypeName(a)));
 			return n.Remove(n.IndexOf('`')) + "_" + args;
 		}
+
+		public static string GetMangledTypeNameNS(Type t) =>
+			t.Namespace.Replace('.', '_') + "__" + GetMangledTypeName(t);
+
 	}
 
 	public static class TypeSerializer

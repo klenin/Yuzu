@@ -51,7 +51,7 @@ namespace Yuzu.Binary
 		public BinaryDeserializerGenerator(string wrapperNameSpace = "YuzuGenBin", CommonOptions? options = null)
 		{
 			this.wrapperNameSpace = wrapperNameSpace;
-			this.options = options.HasValue ? options.Value : new CommonOptions();
+			this.options = options ?? new CommonOptions();
 		}
 
 		static BinaryDeserializerGenerator() { InitSimpleValueReader(); }
@@ -310,11 +310,6 @@ namespace Yuzu.Binary
 					cw.Put("if (fd.OurIndex != {0}.EOF) throw dg.Error(\"Unfinished object\");\n", classDefName);
 			}
 			cw.GenerateActionList(meta.AfterDeserialization);
-		}
-
-		private string GetMangledTypeNameNS(Type t)
-		{
-			return t.Namespace.Replace('.', '_') + "__" + Utils.GetMangledTypeName(t);
 		}
 
 		public void Generate<T>() { Generate(typeof(T)); }
