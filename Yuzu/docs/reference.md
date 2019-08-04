@@ -7,6 +7,7 @@
   * [JsonOptions](#json-options)
   * [BinarySerializeOptions](#binaryserializeoptions)
   * [Meta overrides](#meta-overrides)
+  * [Cloning](#cloning)
 
 ## Item attributes
 
@@ -295,3 +296,35 @@ Returns `this` to allow chaining.
 
 Creates an override for item `itemName`. Upon success, executes `after` action with newly created override as an argument.
 Returns `this` to allow chaining.
+
+## Cloning
+
+To clone an object, use `Yuzu.Clone.Cloner.Deep(object)`, for example:
+
+```cs
+using Yuzu.Clone;
+var d = new List<int> { 1, 2, 3 };
+var result = Cloner.Instance.Deep(d);
+```
+
+For a shallow clone use `Cloner.Shallow` method instead.
+
+When cloning an object, only members with Yuzu attributes are copied.
+Use [meta overrides](#meta-overrides) to clone non-serializable items:
+
+```cs
+public class Point { int X; int Y; }
+var cl = new Cloner();
+cl.Options.Meta = new MetaOptions().AddOverride(typeof(Point), o => o.AddAttr(new YuzuAll()));
+var result = cl.Deep(new Point());
+```
+
+For a minor speedup of multiple deep clones of the same type, use `GetCloner`:
+```cs
+var cl = Cloner.Instance.GetCloner(typeof(MyClass));
+var result = new List<MyClass>();
+for(int i = 0; i < 1000000; ++i)
+    result.Add(cl(new MyClass()));
+```
+
+Note: Cloning of recursive objects graphs is currently not supported.
