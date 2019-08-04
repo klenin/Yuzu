@@ -172,7 +172,7 @@ namespace Yuzu.Json
 			var tempElementName = cw.GetTempName();
 			cw.Put("var {0} = ", tempElementName);
 			GenerateValue(icoll.GetGenericArguments()[0], tempElementName);
-			cw.PutAddToColllection(t, icoll, name, tempElementName);
+			cw.PutAddToCollection(t, icoll, name, tempElementName);
 			cw.Put("} while (Require(']', ',') == ',');\n");
 			cw.Put("}\n");
 		}

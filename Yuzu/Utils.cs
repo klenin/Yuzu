@@ -243,7 +243,7 @@ namespace Yuzu.Util
 		}
 
 		// Check for explicit vs implicit interface implementation.
-		public void PutAddToColllection(Type t, Type icoll, string collName, string elementName)
+		public void PutAddToCollection(Type t, Type icoll, string collName, string elementName)
 		{
 			var imap = t.GetInterfaceMap(icoll);
 			var addIndex = Array.FindIndex(imap.InterfaceMethods, m => m.Name == "Add");
