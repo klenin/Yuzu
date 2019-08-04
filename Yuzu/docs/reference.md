@@ -8,6 +8,7 @@
   * [BinarySerializeOptions](#binaryserializeoptions)
   * [Meta overrides](#meta-overrides)
   * [Cloning](#cloning)
+  * [Type serialization](#type-serialization)
 
 ## Item attributes
 
@@ -328,3 +329,11 @@ for(int i = 0; i < 1000000; ++i)
 ```
 
 Note: Cloning of recursive objects graphs is currently not supported.
+
+## Type serialization
+
+Types are serialized as strings.
+
+To serialize type, use `Yuzu.Util.TypeSerializer.Serialize(typeof(MyType))`.
+
+To deserialize type, use `Yuzu.Util.TypeSerializer.Deserialize("SerializedTypeName")`.
