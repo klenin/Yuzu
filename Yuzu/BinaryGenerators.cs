@@ -28,7 +28,7 @@ namespace Yuzu.Binary
 
 	}
 
-	public class BinaryDeserializerGenerator : IDeserializerGenerator
+	public class BinaryDeserializerGenerator : IGenerator
 	{
 		private CodeWriter cw = new CodeWriter();
 		private string wrapperNameSpace;

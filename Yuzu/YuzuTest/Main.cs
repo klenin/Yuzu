@@ -67,7 +67,7 @@ namespace YuzuTest
 
 	public class Program
 	{
-		private static void Gen(string fileName, IDeserializerGenerator g, Action<IDeserializerGenerator> fill)
+		private static void Gen(string fileName, IGenerator g, Action<IGenerator> fill)
 		{
 			using (var ms = new MemoryStream())
 			using (var sw = new StreamWriter(ms)) {

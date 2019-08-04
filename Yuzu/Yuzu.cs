@@ -505,7 +505,7 @@ namespace Yuzu
 		public abstract T FromBytes<T>(byte[] bytes);
 	}
 
-	public interface IDeserializerGenerator
+	public interface IGenerator
 	{
 		string LineSeparator { get; set; }
 		StreamWriter GenWriter { get; set; }

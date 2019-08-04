@@ -111,7 +111,7 @@ namespace Yuzu.Json
 		}
 	}
 
-	public class JsonDeserializerGenerator : JsonDeserializerGenBase, IDeserializerGenerator
+	public class JsonDeserializerGenerator : JsonDeserializerGenBase, IGenerator
 	{
 		public static new JsonDeserializerGenerator Instance = new JsonDeserializerGenerator();
 
