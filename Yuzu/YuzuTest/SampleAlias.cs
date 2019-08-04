@@ -58,7 +58,7 @@ namespace YuzuTest
 		[YuzuMember]
 		public Dictionary<int, Sample_Renamed> Samples = new Dictionary<int, Sample_Renamed>();
 
-		public static RenameDictionaryValue Sample = new RenameDictionaryValue {
+		public static RenameDictionaryValue Data = new RenameDictionaryValue {
 			Samples = new Dictionary<int, Sample_Renamed> { { 1, new Sample_Renamed { F = 1 } } }
 		};
 	}
@@ -74,7 +74,7 @@ namespace YuzuTest
 		[YuzuMember]
 		public Dictionary<Sample_Renamed, int> Samples = new Dictionary<Sample_Renamed, int>();
 
-		public static RenameDictionaryKey Sample = new RenameDictionaryKey {
+		public static RenameDictionaryKey Data = new RenameDictionaryKey {
 			Samples = new Dictionary<Sample_Renamed, int> { { new Sample_Renamed { F = 2 }, 2 } }
 		};
 	}
@@ -90,7 +90,7 @@ namespace YuzuTest
 		[YuzuMember]
 		public List<Sample_Renamed> Samples = new List<Sample_Renamed>();
 
-		public static RenameListType Sample = new RenameListType {
+		public static RenameListType Data = new RenameListType {
 			Samples = new List<Sample_Renamed> { new Sample_Renamed { F = 3 } }
 		};
 	}
@@ -106,7 +106,7 @@ namespace YuzuTest
 		[YuzuMember]
 		public HashSet<Sample_Renamed> Samples = new HashSet<Sample_Renamed>();
 
-		public static RenameHashSetType Sample = new RenameHashSetType {
+		public static RenameHashSetType Data = new RenameHashSetType {
 			Samples = new HashSet<Sample_Renamed> { new Sample_Renamed { F = 4 } }
 		};
 	}
@@ -119,7 +119,7 @@ namespace YuzuTest
 			public int F;
 		}
 
-		[YuzuAlias("YuzuTest.RenameCustomGenericType+GenericSample`1, YuzuTest")]
+		[YuzuAlias("YuzuTest.RenameCustomGenericType+GenericSample`1[[YuzuTest.RenameCustomGenericType+Sample, YuzuTest]], YuzuTest")]
 		public class GenericSample_Renamed<T>
 		{
 			[YuzuMember]
@@ -129,6 +129,10 @@ namespace YuzuTest
 		}
 		[YuzuMember]
 		public GenericSample_Renamed<Sample> Samples = new GenericSample_Renamed<Sample>();
+
+		public static RenameCustomGenericType Data = new RenameCustomGenericType {
+			Samples = new GenericSample_Renamed<Sample>() { Type = new Sample { F = 5 } }
+		};
 	}
 
 	public class RenameCustomGenericTypeGenericArgumentType
@@ -139,6 +143,7 @@ namespace YuzuTest
 			[YuzuMember]
 			public int F;
 		}
+		[YuzuAlias("YuzuTest.RenameCustomGenericTypeGenericArgumentType+GenericSample`1[[YuzuTest.RenameCustomGenericTypeGenericArgumentType+Sample, YuzuTest]], YuzuTest")]
 		public class GenericSample<T>
 		{
 			[YuzuMember]
@@ -146,6 +151,11 @@ namespace YuzuTest
 		}
 		[YuzuMember]
 		public GenericSample<Sample_Renamed> Samples = new GenericSample<Sample_Renamed>();
+
+		public static RenameCustomGenericTypeGenericArgumentType Data =
+			new RenameCustomGenericTypeGenericArgumentType {
+				Samples = new GenericSample<Sample_Renamed>() { Type = new Sample_Renamed { F = 6 } }
+			};
 	}
 
 	public class EnclosingClassForEnclosingClass
