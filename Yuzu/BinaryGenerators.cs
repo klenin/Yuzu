@@ -317,13 +317,13 @@ namespace Yuzu.Binary
 		public void Generate(Type t)
 		{
 			if (t.IsInterface)
-				throw new YuzuException("Useless BinaryGenerator for interface " + t.Name);
+				throw new YuzuException("Useless BinaryGenerator for interface " + t.FullName);
 			if (t.IsAbstract)
-				throw new YuzuException("Useless BinaryGenerator for abstract class " + t.Name);
+				throw new YuzuException("Useless BinaryGenerator for abstract class " + t.FullName);
 
 			var meta = Meta.Get(t, options);
 
-			var readerName = "Read_" + GetMangledTypeNameNS(t);
+			var readerName = "Read_" + Utils.GetMangledTypeNameNS(t);
 			if (!Utils.IsStruct(t)) {
 				cw.Put("private static void {0}(BinaryDeserializer d, {1} def, object obj)\n", readerName, classDefName);
 				cw.Put("{\n");
@@ -334,7 +334,7 @@ namespace Yuzu.Binary
 				generatedReaders[t] = readerName;
 			}
 
-			var makerName = "Make_" + GetMangledTypeNameNS(t);
+			var makerName = "Make_" + Utils.GetMangledTypeNameNS(t);
 			cw.Put("private static object {0}(BinaryDeserializer d, {1} def)\n", makerName, classDefName);
 			cw.Put("{\n");
 			cw.Put("var result = {0};\n", GenerateFactoryCall(meta));
