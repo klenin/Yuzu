@@ -1216,30 +1216,39 @@ namespace YuzuTest.Json
 			var js = new JsonSerializer();
 			js.JsonOptions.Indent = "";
 			js.JsonOptions.FieldSeparator = "";
+			{
+				var s = "\"/{\u0001}\n\t\"\"";
+				var v = new Sample1 { Y = s };
+				var result = js.ToString(v);
+				Assert.AreEqual("{\"X\":0,\"Y\":\"\\\"/{\\u0001}\\n\\t\\\"\\\"\"}", result);
 
-			var s = "\"/{\u0001}\n\t\"\"";
-			var v = new Sample1 { Y = s };
-			var result = js.ToString(v);
-			Assert.AreEqual("{\"X\":0,\"Y\":\"\\\"/{\\u0001}\\n\\t\\\"\\\"\"}", result);
+				var w = new Sample1();
+				var jd = new JsonDeserializer();
+				jd.FromString(w, result);
+				Assert.AreEqual(s, w.Y);
 
-			var w = new Sample1();
-			var jd = new JsonDeserializer();
-			jd.FromString(w, result);
-			Assert.AreEqual(s, w.Y);
+				v.Y = result;
+				var result1 = js.ToString(v);
+				jd.FromString(w, result1);
+				Assert.AreEqual(result, w.Y);
 
-			v.Y = result;
-			var result1 = js.ToString(v);
-			jd.FromString(w, result1);
-			Assert.AreEqual(result, w.Y);
+				v.Y = "привет";
+				var result2 = js.ToString(v);
+				Assert.AreEqual("{\"X\":0,\"Y\":\"привет\"}", result2);
 
-			v.Y = "привет";
-			var result2 = js.ToString(v);
-			Assert.AreEqual("{\"X\":0,\"Y\":\"привет\"}", result2);
-
-			jd.FromString(w, result2);
-			Assert.AreEqual(v.Y, w.Y);
-			jd.FromString(w, "{\"X\":0,\"Y\":\"\u043F\u0440\u0438\u0432\u0435\u0442\"}");
-			Assert.AreEqual(v.Y, w.Y);
+				jd.FromString(w, result2);
+				Assert.AreEqual(v.Y, w.Y);
+				jd.FromString(w, "{\"X\":0,\"Y\":\"\u043F\u0440\u0438\u0432\u0435\u0442\"}");
+				Assert.AreEqual(v.Y, w.Y);
+			}
+			{
+				var a = "\ud801\udc37";
+				var result = js.ToBytes(a);
+				var quote = new byte[] { 34 };
+				var b = quote.Concat(Encoding.UTF8.GetBytes(a)).Concat(quote).ToArray();
+				CollectionAssert.AreEqual(b, result);
+				// FIXME: Assert.AreEqual(a, jd.FromBytes(b));
+			}
 		}
 
 		[TestMethod]

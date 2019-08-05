@@ -138,6 +138,7 @@ namespace Yuzu.Json
 		private void WriteEscapedString(object obj)
 		{
 			writer.Write((byte)'"');
+			var surrogatePair = new char[2];
 			foreach (var ch in obj.ToString()) {
 				var escape = ch <= '\\' ? JsonEscapeData.escapeChars[ch] : '\0';
 				if (escape > 0) {
@@ -150,9 +151,14 @@ namespace Yuzu.Json
 					for (int i = 3 * 4; i >= 0; i -= 4)
 						writer.Write(JsonEscapeData.digitHex[ch >> i & 0xf]);
 				}
-				else {
-					writer.Write(ch);
+				else if(char.IsHighSurrogate(ch))
+					surrogatePair[0] = ch;
+				else if (char.IsLowSurrogate(ch)) {
+					surrogatePair[1] = ch;
+					writer.Write(surrogatePair);
 				}
+				else
+					writer.Write(ch);
 			}
 			writer.Write((byte)'"');
 		}
