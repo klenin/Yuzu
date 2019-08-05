@@ -93,11 +93,17 @@ namespace Yuzu.Util
 			}
 		}
 
-		public static MethodInfo GetPrivateGeneric(Type callerType, string name, params Type[] parameters)
-		{
-			return callerType.GetMethod(name, BindingFlags.Instance | BindingFlags.NonPublic).
+		public static MethodInfo GetPrivateGeneric(
+			Type callerType, string name, params Type[] parameters
+		) =>
+			callerType.GetMethod(name, BindingFlags.Instance | BindingFlags.NonPublic).
 				MakeGenericMethod(parameters);
-		}
+
+		public static MethodInfo GetPublicGeneric(
+			Type callerType, string name, params Type[] parameters
+		) =>
+			callerType.GetMethod(name, BindingFlags.Instance | BindingFlags.Public).
+				MakeGenericMethod(parameters);
 
 		public static MethodInfo GetPrivateCovariantGeneric(Type callerType, string name, Type container)
 		{
