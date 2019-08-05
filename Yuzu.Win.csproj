@@ -74,6 +74,7 @@
     <Compile Include="Yuzu\BinaryGenerators.cs" />
     <Compile Include="Yuzu\BinarySerializer.cs" />
     <Compile Include="Yuzu\Clone.cs" />
+    <Compile Include="Yuzu\CloneGenerator.cs" />
     <Compile Include="Yuzu\Code.cs" />
     <Compile Include="Yuzu\Grisu\DiyFp.cs" />
     <Compile Include="Yuzu\Grisu\Grisu.cs" />

@@ -64,6 +64,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="GeneratedBinary.cs" />
+    <Compile Include="GeneratedCloner.cs" />
     <Compile Include="SampleAlias.cs" />
     <Compile Include="Samples.cs" />
     <Compile Include="Speed.cs" />

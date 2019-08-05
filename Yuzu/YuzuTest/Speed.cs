@@ -7,9 +7,11 @@ using ProtoBuf;
 
 using Yuzu;
 using Yuzu.Binary;
+using Yuzu.Clone;
 using Yuzu.Json;
 using Yuzu.Unsafe;
 using YuzuGenBin;
+using YuzuGenClone;
 using YuzuGen.YuzuTest;
 
 namespace YuzuTest
@@ -392,11 +394,19 @@ namespace YuzuTest
 		public void TestClone()
 		{
 			Assert.AreEqual(28076, SamplePerson.Counter);
-			var cl = new Yuzu.Clone.Cloner();
+			var cl = new Cloner();
 			var dst = cl.Deep(person);
 			Assert.AreEqual(person.Children.Count, dst.Children.Count);
 		}
 
+		[TestMethod]
+		public void TestCloneGen()
+		{
+			Assert.AreEqual(28076, SamplePerson.Counter);
+			var cl = new ClonerGen();
+			var dst = cl.Deep(person);
+			Assert.AreEqual(person.Children.Count, dst.Children.Count);
+		}
 	}
 
 }

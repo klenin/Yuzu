@@ -6,6 +6,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using Yuzu;
 using Yuzu.Binary;
+using Yuzu.Clone;
 using Yuzu.Code;
 using Yuzu.Json;
 using Yuzu.Metadata;
@@ -195,7 +196,17 @@ namespace YuzuTest
 				bd.Generate<YuzuTestAssembly.SampleAssemblyDerivedQ>();
 				bd.Generate<YuzuTest2.SampleNamespace>();
 			});
+			var cg = new ClonerGenerator();
+			bdg.SafetyChecks = true;
+			Gen(@"..\..\GeneratedCloner.cs", cg, cd => {
+				cd.Generate<Sample1>();
+				cd.Generate<Sample2>();
+				cd.Generate<Sample3>();
+				cd.Generate<SampleArray>();
+				cd.Generate<SampleDict>();
+				cd.Generate<Color>();
+				cd.Generate<SamplePerson>();
+			});
 		}
-
 	}
 }
