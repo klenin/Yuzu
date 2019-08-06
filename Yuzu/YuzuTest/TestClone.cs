@@ -261,5 +261,17 @@ namespace YuzuTest
 				Assert.AreEqual(src.A.X, dst.A.X);
 			});
 		}
+
+		[TestMethod]
+		public void TestFactory()
+		{
+			TestGen(cl => {
+				var src = SamplePrivateConstructor.Make();
+				src.X = 99;
+				var dst = cl.Deep(src);
+				Assert.AreNotEqual(src, dst);
+				Assert.AreEqual(src.X, dst.X);
+			});
+		}
 	}
 }

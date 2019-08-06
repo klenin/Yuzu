@@ -220,6 +220,7 @@ namespace YuzuTest
 				cd.Generate<SampleMatrix>();
 				cd.Generate<SampleStructWithClass>();
 				cd.Generate<SamplePerson>();
+				cd.Generate<SamplePrivateConstructor>();
 				cd.Generate<Color>();
 			});
 		}

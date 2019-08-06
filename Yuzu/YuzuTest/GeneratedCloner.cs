@@ -204,6 +204,15 @@ namespace YuzuGenClone
 		private static global::YuzuTest.SamplePoint Clone_YuzuTest__SamplePoint(Cloner cl, object src) =>
 			(global::YuzuTest.SamplePoint)src;
 
+		private static global::YuzuTest.SamplePrivateConstructor Clone_YuzuTest__SamplePrivateConstructor(Cloner cl, object src)
+		{
+			if (src == null) return null;
+			var result = global::YuzuTest.SamplePrivateConstructor.Make();
+			var s = (global::YuzuTest.SamplePrivateConstructor)src;
+			result.X = s.X;
+			return result;
+		}
+
 		private static global::YuzuTest.SampleRect Clone_YuzuTest__SampleRect(Cloner cl, object src)
 		{
 			if (src == null) return null;
@@ -243,6 +252,7 @@ namespace YuzuGenClone
 			clonerCache[typeof(global::YuzuTest.SampleObj)] = Clone_YuzuTest__SampleObj;
 			clonerCache[typeof(global::YuzuTest.SamplePerson)] = Clone_YuzuTest__SamplePerson;
 			clonerCache[typeof(global::YuzuTest.SamplePoint)] = ValueCopyCloner;
+			clonerCache[typeof(global::YuzuTest.SamplePrivateConstructor)] = Clone_YuzuTest__SamplePrivateConstructor;
 			clonerCache[typeof(global::YuzuTest.SampleRect)] = Clone_YuzuTest__SampleRect;
 			clonerCache[typeof(global::YuzuTest.SampleStructWithClass)] = Clone_YuzuTest__SampleStructWithClass_obj;
 		}
