@@ -233,6 +233,13 @@ namespace YuzuTest
 				Assert.AreEqual(src.A, dst.A);
 				Assert.AreEqual(src.B, dst.B);
 			});
+
+			TestGen(cl => {
+				var src = new SampleStructWithClass { A = new Sample1 { X = 14 } };
+				var dst = cl.Deep(src);
+				Assert.AreNotEqual(src.A, dst.A);
+				Assert.AreEqual(src.A.X, dst.A.X);
+			});
 		}
 	}
 }

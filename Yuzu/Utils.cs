@@ -51,6 +51,12 @@ namespace Yuzu.Util
 			return t.IsValueType && !t.IsPrimitive && !t.IsEnum && !t.IsPointer;
 		}
 
+		public static bool? IsCopyable(Type t) =>
+			t.IsPrimitive || t.IsEnum || t == typeof(string) ? true :
+			!t.IsValueType ? false :
+			t.Namespace == "System" ? (bool?)true :
+			null;
+
 		public static Type GetICollection(Type t)
 		{
 			if (t.Name == "ICollection`1") return t;

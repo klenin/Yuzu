@@ -301,6 +301,12 @@ namespace YuzuTest
 		public SamplePoint B;
 	}
 
+	public struct SampleStructWithClass
+	{
+		[YuzuRequired]
+		public Sample1 A;
+	}
+
 	[YuzuAll]
 	public class SampleDefault
 	{

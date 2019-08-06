@@ -200,6 +200,18 @@ namespace YuzuGenClone
 			return result;
 		}
 
+		private static global::YuzuTest.SampleStructWithClass Clone_YuzuTest__SampleStructWithClass(Cloner cl, object src)
+		{
+			var result = new global::YuzuTest.SampleStructWithClass();
+			var s = (global::YuzuTest.SampleStructWithClass)src;
+			result.A = Clone_YuzuTest__Sample1(cl, s.A);
+			return result;
+		}
+
+
+		private static object Clone_YuzuTest__SampleStructWithClass_obj(Cloner cl, object src) =>
+			Clone_YuzuTest__SampleStructWithClass(cl, src);
+
 		static ClonerGen()
 		{
 			clonerCache[typeof(global::YuzuTest.Color)] = Clone_YuzuTest__Color;
@@ -218,6 +230,7 @@ namespace YuzuGenClone
 			clonerCache[typeof(global::YuzuTest.SamplePerson)] = Clone_YuzuTest__SamplePerson;
 			clonerCache[typeof(global::YuzuTest.SamplePoint)] = ValueCopyCloner;
 			clonerCache[typeof(global::YuzuTest.SampleRect)] = Clone_YuzuTest__SampleRect;
+			clonerCache[typeof(global::YuzuTest.SampleStructWithClass)] = Clone_YuzuTest__SampleStructWithClass_obj;
 		}
 	}
 }

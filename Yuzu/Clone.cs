@@ -36,8 +36,10 @@ namespace Yuzu.Clone
 
 		public T Deep<T>(T obj) => (T)DeepObject(obj);
 
-		public static bool IsCopyable(Type t) =>
-			t.IsPrimitive || t.IsValueType || t == typeof(string);
+		public static bool IsCopyable(Type t, CommonOptions options) =>
+			Utils.IsCopyable(t) ?? Meta.Get(t, options).IsCopyable;
+
+		private bool IsCopyable(Type t) => IsCopyable(t, Options);
 
 		protected T[] CloneArray<T>(object src, Func<object, object> cloneElem)
 		{

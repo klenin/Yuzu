@@ -66,6 +66,7 @@ namespace Yuzu.Metadata
 		private MetaOptions Options;
 		public readonly List<Item> Items = new List<Item>();
 		public readonly bool IsCompact;
+		public bool IsCopyable;
 		public object Default { get; private set; }
 		public YuzuItemKind Must = YuzuItemKind.None;
 		public YuzuItemKind AllKind = YuzuItemKind.None;
@@ -191,6 +192,24 @@ namespace Yuzu.Metadata
 				Delegate.CreateDelegate(typeof(Func<object, object, bool>), this, mi);
 		}
 
+		private void CheckCopyable(Type t, CommonOptions options)
+		{
+			var isCopyable = Utils.IsCopyable(t);
+			if (isCopyable.HasValue) {
+				if (!isCopyable.Value)
+					IsCopyable = false;
+			}
+			else {
+				if (Utils.IsStruct(t)) {
+					var meta = Get(t, options);
+					if (!meta.IsCopyable)
+						IsCopyable = false;
+				}
+				else
+					IsCopyable = false;
+			}
+		}
+
 		private void AddItem(MemberInfo m, CommonOptions options, bool must, bool all)
 		{
 			var ia = new ItemAttrs(m, Options, all ? AllOptionality : YuzuItemOptionality.None);
@@ -260,6 +279,7 @@ namespace Yuzu.Metadata
 				item.IsCompact = true;
 			if (ia.Member != null && item.SerializeIf == null && !Type.IsAbstract && !Type.IsInterface)
 				item.SerializeIf = GetSerializeIf(item, options);
+			CheckCopyable(item.Type, options);
 			Items.Add(item);
 		}
 
@@ -351,6 +371,7 @@ namespace Yuzu.Metadata
 			Type = t;
 			Factory = defaultFactory;
 			Options = options.Meta ?? MetaOptions.Default;
+			IsCopyable = Utils.IsStruct(t);
 			var over = Options.GetOverride(t);
 			IsCompact = over.HasAttr(Options.CompactAttribute);
 			var must = over.Attr(Options.MustAttribute);

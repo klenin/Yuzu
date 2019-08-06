@@ -61,7 +61,9 @@ namespace Yuzu.Clone
 			cw.Put("{\n");
 			foreach (var r in generatedCloners.OrderBy(kv => kv.Key.Name))
 				cw.Put("clonerCache[typeof({0})] = {1};\n",
-					Utils.GetTypeSpec(r.Key), Utils.IsStruct(r.Key) ? "ValueCopyCloner" : r.Value);
+					Utils.GetTypeSpec(r.Key),
+					Cloner.IsCopyable(r.Key, options) ? "ValueCopyCloner" :
+					Utils.IsStruct(r.Key) ? r.Value + "_obj" : r.Value);
 			cw.Put("}\n");
 			cw.Put("}\n"); // Close class.
 			cw.Put("}\n"); // Close namespace.
@@ -74,7 +76,7 @@ namespace Yuzu.Clone
 
 		private string GenerateClonerSimple(Type t, string itemName)
 		{
-			if (Cloner.IsCopyable(t))
+			if (Cloner.IsCopyable(t, options))
 				return itemName;
 			if (t == typeof(object))
 				return string.Format("cl.DeepObject({0})", itemName);
@@ -105,7 +107,7 @@ namespace Yuzu.Clone
 				var e = yi.Type.GetElementType();
 				cw.Put("if (s.{0} != null) {{\n", yi.Name);
 				cw.Put("result.{0} = new {1}[s.{0}.Length];\n", yi.Name, Utils.GetTypeSpec(e));
-				if (Cloner.IsCopyable(e))
+				if (Cloner.IsCopyable(e, options))
 					cw.Put("Array.Copy(s.{0}, result.{0}, s.{0}.Length);\n", yi.Name);
 				else {
 					var indexName = cw.GetTempName();
@@ -172,7 +174,7 @@ namespace Yuzu.Clone
 
 			var meta = Meta.Get(t, options);
 
-			if (Utils.IsStruct(meta.Type)) {
+			if (Cloner.IsCopyable(meta.Type, options)) {
 				cw.Put("private static {0} {1}(Cloner cl, object src) =>\n", Utils.GetTypeSpec(t), clonerName);
 				cw.PutInd("({0})src;\n", Utils.GetTypeSpec(t));
 				cw.Put("\n");
@@ -181,13 +183,19 @@ namespace Yuzu.Clone
 
 			cw.Put("private static {0} {1}(Cloner cl, object src)\n", Utils.GetTypeSpec(t), clonerName);
 			cw.Put("{\n");
-			cw.Put("if (src == null) return null;\n");
+			if (!Utils.IsStruct(t))
+				cw.Put("if (src == null) return null;\n");
 			cw.Put("var result = {0};\n", GenerateFactoryCall(meta));
 			cw.Put("var s = ({0})src;\n", Utils.GetTypeSpec(t));
 			GenerateClonerBody(meta);
 			cw.Put("return result;\n");
 			cw.Put("}\n");
 			cw.Put("\n");
+			if (Utils.IsStruct(t)) {
+				cw.Put("private static object {0}_obj(Cloner cl, object src) =>\n", clonerName);
+				cw.PutInd("{0}(cl, src);\n", clonerName);
+				cw.Put("\n");
+			}
 		}
 	}
 }
