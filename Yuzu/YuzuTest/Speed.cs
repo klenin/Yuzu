@@ -121,6 +121,19 @@ namespace YuzuTest
 		}
 
 		[TestMethod]
+		public void TestCloneLongListInt()
+		{
+			var list1 = new SampleMatrix { M = new List<List<int>>() };
+			for (int i = 0; i < 1000; ++i) {
+				list1.M.Add(new List<int>());
+				for (int j = 0; j < 400; ++j)
+					list1.M[i].Add(i * j * 97);
+			}
+			var list2 = new ClonerGen().Deep(list1);
+			Assert.AreEqual(list1.M.Count, list2.M.Count);
+		}
+
+		[TestMethod]
 		public void TestJsonLongListLong()
 		{
 			var list1 = new List<long>();

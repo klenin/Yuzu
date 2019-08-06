@@ -153,6 +153,20 @@ namespace YuzuGenClone
 			return result;
 		}
 
+		private static global::YuzuTest.SampleMatrix Clone_YuzuTest__SampleMatrix(Cloner cl, object src)
+		{
+			if (src == null) return null;
+			var result = new global::YuzuTest.SampleMatrix();
+			var s = (global::YuzuTest.SampleMatrix)src;
+			if (s.M != null) {
+				result.M = new global::System.Collections.Generic.List<global::System.Collections.Generic.List<int>>();
+				var tmp2 = cl.GetCloner<global::System.Collections.Generic.List<int>>();
+				foreach (var tmp1 in s.M)
+					result.M.Add((global::System.Collections.Generic.List<int>)tmp2(tmp1));
+			}
+			return result;
+		}
+
 		private static global::YuzuTest.SampleNullable Clone_YuzuTest__SampleNullable(Cloner cl, object src)
 		{
 			if (src == null) return null;
@@ -208,7 +222,6 @@ namespace YuzuGenClone
 			return result;
 		}
 
-
 		private static object Clone_YuzuTest__SampleStructWithClass_obj(Cloner cl, object src) =>
 			Clone_YuzuTest__SampleStructWithClass(cl, src);
 
@@ -225,6 +238,7 @@ namespace YuzuGenClone
 			clonerCache[typeof(global::YuzuTest.SampleGenNoGen)] = Clone_YuzuTest__SampleGenNoGen;
 			clonerCache[typeof(global::YuzuTest.SampleItemObj)] = Clone_YuzuTest__SampleItemObj;
 			clonerCache[typeof(global::YuzuTest.SampleList)] = Clone_YuzuTest__SampleList;
+			clonerCache[typeof(global::YuzuTest.SampleMatrix)] = Clone_YuzuTest__SampleMatrix;
 			clonerCache[typeof(global::YuzuTest.SampleNullable)] = Clone_YuzuTest__SampleNullable;
 			clonerCache[typeof(global::YuzuTest.SampleObj)] = Clone_YuzuTest__SampleObj;
 			clonerCache[typeof(global::YuzuTest.SamplePerson)] = Clone_YuzuTest__SamplePerson;

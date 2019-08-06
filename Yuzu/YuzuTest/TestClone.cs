@@ -81,7 +81,7 @@ namespace YuzuTest
 		}
 
 		[TestMethod]
-		public void TestCollection()
+		public void TestArray()
 		{
 			TestGen(cl => {
 				var src = new int[5] { 2, 4, 5, 6, 8 };
@@ -107,6 +107,12 @@ namespace YuzuTest
 				Assert.AreNotEqual(src.A[0], dst.A[0]);
 				Assert.AreEqual(src.A[0].X, dst.A[0].X);
 			});
+		}
+
+		[TestMethod]
+		public void TestCollection()
+		{
+
 			TestGen(cl => {
 				var src = new List<string> { "s1", "s2" };
 				var dst = cl.Deep(src);
@@ -128,6 +134,20 @@ namespace YuzuTest
 				Assert.AreEqual(src.E.Count, dst.E.Count);
 				Assert.AreNotEqual(src.E, dst.E);
 				Assert.AreEqual(src.E[0], dst.E[0]);
+			});
+			TestGen(cl => {
+				var src = new SampleMatrix {
+					M = new List<List<int>> {
+						new List<int>{ 1, 2, 3 },
+						new List<int>{ 4 },
+					}
+				};
+				var dst = cl.Deep(src);
+				Assert.AreNotEqual(src, dst);
+				Assert.AreNotEqual(src.M, dst.M);
+				Assert.AreNotEqual(src.M[0], dst.M[0]);
+				CollectionAssert.AreEqual(src.M[0], dst.M[0]);
+				CollectionAssert.AreEqual(src.M[1], dst.M[1]);
 			});
 			TestGen(cl => {
 				var src = new SampleCollection<int> { 1, 5 };
