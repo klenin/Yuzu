@@ -55,11 +55,11 @@ namespace Yuzu.Clone
 
 		public void GenerateFooter()
 		{
-			foreach (var kv in generatedCloners)
+			foreach (var kv in generatedCloners.OrderBy(kv => kv.Key.Name))
 				ActuallyGenerate(kv.Key, kv.Value);
 			cw.Put("static ClonerGen()\n");
 			cw.Put("{\n");
-			foreach (var r in generatedCloners)
+			foreach (var r in generatedCloners.OrderBy(kv => kv.Key.Name))
 				cw.Put("clonerCache[typeof({0})] = {1};\n",
 					Utils.GetTypeSpec(r.Key), Utils.IsStruct(r.Key) ? "ValueCopyCloner" : r.Value);
 			cw.Put("}\n");
