@@ -214,5 +214,25 @@ namespace YuzuTest
 			});
 		}
 
+		[TestMethod]
+		public void TestStruct()
+		{
+			TestGen(cl => {
+				var src = new SamplePoint { X = 1, Y = 4 };
+				var dst = cl.Deep(src);
+				Assert.AreEqual(src, dst);
+			});
+
+			TestGen(cl => {
+				var src = new SampleRect {
+					A = new SamplePoint { X = 1, Y = 4 },
+					B = new SamplePoint { X = 5, Y = 2 },
+				};
+				var dst = cl.Deep(src);
+				Assert.AreNotEqual(src, dst);
+				Assert.AreEqual(src.A, dst.A);
+				Assert.AreEqual(src.B, dst.B);
+			});
+		}
 	}
 }

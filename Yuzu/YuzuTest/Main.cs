@@ -215,6 +215,8 @@ namespace YuzuTest
 				cd.Generate<SampleItemObj>();
 				cd.Generate<SampleDict>();
 				cd.Generate<SampleDictKeys>();
+				cd.Generate<SamplePoint>();
+				cd.Generate<SampleRect>();
 				cd.Generate<SamplePerson>();
 				cd.Generate<Color>();
 			});

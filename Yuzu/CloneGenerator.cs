@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 using Yuzu.Metadata;
 using Yuzu.Util;
@@ -13,6 +14,8 @@ namespace Yuzu.Clone
 		protected static Dictionary<Type, Func<Cloner, object, object>> clonerCache =
 			new Dictionary<Type, Func<Cloner, object, object>>();
 		public ClonerGenBase(): base(clonerCache) { }
+
+		public static object ValueCopyCloner(Cloner cl, object src) => src;
 	}
 
 	public class ClonerGenerator : IGenerator
@@ -57,7 +60,8 @@ namespace Yuzu.Clone
 			cw.Put("static ClonerGen()\n");
 			cw.Put("{\n");
 			foreach (var r in generatedCloners)
-				cw.Put("clonerCache[typeof({0})] = {1};\n", Utils.GetTypeSpec(r.Key), r.Value);
+				cw.Put("clonerCache[typeof({0})] = {1};\n",
+					Utils.GetTypeSpec(r.Key), Utils.IsStruct(r.Key) ? "ValueCopyCloner" : r.Value);
 			cw.Put("}\n");
 			cw.Put("}\n"); // Close class.
 			cw.Put("}\n"); // Close namespace.
@@ -168,10 +172,16 @@ namespace Yuzu.Clone
 
 			var meta = Meta.Get(t, options);
 
+			if (Utils.IsStruct(meta.Type)) {
+				cw.Put("private static {0} {1}(Cloner cl, object src) =>\n", Utils.GetTypeSpec(t), clonerName);
+				cw.PutInd("({0})src;\n", Utils.GetTypeSpec(t));
+				cw.Put("\n");
+				return;
+			}
+
 			cw.Put("private static {0} {1}(Cloner cl, object src)\n", Utils.GetTypeSpec(t), clonerName);
 			cw.Put("{\n");
-			if (!Utils.IsStruct(meta.Type))
-				cw.Put("if (src == null) return null;\n");
+			cw.Put("if (src == null) return null;\n");
 			cw.Put("var result = {0};\n", GenerateFactoryCall(meta));
 			cw.Put("var s = ({0})src;\n", Utils.GetTypeSpec(t));
 			GenerateClonerBody(meta);

@@ -17,7 +17,7 @@ namespace Yuzu.Clone
 
 		public Cloner() { }
 
-		protected Cloner(Dictionary<Type, Func<Cloner, object, object>> initClonerCache)
+		protected Cloner(IDictionary<Type, Func<Cloner, object, object>> initClonerCache)
 		{
 			foreach (var kv in initClonerCache)
 				clonerCache.Add(kv.Key, src => kv.Value(this, src));

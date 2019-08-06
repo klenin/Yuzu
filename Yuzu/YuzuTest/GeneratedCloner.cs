@@ -160,6 +160,19 @@ namespace YuzuGenClone
 			return result;
 		}
 
+		private static global::YuzuTest.SamplePoint Clone_YuzuTest__SamplePoint(Cloner cl, object src) =>
+			(global::YuzuTest.SamplePoint)src;
+
+		private static global::YuzuTest.SampleRect Clone_YuzuTest__SampleRect(Cloner cl, object src)
+		{
+			if (src == null) return null;
+			var result = new global::YuzuTest.SampleRect();
+			var s = (global::YuzuTest.SampleRect)src;
+			result.A = s.A;
+			result.B = s.B;
+			return result;
+		}
+
 		private static global::YuzuTest.SamplePerson Clone_YuzuTest__SamplePerson(Cloner cl, object src)
 		{
 			if (src == null) return null;
@@ -201,6 +214,8 @@ namespace YuzuGenClone
 			clonerCache[typeof(global::YuzuTest.SampleItemObj)] = Clone_YuzuTest__SampleItemObj;
 			clonerCache[typeof(global::YuzuTest.SampleDict)] = Clone_YuzuTest__SampleDict;
 			clonerCache[typeof(global::YuzuTest.SampleDictKeys)] = Clone_YuzuTest__SampleDictKeys;
+			clonerCache[typeof(global::YuzuTest.SamplePoint)] = ValueCopyCloner;
+			clonerCache[typeof(global::YuzuTest.SampleRect)] = Clone_YuzuTest__SampleRect;
 			clonerCache[typeof(global::YuzuTest.SamplePerson)] = Clone_YuzuTest__SamplePerson;
 			clonerCache[typeof(global::YuzuTest.Color)] = Clone_YuzuTest__Color;
 		}
