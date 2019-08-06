@@ -191,6 +191,8 @@ namespace Yuzu.Clone
 					}
 				}
 			}
+			if (t == typeof(object))
+				return DeepObject;
 			{
 				var icoll = Utils.GetICollection(t);
 				if (icoll != null) {

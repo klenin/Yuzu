@@ -72,6 +72,8 @@ namespace Yuzu.Clone
 		{
 			if (Cloner.IsCopyable(t))
 				return itemName;
+			if (t == typeof(object))
+				return string.Format("cl.DeepObject({0})", itemName);
 			string itemClonerName;
 			if (generatedCloners.TryGetValue(t, out itemClonerName))
 				return string.Format("{0}(cl, {1})", itemClonerName, itemName);

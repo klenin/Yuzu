@@ -86,6 +86,42 @@ namespace YuzuGenClone
 			return result;
 		}
 
+		private static global::YuzuTest.SampleNullable Clone_YuzuTest__SampleNullable(Cloner cl, object src)
+		{
+			if (src == null) return null;
+			var result = new global::YuzuTest.SampleNullable();
+			var s = (global::YuzuTest.SampleNullable)src;
+			result.N = s.N;
+			return result;
+		}
+
+		private static global::YuzuTest.SampleObj Clone_YuzuTest__SampleObj(Cloner cl, object src)
+		{
+			if (src == null) return null;
+			var result = new global::YuzuTest.SampleObj();
+			var s = (global::YuzuTest.SampleObj)src;
+			result.F = cl.DeepObject(s.F);
+			return result;
+		}
+
+		private static global::YuzuTest.SampleItemObj Clone_YuzuTest__SampleItemObj(Cloner cl, object src)
+		{
+			if (src == null) return null;
+			var result = new global::YuzuTest.SampleItemObj();
+			var s = (global::YuzuTest.SampleItemObj)src;
+			if (s.D != null) {
+				result.D = new global::System.Collections.Generic.Dictionary<string, object>();
+				foreach (var tmp1 in s.D)
+					result.D.Add(tmp1.Key, cl.DeepObject(tmp1.Value));
+			}
+			if (s.L != null) {
+				result.L = new global::System.Collections.Generic.List<object>();
+				foreach (var tmp2 in s.L)
+					result.L.Add(cl.DeepObject(tmp2));
+			}
+			return result;
+		}
+
 		private static global::YuzuTest.SampleDict Clone_YuzuTest__SampleDict(Cloner cl, object src)
 		{
 			if (src == null) return null;
@@ -160,6 +196,9 @@ namespace YuzuGenClone
 			clonerCache[typeof(global::YuzuTest.SampleArray)] = Clone_YuzuTest__SampleArray;
 			clonerCache[typeof(global::YuzuTest.SampleArrayOfClass)] = Clone_YuzuTest__SampleArrayOfClass;
 			clonerCache[typeof(global::YuzuTest.SampleList)] = Clone_YuzuTest__SampleList;
+			clonerCache[typeof(global::YuzuTest.SampleNullable)] = Clone_YuzuTest__SampleNullable;
+			clonerCache[typeof(global::YuzuTest.SampleObj)] = Clone_YuzuTest__SampleObj;
+			clonerCache[typeof(global::YuzuTest.SampleItemObj)] = Clone_YuzuTest__SampleItemObj;
 			clonerCache[typeof(global::YuzuTest.SampleDict)] = Clone_YuzuTest__SampleDict;
 			clonerCache[typeof(global::YuzuTest.SampleDictKeys)] = Clone_YuzuTest__SampleDictKeys;
 			clonerCache[typeof(global::YuzuTest.SamplePerson)] = Clone_YuzuTest__SamplePerson;

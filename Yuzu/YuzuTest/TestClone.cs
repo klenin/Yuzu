@@ -188,5 +188,31 @@ namespace YuzuTest
 				CollectionAssert.AreEqual(src, dst);
 			});
 		}
+
+		[TestMethod]
+		public void TestObject()
+		{
+			TestGen(cl => {
+				var src = new SampleObj { F = new int[] { 1 } };
+				var dst = cl.Deep(src);
+				Assert.AreNotEqual(src, dst);
+				Assert.AreNotEqual(src.F, dst.F);
+				CollectionAssert.AreEqual((int[])src.F, (int[])dst.F);
+			});
+			TestGen(cl => {
+				var src = new SampleItemObj {
+					L = new List<object> { new int[] { 1 }, 2, new Sample1() },
+					D = new Dictionary<string, object> { { "abc", 5 } },
+				};
+				var dst = cl.Deep(src);
+				Assert.AreNotEqual(src, dst);
+				Assert.AreNotEqual(src.L, dst.L);
+				CollectionAssert.AreEqual((int[])src.L[0], (int[])dst.L[0]);
+				Assert.AreEqual((int)src.L[1], (int)dst.L[1]);
+				Assert.AreEqual(((Sample1)src.L[2]).X, ((Sample1)dst.L[2]).X);
+				Assert.AreEqual((int)src.D["abc"], (int)dst.D["abc"]);
+			});
+		}
+
 	}
 }

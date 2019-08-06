@@ -317,6 +317,14 @@ namespace YuzuTest
 		public object F;
 	}
 
+	public class SampleItemObj
+	{
+		[YuzuRequired]
+		public List<object> L;
+		[YuzuRequired]
+		public Dictionary<string, object> D;
+	}
+
 	public class SampleDate
 	{
 		[YuzuRequired]
