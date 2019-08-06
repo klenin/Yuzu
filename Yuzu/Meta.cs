@@ -448,6 +448,12 @@ namespace Yuzu.Metadata
 				if (WriteAlias != null && WriteAlias == "")
 					throw Error("Empty write alias");
 			}
+
+			if (
+				BeforeSerialization.Actions.Any() || AfterSerialization.Actions.Any() ||
+				BeforeDeserialization.Actions.Any() || AfterDeserialization.Actions.Any()
+			)
+				IsCopyable = false;
 		}
 
 		private static Func<Tuple<Type, CommonOptions>, Meta> MakeMeta = key => new Meta(key.Item1, key.Item2);

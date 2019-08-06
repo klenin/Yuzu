@@ -28,9 +28,13 @@ namespace Yuzu.Clone
 		public object ShallowObject(object src)
 		{
 			var meta = Meta.Get(src.GetType(), Options);
+			meta.BeforeSerialization.Run(src);
 			var result = meta.Factory();
+			meta.BeforeDeserialization.Run(result);
 			foreach (var item in meta.Items)
 				item.SetValue(result, item.GetValue(src));
+			meta.AfterSerialization.Run(src);
+			meta.AfterDeserialization.Run(result);
 			return result;
 		}
 
@@ -226,10 +230,14 @@ namespace Yuzu.Clone
 					}
 					if (src == null)
 						return null;
+					meta.BeforeSerialization.Run(src);
 					var result = meta.Factory();
+					meta.BeforeDeserialization.Run(result);
 					int j = 0;
 					foreach (var item in meta.Items)
 						item.SetValue(result, cloners[j++](item.GetValue(src)));
+					meta.AfterSerialization.Run(src);
+					meta.AfterDeserialization.Run(result);
 					return result;
 				};
 

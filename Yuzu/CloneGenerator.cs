@@ -185,9 +185,13 @@ namespace Yuzu.Clone
 			cw.Put("{\n");
 			if (!Utils.IsStruct(t))
 				cw.Put("if (src == null) return null;\n");
-			cw.Put("var result = {0};\n", GenerateFactoryCall(meta));
 			cw.Put("var s = ({0})src;\n", Utils.GetTypeSpec(t));
+			cw.GenerateActionList(meta.BeforeSerialization, "s");
+			cw.Put("var result = {0};\n", GenerateFactoryCall(meta));
+			cw.GenerateActionList(meta.BeforeDeserialization);
 			GenerateClonerBody(meta);
+			cw.GenerateActionList(meta.AfterSerialization, "s");
+			cw.GenerateActionList(meta.AfterDeserialization);
 			cw.Put("return result;\n");
 			cw.Put("}\n");
 			cw.Put("\n");

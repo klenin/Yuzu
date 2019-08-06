@@ -221,6 +221,12 @@ namespace YuzuTest
 				cd.Generate<SampleStructWithClass>();
 				cd.Generate<SamplePerson>();
 				cd.Generate<SamplePrivateConstructor>();
+				cd.Generate<SampleBeforeSerialization>();
+				cd.Generate<SampleBefore2>();
+				cd.Generate<SampleAfterSerialization>();
+				cd.Generate<SampleBeforeDeserialization>();
+				cd.Generate<SampleAfterDeserialization>();
+				cd.Generate<SampleAfter2>();
 				cd.Generate<Color>();
 			});
 		}

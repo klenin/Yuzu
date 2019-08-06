@@ -273,5 +273,50 @@ namespace YuzuTest
 				Assert.AreEqual(src.X, dst.X);
 			});
 		}
+
+		[TestMethod]
+		public void TestBeforeAfter()
+		{
+			TestGen(cl => {
+				var src = new SampleBeforeSerialization { X = "m" };
+				var dst = cl.Deep(src);
+				Assert.AreNotEqual(src, dst);
+				Assert.AreEqual("m1", dst.X);
+			});
+			TestGen(cl => {
+				var src = new SampleBefore2 { X = "m" };
+				var dst = cl.Deep(src);
+				Assert.AreNotEqual(src, dst);
+				Assert.AreEqual("m231", dst.X);
+			});
+			TestGen(cl => {
+				var src = new SampleAfterSerialization { X = "m" };
+				var dst = cl.Deep(src);
+				Assert.AreNotEqual(src, dst);
+				Assert.AreEqual("m", dst.X);
+				Assert.AreEqual("m1", src.X);
+			});
+			TestGen(cl => {
+				var src = new SampleBeforeDeserialization();
+				var dst = cl.Deep(src);
+				Assert.AreNotEqual(src, dst);
+				Assert.AreEqual("2X", dst.X);
+				Assert.AreEqual("X", src.X);
+			});
+			TestGen(cl => {
+				var src = new SampleAfterDeserialization { X = "m" };
+				var dst = cl.Deep(src);
+				Assert.AreNotEqual(src, dst);
+				Assert.AreEqual("m1", dst.X);
+				Assert.AreEqual("m", src.X);
+			});
+			TestGen(cl => {
+				var src = new SampleAfter2 { X = "m" };
+				var dst = cl.Deep(src);
+				Assert.AreNotEqual(src, dst);
+				Assert.AreEqual("m231", dst.X);
+				Assert.AreEqual("m", src.X);
+			});
+		}
 	}
 }

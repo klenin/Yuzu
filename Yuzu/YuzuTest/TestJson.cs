@@ -1371,7 +1371,6 @@ namespace YuzuTest.Json
 			var v1 = new SampleBefore2 { X = "m" };
 			var result1 = js.ToString(v1);
 			Assert.AreEqual("{\n\t\"X\":\"m231\"\n}", result1);
-
 		}
 
 		[TestMethod]

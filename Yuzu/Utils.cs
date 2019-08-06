@@ -305,10 +305,10 @@ namespace Yuzu.Util
 			return "tmp" + tempCount.ToString();
 		}
 
-		public void GenerateActionList(ActionList actions)
+		public void GenerateActionList(ActionList actions, string name = "result")
 		{
 			foreach (var a in actions.Actions)
-				Put("result.{0}();\n", a.Info.Name);
+				Put("{0}.{1}();\n", name, a.Info.Name);
 		}
 
 	}
