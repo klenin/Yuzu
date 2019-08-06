@@ -52,7 +52,8 @@ Can be substituted by changing `MetaOptions.MergeAttribute`.
 
 #### `[YuzuCompact]`
 Selects more compact serialized representation at the expense of backward and forward compatibility.
-This attrubute can be used for increasing serialization and deserialization speed as well as readablity of text-based formats. The downside is that changing `YuzuCompact` item will break compatibility with both old and new versions of the serialized data.
+This attrubute can be used for increasing serialization and deserialization speed as well as readablity of text-based formats.
+The downside is that changing `YuzuCompact` item will break compatibility with both old and new versions of the serialized data.
 
 Can be substituted by changing `MetaOptions.CompactAttribute`.
 
@@ -64,12 +65,27 @@ Can be substituted by changing `MetaOptions.ExcludeAttribute`.
 ## Method attributes
 
 #### `[YuzuBeforeSerialization]`
-Denotes a `void` method without arguments, which will be called immediately before this object is serialized. If there are several `[YuzuBeforeSerialization]` methods, first methods of the current class are called in the order of source code definition, then methods from the parent class are called. This order is opposite of `[YuzuAfterDeserialization]`.
+Denotes a `void` method without arguments, which will be called immediately before this object is serialized.
+If there are several `[YuzuBeforeSerialization]` methods, first methods of the current class are called in the order of source code definition, then methods from the parent class are called. This order is opposite of `[YuzuAfterDeserialization]`.
 
 Can be substituted by changing `MetaOptions.BeforeSerializationAttribute`.
 
+#### `[YuzuAfterSerialization]`
+Denotes a `void` method without arguments, which will be called immediately after this object is serialized.
+If there are several `[YuzuAfterSerialization]` methods, first methods of the current class are called in the order of source code definition, then methods from the parent class are called. This order is opposite of `[YuzuBeforeDeserialization]`.
+
+Can be substituted by changing `MetaOptions.AfterSerializationAttribute`.
+
+#### `[YuzuBeforeDeserialization]`
+Denotes a `void` method without arguments, which will be called immediately before this object is deserialized.
+Usually this method is called immediately after construction of deserialized object, except when merging into existing object.
+If there are several `[YuzuBeforeDeserialization]` methods, first methods from the parent class are called, then methods of the current class are called in the order of source code definition. This order is opposite of `[YuzuAfterSerialization]`.
+
+Can be substituted by changing `MetaOptions.YuzuBeforeDeserializationAttribute`.
+
 #### `[YuzuAfterDeserialization]`
-Denotes a `void` method without arguments, which will be called immediately after this object is deserialized. If there are several `[YuzuAfterDeserialization]` methods, first methods from the parent class are called, then methods  of the current class are called in the order of source code definition. This order is opposite of `[YuzuBeforeSerialization]`.
+Denotes a `void` method without arguments, which will be called immediately after this object is deserialized.
+If there are several `[YuzuAfterDeserialization]` methods, first methods from the parent class are called, then methods of the current class are called in the order of source code definition. This order is opposite of `[YuzuBeforeSerialization]`.
 
 Can be substituted by changing `MetaOptions.YuzuAfterDeserializationAttribute`.
 
