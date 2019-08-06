@@ -1282,35 +1282,43 @@ namespace YuzuTest.Binary
 		public void TestEscape()
 		{
 			var bs = new BinarySerializer();
-
-			var s = "\"/{\u0001}\n\t\"\"";
-			var v = new Sample1 { Y = s };
-			var result = bs.ToBytes(v);
-			Assert.AreEqual(
-				"20 01 00 " + XS(typeof(Sample1)) + " 02 00 " +
-				XS("X", RoughType.Int, "Y", RoughType.String) +
-				" 01 00 00 00 00 00 02 00 " + XS(s) + " 00 00",
-				XS(result));
-
-			var w = new Sample1();
 			var bd = new BinaryDeserializer();
-			bd.FromBytes(w, result);
-			Assert.AreEqual(s, w.Y);
+			{
+				var s = "\"/{\u0001}\n\t\"\"";
+				var v = new Sample1 { Y = s };
+				var result = bs.ToBytes(v);
+				Assert.AreEqual(
+					"20 01 00 " + XS(typeof(Sample1)) + " 02 00 " +
+					XS("X", RoughType.Int, "Y", RoughType.String) +
+					" 01 00 00 00 00 00 02 00 " + XS(s) + " 00 00",
+					XS(result));
 
-			v.Y = "привет";
-			var result2 = bs.ToBytes(v);
-			Assert.AreEqual(
-				"20 01 00 01 00 00 00 00 00 02 00 0C " +
-				XS(Encoding.UTF8.GetBytes("привет")) + " 00 00",
-				XS(result2));
-			bd.FromBytes(w, result2);
-			Assert.AreEqual(v.Y, w.Y);
+				var w = new Sample1();
+				bd.FromBytes(w, result);
+				Assert.AreEqual(s, w.Y);
 
-			var ms = new MemoryStream(result2.Length);
-			ms.Write(result2, 0, result2.Length);
-			ms.Position = 0;
-			bd.FromReader(w, new UnsafeBinaryReader(ms));
-			Assert.AreEqual(v.Y, w.Y);
+				v.Y = "привет";
+				var result2 = bs.ToBytes(v);
+				Assert.AreEqual(
+					"20 01 00 01 00 00 00 00 00 02 00 0C " +
+					XS(Encoding.UTF8.GetBytes("привет")) + " 00 00",
+					XS(result2));
+				bd.FromBytes(w, result2);
+				Assert.AreEqual(v.Y, w.Y);
+
+				var ms = new MemoryStream(result2.Length);
+				ms.Write(result2, 0, result2.Length);
+				ms.Position = 0;
+				bd.FromReader(w, new UnsafeBinaryReader(ms));
+				Assert.AreEqual(v.Y, w.Y);
+			}
+			{
+				var a = "\ud801\udc37";
+				var result = bs.ToBytes(a);
+				var b = new byte[] { 16, 4 }.Concat(Encoding.UTF8.GetBytes(a)).ToArray();
+				CollectionAssert.AreEqual(b, result);
+				Assert.AreEqual(a, bd.FromBytes(b));
+			}
 		}
 
 		[TestMethod]
