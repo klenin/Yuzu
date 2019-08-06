@@ -20,8 +20,8 @@ namespace Yuzu.Metadata
 			new ConcurrentDictionary<Tuple<Type, MetaOptions>, State>();
 
 		private MethodInfo methodIf;
-		private MethodInfo methodTo;
-		private MethodInfo methodFrom;
+		public MethodInfo MethodTo;
+		public MethodInfo MethodFrom;
 
 		public Func<object, bool> FuncIf;
 		public Func<object, object> FuncTo;
@@ -56,8 +56,8 @@ namespace Yuzu.Metadata
 		{
 			var attrs = options.GetItem(m);
 			MaybeSet(m, attrs, options.SurrogateIfAttribute, "SurrogateIf", ref methodIf);
-			MaybeSet(m, attrs, options.ToSurrogateAttribute, "ToSurrogate", ref methodTo);
-			MaybeSet(m, attrs, options.FromSurrogateAttribute, "FromSurrogate", ref methodFrom);
+			MaybeSet(m, attrs, options.ToSurrogateAttribute, "ToSurrogate", ref MethodTo);
+			MaybeSet(m, attrs, options.FromSurrogateAttribute, "FromSurrogate", ref MethodFrom);
 		}
 
 		private void CheckAccepts(MethodInfo m, string name, Type paramType)
@@ -98,39 +98,39 @@ namespace Yuzu.Metadata
 				}
 			}
 
-			if (methodTo != null) {
-				if (methodTo.ReturnType == typeof(void))
-					throw Error("ToSurrogate '{0}' returns void", methodTo.Name);
-				SurrogateType = methodTo.ReturnType;
-				SetTypeState(methodTo.ReturnType, State.Is);
+			if (MethodTo != null) {
+				if (MethodTo.ReturnType == typeof(void))
+					throw Error("ToSurrogate '{0}' returns void", MethodTo.Name);
+				SurrogateType = MethodTo.ReturnType;
+				SetTypeState(MethodTo.ReturnType, State.Is);
 				if (SurrogateType == ownerType)
-					throw Error("ToSurrogate '{0}' returns owner type", methodTo.Name);
-				if (methodTo.IsStatic) {
-					CheckAccepts(methodTo, "ToSurrogate", ownerType);
-					FuncTo = obj => methodTo.Invoke(null, new object[] { obj });
+					throw Error("ToSurrogate '{0}' returns owner type", MethodTo.Name);
+				if (MethodTo.IsStatic) {
+					CheckAccepts(MethodTo, "ToSurrogate", ownerType);
+					FuncTo = obj => MethodTo.Invoke(null, new object[] { obj });
 				} else {
-					var p = methodTo.GetParameters();
+					var p = MethodTo.GetParameters();
 					if (p.Length != 0)
-						throw Error("ToSurrogate '{0}' must have 0 parameters, but has {1}", methodTo.Name, p.Length);
-					FuncTo = obj => methodTo.Invoke(obj, null);
+						throw Error("ToSurrogate '{0}' must have 0 parameters, but has {1}", MethodTo.Name, p.Length);
+					FuncTo = obj => MethodTo.Invoke(obj, null);
 				}
 			}
 
-			if (methodFrom != null) {
-				if (!methodFrom.IsStatic)
-					throw Error("FromSurrogate '{0}' must be static", methodFrom.Name);
-				if (!ownerType.IsAssignableFrom(methodFrom.ReturnType))
+			if (MethodFrom != null) {
+				if (!MethodFrom.IsStatic)
+					throw Error("FromSurrogate '{0}' must be static", MethodFrom.Name);
+				if (!ownerType.IsAssignableFrom(MethodFrom.ReturnType))
 					throw Error(
 						"FromSurrogate '{0}' must return '{1}', but returns '{2}'",
-						methodFrom.Name, ownerType.Name, methodFrom.ReturnType.Name);
+						MethodFrom.Name, ownerType.Name, MethodFrom.ReturnType.Name);
 				// FromSurrogate does not make source type a surrogate by itself.
 				if (SurrogateType == null) {
-					SurrogateType = methodFrom.GetParameters()[0].ParameterType;
+					SurrogateType = MethodFrom.GetParameters()[0].ParameterType;
 					if (SurrogateType == ownerType)
-						throw Error("FromSurrogate '{0}' accepts owner type", methodFrom.Name);
+						throw Error("FromSurrogate '{0}' accepts owner type", MethodFrom.Name);
 				}
-				CheckAccepts(methodFrom, "FromSurrogate", SurrogateType);
-				FuncFrom = obj => methodFrom.Invoke(null, new object[] { obj });
+				CheckAccepts(MethodFrom, "FromSurrogate", SurrogateType);
+				FuncFrom = obj => MethodFrom.Invoke(null, new object[] { obj });
 			}
 
 			if (SurrogateType != null)

@@ -227,6 +227,7 @@ namespace YuzuTest
 				cd.Generate<SampleBeforeDeserialization>();
 				cd.Generate<SampleAfterDeserialization>();
 				cd.Generate<SampleAfter2>();
+				cd.Generate<SampleSurrogateColor>();
 				cd.Generate<Color>();
 			});
 		}

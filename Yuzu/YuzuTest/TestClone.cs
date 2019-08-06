@@ -318,5 +318,20 @@ namespace YuzuTest
 				Assert.AreEqual("m", src.X);
 			});
 		}
+
+		[TestMethod]
+		public void TestSurrogate()
+		{
+			TestGen(cl => {
+				var src = new SampleSurrogateColor { R = 123, G = 11, B = 77 };
+				var dst = cl.Deep(src);
+				Assert.AreNotEqual(src, dst);
+				Assert.AreEqual(src.R, dst.R);
+				Assert.AreEqual(src.G, dst.G);
+				Assert.AreEqual(src.B, dst.B);
+			});
+			XAssert.Throws<Yuzu.YuzuException>(
+				() => new Cloner().Deep(new SampleSurrogateColorIf()), "Both");
+		}
 	}
 }

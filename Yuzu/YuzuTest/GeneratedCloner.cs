@@ -298,6 +298,15 @@ namespace YuzuGenClone
 		private static object Clone_YuzuTest__SampleStructWithClass_obj(Cloner cl, object src) =>
 			Clone_YuzuTest__SampleStructWithClass(cl, src);
 
+		private static global::YuzuTest.SampleSurrogateColor Clone_YuzuTest__SampleSurrogateColor(Cloner cl, object src)
+		{
+			if (src == null) return null;
+			var s = (global::YuzuTest.SampleSurrogateColor)src;
+			var tmp1 = s.ToSurrogate();
+			var result = global::YuzuTest.SampleSurrogateColor.FromSurrogate(tmp1);
+			return result;
+		}
+
 		static ClonerGen()
 		{
 			clonerCache[typeof(global::YuzuTest.Color)] = Clone_YuzuTest__Color;
@@ -325,6 +334,7 @@ namespace YuzuGenClone
 			clonerCache[typeof(global::YuzuTest.SamplePrivateConstructor)] = Clone_YuzuTest__SamplePrivateConstructor;
 			clonerCache[typeof(global::YuzuTest.SampleRect)] = Clone_YuzuTest__SampleRect;
 			clonerCache[typeof(global::YuzuTest.SampleStructWithClass)] = Clone_YuzuTest__SampleStructWithClass_obj;
+			clonerCache[typeof(global::YuzuTest.SampleSurrogateColor)] = Clone_YuzuTest__SampleSurrogateColor;
 		}
 	}
 }

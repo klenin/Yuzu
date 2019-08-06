@@ -165,6 +165,22 @@ namespace Yuzu.Clone
 			generatedCloners[t] = clonerName;
 		}
 
+		private bool GenerateSurrogateCloner(Meta meta)
+		{
+			var sg = meta.Surrogate;
+			if (sg.SurrogateType == null)
+				return false;
+			if (sg.FuncFrom == null || sg.FuncTo == null)
+				throw new YuzuException("Both FromSurrogate and ToSurrogate must be defined for cloning");
+			var surrogateTempName = cw.GetTempName();
+			var surrogateClone = GenerateClonerInit(
+				sg.SurrogateType, string.Format("s.{0}()", sg.MethodTo.Name));
+			cw.Put("var {0} = {1};\n", surrogateTempName, surrogateClone);
+			cw.Put("var result = {0}.{1}({2});\n",
+				Utils.GetTypeSpec(meta.Type), sg.MethodFrom.Name, surrogateTempName);
+			return true;
+		}
+
 		private void ActuallyGenerate(Type t, string clonerName)
 		{
 			if (t.IsInterface)
@@ -187,9 +203,11 @@ namespace Yuzu.Clone
 				cw.Put("if (src == null) return null;\n");
 			cw.Put("var s = ({0})src;\n", Utils.GetTypeSpec(t));
 			cw.GenerateActionList(meta.BeforeSerialization, "s");
-			cw.Put("var result = {0};\n", GenerateFactoryCall(meta));
-			cw.GenerateActionList(meta.BeforeDeserialization);
-			GenerateClonerBody(meta);
+			if (!GenerateSurrogateCloner(meta)) {
+				cw.Put("var result = {0};\n", GenerateFactoryCall(meta));
+				cw.GenerateActionList(meta.BeforeDeserialization);
+				GenerateClonerBody(meta);
+			}
 			cw.GenerateActionList(meta.AfterSerialization, "s");
 			cw.GenerateActionList(meta.AfterDeserialization);
 			cw.Put("return result;\n");

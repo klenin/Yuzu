@@ -148,6 +148,17 @@ namespace Yuzu.Clone
 			(Func<object, TParam1, TParam2, object>)Delegate.CreateDelegate(
 				typeof(Func<object, TParam1, TParam2, object>), this, m);
 
+		private Func<object, object> MakeSurrogateCloner(Meta meta)
+		{
+			var sg = meta.Surrogate;
+			if (sg.SurrogateType == null)
+				return null;
+			if (sg.FuncFrom == null || sg.FuncTo == null)
+				throw new YuzuException("Both FromSurrogate and ToSurrogate must be defined for cloning");
+			var surrogateCloner = GetCloner(sg.SurrogateType);
+			return src => sg.FuncFrom(surrogateCloner(sg.FuncTo(src)));
+		}
+
 		private Func<object, object> MakeCloner(Type t)
 		{
 			if (IsCopyable(t)) return ValueCopy;
@@ -218,8 +229,11 @@ namespace Yuzu.Clone
 			}
 			if (t.IsClass || t.IsInterface || Utils.IsStruct(t)) {
 				var meta = Meta.Get(t, Options);
+				var surrogateCloner = MakeSurrogateCloner(meta);
+				if (surrogateCloner != null)
+					return surrogateCloner;
 				if (meta.Items.Count == 0)
-					return CloneNull;
+					return src => meta.Factory();
 				var cloners = new Func<object, object>[meta.Items.Count];
 				return src => {
 					if (cloners[0] == null) {
