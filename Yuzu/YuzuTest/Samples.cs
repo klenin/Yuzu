@@ -572,23 +572,23 @@ namespace YuzuTest
 		public IEnumerable<int> L = new int[] { 1, 2, 3 };
 	}
 
-	public class SampleBefore
+	public class SampleBeforeSerialization
 	{
 		[YuzuRequired]
 		public string X;
 		[YuzuBeforeSerialization]
-		public void After() { X += "1"; }
+		public void Before() { X += "1"; }
 	}
 
-	public class SampleBefore2 : SampleBefore
+	public class SampleBefore2 : SampleBeforeSerialization
 	{
 		[YuzuBeforeSerialization]
-		public void After2() { X += "2"; }
+		public void Before2() { X += "2"; }
 		[YuzuBeforeSerialization]
-		public void After3() { X += "3"; }
+		public void Before3() { X += "3"; }
 	}
 
-	public class SampleAfter
+	public class SampleAfterDeserialization
 	{
 		[YuzuRequired]
 		public string X;
@@ -596,7 +596,7 @@ namespace YuzuTest
 		public void After() { X += "1"; }
 	}
 
-	public class SampleAfter2 : SampleAfter
+	public class SampleAfter2 : SampleAfterDeserialization
 	{
 		[YuzuAfterDeserialization]
 		public void After2() { X += "2"; }

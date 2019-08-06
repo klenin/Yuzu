@@ -1433,10 +1433,10 @@ namespace YuzuTest.Binary
 		public void TestBeforeSerialization()
 		{
 			var bs = new BinarySerializer();
-			var v0 = new SampleBefore { X = "m" };
+			var v0 = new SampleBeforeSerialization { X = "m" };
 			var result0 = bs.ToBytes(v0);
 			Assert.AreEqual(
-				"20 01 00 " + XS(typeof(SampleBefore)) + " 01 00 " + XS("X", RoughType.String) +
+				"20 01 00 " + XS(typeof(SampleBeforeSerialization)) + " 01 00 " + XS("X", RoughType.String) +
 				" 01 00 " + XS("m1") + " 00 00",
 				XS(result0));
 			var result1 = bs.ToBytes(new SampleBefore2 { X = "m" });
@@ -1450,16 +1450,16 @@ namespace YuzuTest.Binary
 		public void TestAfterDeserialization()
 		{
 			var bs = new BinarySerializer();
-			var v0 = new SampleAfter { X = "m" };
+			var v0 = new SampleAfterDeserialization { X = "m" };
 			var result0 = bs.ToBytes(v0);
 			Assert.AreEqual(
-				"20 01 00 " + XS(typeof(SampleAfter)) + " 01 00 " + XS("X", RoughType.String) +
+				"20 01 00 " + XS(typeof(SampleAfterDeserialization)) + " 01 00 " + XS("X", RoughType.String) +
 				" 01 00 " + XS("m") + " 00 00",
 				XS(result0));
 			var result1 = bs.ToBytes(new SampleAfter2 { X = "m" });
 
 			CheckDeserializers(bd => {
-				Assert.AreEqual("m1", bd.FromBytes<SampleAfter>(result0).X);
+				Assert.AreEqual("m1", bd.FromBytes<SampleAfterDeserialization>(result0).X);
 				Assert.AreEqual("m231", bd.FromBytes<SampleAfter2>(result1).X);
 			});
 		}
