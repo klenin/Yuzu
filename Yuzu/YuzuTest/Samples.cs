@@ -63,6 +63,18 @@ namespace YuzuTest
 		}
 	}
 
+	public class SampleNoGen
+	{
+		[YuzuRequired]
+		public int Z;
+	}
+
+	public class SampleGenNoGen
+	{
+		[YuzuRequired]
+		public SampleNoGen NG;
+	}
+
 	[YuzuAllowReadingFromAncestor]
 	public class Sample2Allow : Sample2
 	{
@@ -185,6 +197,12 @@ namespace YuzuTest
 	{
 		[YuzuRequired]
 		public int[][] A;
+	}
+
+	public class SampleArrayOfClass
+	{
+		[YuzuRequired]
+		public Sample1[] A;
 	}
 
 	public class SampleTree

@@ -52,6 +52,8 @@ namespace Yuzu.Clone
 
 		public void GenerateFooter()
 		{
+			foreach (var kv in generatedCloners)
+				ActuallyGenerate(kv.Key, kv.Value);
 			cw.Put("static ClonerGen()\n");
 			cw.Put("{\n");
 			foreach (var r in generatedCloners)
@@ -66,56 +68,60 @@ namespace Yuzu.Clone
 				String.Format("new {0}()", Utils.GetTypeSpec(meta.Type)) :
 				String.Format("{0}.{1}()", Utils.GetTypeSpec(meta.Type), meta.FactoryMethod.Name);
 
+		private string GenerateClonerSimple(Type t, string itemName)
+		{
+			if (Cloner.IsCopyable(t))
+				return itemName;
+			string itemClonerName;
+			if (generatedCloners.TryGetValue(t, out itemClonerName))
+				return string.Format("{0}(cl, {1})", itemClonerName, itemName);
+			return null;
+		}
+
+		private string GenerateClonerInit(Type t, string itemName)
+		{
+			var result = GenerateClonerSimple(t, itemName);
+			if (result != null)
+				return result;
+			var clonerName = cw.GetTempName();
+			cw.Put("var {0} = cl.GetCloner<{1}>();\n", clonerName, Utils.GetTypeSpec(t));
+			return string.Format("({0}){1}({2})", Utils.GetTypeSpec(t), clonerName, itemName);
+		}
+
 		private void GenerateCloneItem(Meta meta, Meta.Item yi)
 		{
-			if (Cloner.IsCopyable(yi.Type)) {
-				cw.Put("result.{0} = s.{0};\n", yi.Name);
-				return;
-			}
-			string generatedClonerName;
-			if (generatedCloners.TryGetValue(yi.Type, out generatedClonerName)) {
-				cw.Put("result.{0} = ({1}){2}(cl, s.{0});\n",
-					yi.Name, Utils.GetTypeSpec(yi.Type), generatedClonerName);
+			var simpleCloner = GenerateClonerSimple(yi.Type, "s." + yi.Name);
+			if (simpleCloner != null) {
+				cw.Put("result.{0} = {1};\n", yi.Name, simpleCloner);
 				return;
 			}
 			if (yi.Type.IsArray) {
 				var e = yi.Type.GetElementType();
-				if (Cloner.IsCopyable(e)) {
-					cw.Put("result.{0} = cl.CloneArrayPrimitive<{1}>(s.{0});\n",
-						yi.Name, Utils.GetTypeSpec(e));
-				}
+				cw.Put("if (s.{0} != null) {{\n", yi.Name);
+				cw.Put("result.{0} = new {1}[s.{0}.Length];\n", yi.Name, Utils.GetTypeSpec(e));
+				if (Cloner.IsCopyable(e))
+					cw.Put("Array.Copy(s.{0}, result.{0}, s.{0}.Length);\n", yi.Name);
 				else {
-					cw.Put("result.{0} = cl.CloneArray(s.{0});\n", yi.Name, Utils.GetTypeSpec(e));
+					var indexName = cw.GetTempName();
+					var clonerCall = GenerateClonerInit(e, string.Format("s.{0}[{1}]", yi.Name, indexName));
+					cw.Put("for(int {0} = 0; {0} < s.{1}.Length; ++{0})\n", indexName, yi.Name);
+					cw.PutInd("result.{0}[{1}] = {2};\n", yi.Name, indexName, clonerCall);
 				}
+				cw.Put("}\n");
 				return;
 			}
 			{
 				var idict = Utils.GetIDictionary(yi.Type);
 				if (idict != null) {
 					var a = idict.GetGenericArguments();
-					if (!Cloner.IsCopyable(a[0])) {
-						var tempKeyClonerName = cw.GetTempName();
-						var tempValueClonerName = cw.GetTempName();
-						cw.Put("var {0} = cl.GetCloner(typeof({1}));\n",
-							tempKeyClonerName, Utils.GetTypeSpec(a[0]));
-						cw.Put("var {0} = cl.GetCloner(typeof({1}));\n",
-							tempValueClonerName, Utils.GetTypeSpec(a[1]));
-						cw.Put("result.{0} = cl.CloneIDictionary<{1}, {2}, {3}>(s.{0}, {4}, {5});\n",
-							yi.Name, Utils.GetTypeSpec(yi.Type),
-							Utils.GetTypeSpec(a[0]), Utils.GetTypeSpec(a[1]),
-							tempKeyClonerName, tempValueClonerName);
-					}
-					else if (!Cloner.IsCopyable(a[1])) {
-						var tempValueClonerName = cw.GetTempName();
-						cw.Put("var {0} = cl.GetCloner(typeof({1}));\n",
-							tempValueClonerName, Utils.GetTypeSpec(a[1]));
-						cw.Put("result.{0} = cl.CloneIDictionaryPrimiviteKey<{1}, {2}, {3}>(s.{0}, {4});\n",
-							yi.Name, Utils.GetTypeSpec(yi.Type),
-							Utils.GetTypeSpec(a[0]), Utils.GetTypeSpec(a[1]),
-							tempValueClonerName);
-					}
-					else
-						cw.Put("result.{0} = cl.CloneIDictionaryPrimitive(s.{0});\n", yi.Name);
+					cw.Put("if (s.{0} != null) {{\n", yi.Name);
+					cw.Put("result.{0} = new {1}();\n", yi.Name, Utils.GetTypeSpec(yi.Type));
+					var itemName = cw.GetTempName();
+					var clonerCallK = GenerateClonerInit(a[0], string.Format("{0}.Key", itemName));
+					var clonerCallV = GenerateClonerInit(a[1], string.Format("{0}.Value", itemName));
+					cw.Put("foreach (var {0} in s.{1})\n", itemName, yi.Name);
+					cw.PutInd("result.{0}.Add({1}, {2});\n", yi.Name, clonerCallK, clonerCallV);
+					cw.Put("}\n");
 					return;
 				}
 			}
@@ -123,21 +129,17 @@ namespace Yuzu.Clone
 				var icoll = Utils.GetICollection(yi.Type);
 				if (icoll != null) {
 					var a = icoll.GetGenericArguments();
-					if (!Cloner.IsCopyable(a[0])) {
-						var tempClonerName = cw.GetTempName();
-						cw.Put("var {0} = cl.GetCloner(typeof({1}));\n",
-							tempClonerName, Utils.GetTypeSpec(a[0]));
-						cw.Put("result.{0} = cl.CloneCollection<{1}, {2}>(s.{0}, {3});\n",
-							yi.Name, Utils.GetTypeSpec(yi.Type), Utils.GetTypeSpec(a[0]), tempClonerName);
-					}
-					else
-						cw.Put("result.{0} = cl.CloneCollectionPrimitive(s.{0});\n", yi.Name);
+					cw.Put("if (s.{0} != null) {{\n", yi.Name);
+					cw.Put("result.{0} = new {1}();\n", yi.Name, Utils.GetTypeSpec(yi.Type));
+					var itemName = cw.GetTempName();
+					var clonerCall = GenerateClonerInit(a[0], itemName);
+					cw.Put("foreach (var {0} in s.{1})\n", itemName, yi.Name);
+					cw.PutInd("result.{0}.Add({1});\n", yi.Name, clonerCall);
+					cw.Put("}\n");
+					return;
 				}
-				return;
 			}
-
-			cw.Put("result.{0} = ({1})cl.GetCloner(typeof({1}))(s.{0});\n",
-				yi.Name, Utils.GetTypeSpec(yi.Type));
+			cw.Put("result.{0} = cl.Deep(s.{0});\n", yi.Name);
 		}
 
 		private void GenerateClonerBody(Meta meta)
@@ -151,6 +153,12 @@ namespace Yuzu.Clone
 
 		public void Generate(Type t)
 		{
+			var clonerName = "Clone_" + Utils.GetMangledTypeNameNS(t);
+			generatedCloners[t] = clonerName;
+		}
+
+		private void ActuallyGenerate(Type t, string clonerName)
+		{
 			if (t.IsInterface)
 				throw new YuzuException("Useless ClonerGenerator for interface " + t.FullName);
 			if (t.IsAbstract)
@@ -158,16 +166,16 @@ namespace Yuzu.Clone
 
 			var meta = Meta.Get(t, options);
 
-			var clonerName = "Clone_" + Utils.GetMangledTypeNameNS(t);
-			cw.Put("private static object {0}(Cloner cl, object src)\n", clonerName);
+			cw.Put("private static {0} {1}(Cloner cl, object src)\n", Utils.GetTypeSpec(t), clonerName);
 			cw.Put("{\n");
+			if (!Utils.IsStruct(meta.Type))
+				cw.Put("if (src == null) return null;\n");
 			cw.Put("var result = {0};\n", GenerateFactoryCall(meta));
 			cw.Put("var s = ({0})src;\n", Utils.GetTypeSpec(t));
 			GenerateClonerBody(meta);
 			cw.Put("return result;\n");
 			cw.Put("}\n");
 			cw.Put("\n");
-			generatedCloners[t] = clonerName;
 		}
 	}
 }

@@ -202,10 +202,14 @@ namespace YuzuTest
 				cd.Generate<Sample1>();
 				cd.Generate<Sample2>();
 				cd.Generate<Sample3>();
+				cd.Generate<SampleGenNoGen>();
 				cd.Generate<SampleArray>();
+				cd.Generate<SampleArrayOfClass>();
+				cd.Generate<SampleList>();
 				cd.Generate<SampleDict>();
-				cd.Generate<Color>();
+				cd.Generate<SampleDictKeys>();
 				cd.Generate<SamplePerson>();
+				cd.Generate<Color>();
 			});
 		}
 	}

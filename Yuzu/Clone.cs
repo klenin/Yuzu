@@ -39,8 +39,10 @@ namespace Yuzu.Clone
 		public static bool IsCopyable(Type t) =>
 			t.IsPrimitive || t.IsValueType || t == typeof(string);
 
-		public T[] CloneArray<T>(object src, Func<object, object> cloneElem)
+		protected T[] CloneArray<T>(object src, Func<object, object> cloneElem)
 		{
+			if (src == null)
+				return null;
 			var a = (T[])src;
 			var result = new T[a.Length];
 			for (int i = 0; i < a.Length; ++i)
@@ -48,15 +50,17 @@ namespace Yuzu.Clone
 			return result;
 		}
 
-		public T[] CloneArrayPrimitive<T>(object src)
+		protected T[] CloneArrayPrimitive<T>(object src)
 		{
+			if (src == null)
+				return null;
 			var a = (T[])src;
 			var result = new T[a.Length];
 			Array.Copy(a, result, a.Length);
 			return result;
 		}
 
-		public I CloneIDictionary<I, K, V>(
+		protected I CloneIDictionary<I, K, V>(
 			object src, Func<object, object> cloneKey, Func<object, object> cloneValue
 		) where I : class, IDictionary<K, V>, new()
 		{
@@ -68,7 +72,7 @@ namespace Yuzu.Clone
 			return result;
 		}
 
-		public I CloneIDictionaryPrimiviteKey<I, K, V>(
+		protected I CloneIDictionaryPrimiviteKey<I, K, V>(
 			object src, Func<object, object> cloneValue
 		) where I : class, IDictionary<K, V>, new()
 		{
@@ -80,7 +84,7 @@ namespace Yuzu.Clone
 			return result;
 		}
 
-		public I CloneIDictionaryPrimivite<I, K, V>(object src)
+		protected I CloneIDictionaryPrimivite<I, K, V>(object src)
 			where I : class, IDictionary<K, V>, new()
 		{
 			if (src == null)
@@ -91,7 +95,7 @@ namespace Yuzu.Clone
 			return result;
 		}
 
-		public I CloneCollection<I, E>(object src, Func<object, object> cloneElem)
+		protected I CloneCollection<I, E>(object src, Func<object, object> cloneElem)
 			where I : class, ICollection<E>, new()
 		{
 			if (src == null)
@@ -102,7 +106,7 @@ namespace Yuzu.Clone
 			return result;
 		}
 
-		public I CloneCollectionPrimitive<I, E>(object src)
+		protected I CloneCollectionPrimitive<I, E>(object src)
 			where I : class, ICollection<E>, new()
 		{
 			if (src == null)
@@ -113,8 +117,8 @@ namespace Yuzu.Clone
 			return result;
 		}
 
-		private object ValueCopy(object src) => src;
-		private object CloneNull(object srcr) => null;
+		public static object ValueCopy(object src) => src;
+		private static object CloneNull(object src) => null;
 
 		public Func<object, object> GetCloner(Type t)
 		{
@@ -125,6 +129,7 @@ namespace Yuzu.Clone
 			}
 			return cloner;
 		}
+		public Func<object, object> GetCloner<T>() => GetCloner(typeof(T));
 
 		protected Func<object, object> MakeDelegateFunc(MethodInfo m) =>
 			(Func<object, object>)Delegate.CreateDelegate(typeof(Func<object, object>), this, m);
@@ -150,12 +155,12 @@ namespace Yuzu.Clone
 			if (t.IsArray) {
 				var e = t.GetElementType();
 				if (IsCopyable(e)) {
-					var m = Utils.GetPublicGeneric(GetType(), nameof(CloneArrayPrimitive), e);
+					var m = Utils.GetPrivateGeneric(GetType(), nameof(CloneArrayPrimitive), e);
 					return MakeDelegateFunc(m);
 				}
 				else {
 					var cloneElem = GetCloner(e);
-					var m = Utils.GetPublicGeneric(GetType(), nameof(CloneArray), e);
+					var m = Utils.GetPrivateGeneric(GetType(), nameof(CloneArray), e);
 					var d = MakeDelegateParam<Func<object, object>>(m);
 					return src => d(src, cloneElem);
 				}
@@ -167,20 +172,20 @@ namespace Yuzu.Clone
 					if (!IsCopyable(a[0])) {
 						var сk = GetCloner(a[0]);
 						var сv = GetCloner(a[1]);
-						var m = Utils.GetPublicGeneric(
+						var m = Utils.GetPrivateGeneric(
 							GetType(), nameof(CloneIDictionary), t, a[0], a[1]);
 						var d = MakeDelegateParam2<Func<object, object>, Func<object, object>>(m);
 						return obj => d(obj, сk, сv);
 					}
 					else if (!IsCopyable(a[1])) {
 						var сv = GetCloner(a[1]);
-						var m = Utils.GetPublicGeneric(
+						var m = Utils.GetPrivateGeneric(
 							GetType(), nameof(CloneIDictionaryPrimiviteKey), t, a[0], a[1]);
 						var d = MakeDelegateParam<Func<object, object>>(m);
 						return obj => d(obj, сv);
 					}
 					else {
-						var m = Utils.GetPublicGeneric(
+						var m = Utils.GetPrivateGeneric(
 							GetType(), nameof(CloneIDictionaryPrimivite), t, a[0], a[1]);
 						return MakeDelegateFunc(m);
 					}
@@ -192,12 +197,12 @@ namespace Yuzu.Clone
 					var a = icoll.GetGenericArguments();
 					if (!IsCopyable(a[0])) {
 						var сe = GetCloner(a[0]);
-						var m = Utils.GetPublicGeneric(GetType(), nameof(CloneCollection), t, a[0]);
+						var m = Utils.GetPrivateGeneric(GetType(), nameof(CloneCollection), t, a[0]);
 						var d = MakeDelegateParam<Func<object, object>>(m);
 						return obj => d(obj, сe);
 					}
 					else {
-						var m = Utils.GetPublicGeneric(
+						var m = Utils.GetPrivateGeneric(
 							GetType(), nameof(CloneCollectionPrimitive), t, a[0]);
 						return MakeDelegateFunc(m);
 					}

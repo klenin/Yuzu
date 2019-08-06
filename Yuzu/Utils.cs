@@ -273,6 +273,13 @@ namespace Yuzu.Util
 				indentLevel += 1;
 		}
 
+		public void PutInd(string format, params object[] p)
+		{
+			indentLevel += 1;
+			Put(format, p);
+			indentLevel -= 1;
+		}
+
 		// Check for explicit vs implicit interface implementation.
 		public void PutAddToCollection(Type t, Type icoll, string collName, string elementName)
 		{
