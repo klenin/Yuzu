@@ -469,7 +469,7 @@ namespace YuzuGen.YuzuTest
 		{
 			var result = (global::YuzuTest.SampleList)obj;
 			if ("E" != name) throw new YuzuException("E!=" + name);
-			result.E = RequireOrNull('[') ? null : new global::System.Collections.Generic.List<global::System.String>();
+			result.E = RequireOrNull('[') ? null : new global::System.Collections.Generic.List<string>();
 			if (result.E != null) {
 				if (SkipSpacesCarefully() == ']') {
 					Require(']');
@@ -581,7 +581,7 @@ namespace YuzuGen.YuzuTest
 			result.Value = RequireInt();
 			name = GetNextName(false);
 			if ("Children" == name) {
-				result.Children = RequireOrNull('{') ? null : new global::System.Collections.Generic.Dictionary<global::System.String,global::YuzuTest.SampleDict>();
+				result.Children = RequireOrNull('{') ? null : new global::System.Collections.Generic.Dictionary<string, global::YuzuTest.SampleDict>();
 				if (result.Children != null) {
 					if (SkipSpacesCarefully() == '}') {
 						Require('}');
@@ -644,7 +644,7 @@ namespace YuzuGen.YuzuTest
 		{
 			var result = (global::YuzuTest.SampleSortedDict)obj;
 			if ("d" == name) {
-				result.d = RequireOrNull('{') ? null : new global::System.Collections.Generic.SortedDictionary<global::System.String,global::System.Int32>();
+				result.d = RequireOrNull('{') ? null : new global::System.Collections.Generic.SortedDictionary<string, int>();
 				if (result.d != null) {
 					if (SkipSpacesCarefully() == '}') {
 						Require('}');
@@ -707,7 +707,7 @@ namespace YuzuGen.YuzuTest
 		{
 			var result = (global::YuzuTest.SampleDictKeys)obj;
 			if ("E" != name) throw new YuzuException("E!=" + name);
-			result.E = RequireOrNull('{') ? null : new global::System.Collections.Generic.Dictionary<global::YuzuTest.SampleEnum,global::System.Int32>();
+			result.E = RequireOrNull('{') ? null : new global::System.Collections.Generic.Dictionary<global::YuzuTest.SampleEnum, int>();
 			if (result.E != null) {
 				if (SkipSpacesCarefully() == '}') {
 					Require('}');
@@ -723,7 +723,7 @@ namespace YuzuGen.YuzuTest
 			}
 			name = GetNextName(false);
 			if ("I" != name) throw new YuzuException("I!=" + name);
-			result.I = RequireOrNull('{') ? null : new global::System.Collections.Generic.Dictionary<global::System.Int32,global::System.Int32>();
+			result.I = RequireOrNull('{') ? null : new global::System.Collections.Generic.Dictionary<int, int>();
 			if (result.I != null) {
 				if (SkipSpacesCarefully() == '}') {
 					Require('}');
@@ -739,7 +739,7 @@ namespace YuzuGen.YuzuTest
 			}
 			name = GetNextName(false);
 			if ("K" != name) throw new YuzuException("K!=" + name);
-			result.K = RequireOrNull('{') ? null : new global::System.Collections.Generic.Dictionary<global::YuzuTest.SampleKey,global::System.Int32>();
+			result.K = RequireOrNull('{') ? null : new global::System.Collections.Generic.Dictionary<global::YuzuTest.SampleKey, int>();
 			if (result.K != null) {
 				if (SkipSpacesCarefully() == '}') {
 					Require('}');
@@ -971,10 +971,10 @@ namespace YuzuGen.YuzuTest
 		{
 			var result = (global::YuzuTest.SampleArray)obj;
 			if ("A" != name) throw new YuzuException("A!=" + name);
-			result.A = RequireOrNull('[') ? null : new global::System.String[0];
+			result.A = RequireOrNull('[') ? null : new string[0];
 			if (result.A != null) {
 				if (SkipSpacesCarefully() != ']') {
-					var tmp1 = new global::System.String[RequireUInt()];
+					var tmp1 = new string[RequireUInt()];
 					for(int tmp2 = 0; tmp2 < tmp1.Length; ++tmp2) {
 						Require(',');
 						tmp1[tmp2] = RequireString();
@@ -1031,21 +1031,21 @@ namespace YuzuGen.YuzuTest
 		{
 			var result = (global::YuzuTest.SampleArray2D)obj;
 			if ("A" != name) throw new YuzuException("A!=" + name);
-			result.A = RequireOrNull('[') ? null : new global::System.Int32[0][];
+			result.A = RequireOrNull('[') ? null : new int[0][];
 			if (result.A != null) {
 				if (SkipSpacesCarefully() == ']') {
 					Require(']');
 				}
 				else {
-					var tmp1 = new List<global::System.Int32[]>();
+					var tmp1 = new List<int[]>();
 					do {
-						var tmp2 = RequireOrNull('[') ? null : new global::System.Int32[0];
+						var tmp2 = RequireOrNull('[') ? null : new int[0];
 						if (tmp2 != null) {
 							if (SkipSpacesCarefully() == ']') {
 								Require(']');
 							}
 							else {
-								var tmp3 = new List<global::System.Int32>();
+								var tmp3 = new List<int>();
 								do {
 									var tmp4 = RequireInt();
 									tmp3.Add(tmp4);
@@ -1259,14 +1259,14 @@ namespace YuzuGen.YuzuTest
 		{
 			var result = (global::YuzuTest.SampleMatrix)obj;
 			if ("M" != name) throw new YuzuException("M!=" + name);
-			result.M = RequireOrNull('[') ? null : new global::System.Collections.Generic.List<global::System.Collections.Generic.List<global::System.Int32>>();
+			result.M = RequireOrNull('[') ? null : new global::System.Collections.Generic.List<global::System.Collections.Generic.List<int>>();
 			if (result.M != null) {
 				if (SkipSpacesCarefully() == ']') {
 					Require(']');
 				}
 				else {
 					do {
-						var tmp1 = RequireOrNull('[') ? null : new global::System.Collections.Generic.List<global::System.Int32>();
+						var tmp1 = RequireOrNull('[') ? null : new global::System.Collections.Generic.List<int>();
 						if (tmp1 != null) {
 							if (SkipSpacesCarefully() == ']') {
 								Require(']');
@@ -1555,19 +1555,19 @@ namespace YuzuGen.System.Collections.Generic
 
 		public override object FromReaderInt()
 		{
-			return FromReaderInt(new global::System.Collections.Generic.List<global::System.Collections.Generic.List<global::System.Int32>>());
+			return FromReaderInt(new global::System.Collections.Generic.List<global::System.Collections.Generic.List<int>>());
 		}
 
 		public override object FromReaderInt(object obj)
 		{
-			var result = (global::System.Collections.Generic.List<global::System.Collections.Generic.List<global::System.Int32>>)obj;
+			var result = (global::System.Collections.Generic.List<global::System.Collections.Generic.List<int>>)obj;
 			Require('[');
 			if (SkipSpacesCarefully() == ']') {
 				Require(']');
 			}
 			else {
 				do {
-					var tmp1 = RequireOrNull('[') ? null : new global::System.Collections.Generic.List<global::System.Int32>();
+					var tmp1 = RequireOrNull('[') ? null : new global::System.Collections.Generic.List<int>();
 					if (tmp1 != null) {
 						if (SkipSpacesCarefully() == ']') {
 							Require(']');
@@ -1587,12 +1587,12 @@ namespace YuzuGen.System.Collections.Generic
 
 		public override object FromReaderIntPartial(string name)
 		{
-			return ReadFields(new global::System.Collections.Generic.List<global::System.Collections.Generic.List<global::System.Int32>>(), name);
+			return ReadFields(new global::System.Collections.Generic.List<global::System.Collections.Generic.List<int>>(), name);
 		}
 
 		protected override object ReadFields(object obj, string name)
 		{
-			var result = (global::System.Collections.Generic.List<global::System.Collections.Generic.List<global::System.Int32>>)obj;
+			var result = (global::System.Collections.Generic.List<global::System.Collections.Generic.List<int>>)obj;
 			return result;
 		}
 	}
@@ -2142,17 +2142,17 @@ namespace YuzuGen.YuzuTest
 
 		public override object FromReaderInt()
 		{
-			return FromReaderTyped<global::YuzuTest.SampleInterfacedGeneric<global::System.String>>(Reader);
+			return FromReaderTyped<global::YuzuTest.SampleInterfacedGeneric<string>>(Reader);
 		}
 
 		public override object FromReaderIntPartial(string name)
 		{
-			return ReadFields(new global::YuzuTest.SampleInterfacedGeneric<global::System.String>(), name);
+			return ReadFields(new global::YuzuTest.SampleInterfacedGeneric<string>(), name);
 		}
 
 		protected override object ReadFields(object obj, string name)
 		{
-			var result = (global::YuzuTest.SampleInterfacedGeneric<global::System.String>)obj;
+			var result = (global::YuzuTest.SampleInterfacedGeneric<string>)obj;
 			if ("G" != name) throw new YuzuException("G!=" + name);
 			result.G = RequireString();
 			name = GetNextName(false);
@@ -2289,12 +2289,12 @@ namespace YuzuGen.YuzuTest
 
 		public override object FromReaderInt()
 		{
-			return FromReaderInt(new global::YuzuTest.SampleCollection<global::System.Int32>());
+			return FromReaderInt(new global::YuzuTest.SampleCollection<int>());
 		}
 
 		public override object FromReaderInt(object obj)
 		{
-			var result = (global::YuzuTest.SampleCollection<global::System.Int32>)obj;
+			var result = (global::YuzuTest.SampleCollection<int>)obj;
 			Require('[');
 			if (SkipSpacesCarefully() == ']') {
 				Require(']');
@@ -2310,12 +2310,12 @@ namespace YuzuGen.YuzuTest
 
 		public override object FromReaderIntPartial(string name)
 		{
-			return ReadFields(new global::YuzuTest.SampleCollection<global::System.Int32>(), name);
+			return ReadFields(new global::YuzuTest.SampleCollection<int>(), name);
 		}
 
 		protected override object ReadFields(object obj, string name)
 		{
-			var result = (global::YuzuTest.SampleCollection<global::System.Int32>)obj;
+			var result = (global::YuzuTest.SampleCollection<int>)obj;
 			return result;
 		}
 	}
@@ -2351,12 +2351,12 @@ namespace YuzuGen.YuzuTest
 
 		public override object FromReaderInt()
 		{
-			return FromReaderInt(new global::YuzuTest.SampleExplicitCollection<global::System.Int32>());
+			return FromReaderInt(new global::YuzuTest.SampleExplicitCollection<int>());
 		}
 
 		public override object FromReaderInt(object obj)
 		{
-			var result = (global::YuzuTest.SampleExplicitCollection<global::System.Int32>)obj;
+			var result = (global::YuzuTest.SampleExplicitCollection<int>)obj;
 			Require('[');
 			if (SkipSpacesCarefully() == ']') {
 				Require(']');
@@ -2364,7 +2364,7 @@ namespace YuzuGen.YuzuTest
 			else {
 				do {
 					var tmp2 = RequireInt();
-					((global::System.Collections.Generic.ICollection<global::System.Int32>)result).Add(tmp2);
+					((global::System.Collections.Generic.ICollection<int>)result).Add(tmp2);
 				} while (Require(']', ',') == ',');
 			}
 			return result;
@@ -2372,12 +2372,12 @@ namespace YuzuGen.YuzuTest
 
 		public override object FromReaderIntPartial(string name)
 		{
-			return ReadFields(new global::YuzuTest.SampleExplicitCollection<global::System.Int32>(), name);
+			return ReadFields(new global::YuzuTest.SampleExplicitCollection<int>(), name);
 		}
 
 		protected override object ReadFields(object obj, string name)
 		{
-			var result = (global::YuzuTest.SampleExplicitCollection<global::System.Int32>)obj;
+			var result = (global::YuzuTest.SampleExplicitCollection<int>)obj;
 			return result;
 		}
 	}
@@ -2439,7 +2439,7 @@ namespace YuzuGen.YuzuTest
 			}
 			name = GetNextName(false);
 			if ("B" == name) {
-				result.B = RequireOrNull('[') ? null : new global::YuzuTest.SampleCollection<global::System.Int32>();
+				result.B = RequireOrNull('[') ? null : new global::YuzuTest.SampleCollection<int>();
 				if (result.B != null) {
 					if (SkipSpacesCarefully() == ']') {
 						Require(']');

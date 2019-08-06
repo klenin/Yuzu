@@ -124,8 +124,29 @@ namespace Yuzu.Util
 				DeclaringTypes(t.DeclaringType, separator) + t.DeclaringType.Name + separator;
 		}
 
+		private static Dictionary<Type, string> knownTypes = new Dictionary<Type, string> {
+			{ typeof(byte),  "byte" },
+			{ typeof(sbyte), "sbyte" },
+			{ typeof(short), "short" },
+			{ typeof(ushort), "ushort" },
+			{ typeof(int), "int" },
+			{ typeof(uint), "uint" },
+			{ typeof(long), "long" },
+			{ typeof(ulong), "ulong" },
+			{ typeof(char), "char" },
+			{ typeof(float), "float" },
+			{ typeof(double), "double" },
+			{ typeof(decimal), "decimal" },
+			{ typeof(bool), "bool" },
+			{ typeof(object), "object" },
+			{ typeof(string), "string" },
+			{ typeof(void), "void" },
+		};
 		public static string GetTypeSpec(Type t, string arraySize = "")
 		{
+			string result;
+			if (knownTypes.TryGetValue(t, out result))
+				return result;
 			if (t.IsArray) {
 				var suffix = String.Format("[{0}]", arraySize);
 				t = t.GetElementType();
@@ -137,7 +158,7 @@ namespace Yuzu.Util
 			var n = DeclaringTypes(t, ".") + t.Name;
 			if (!t.IsGenericType)
 				return p + n;
-			var args = String.Join(",", t.GetGenericArguments().Select(a => GetTypeSpec(a)));
+			var args = String.Join(", ", t.GetGenericArguments().Select(a => GetTypeSpec(a)));
 			return p + String.Format("{0}<{1}>", n.Remove(n.IndexOf('`')), args);
 		}
 

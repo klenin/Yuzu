@@ -153,7 +153,7 @@ namespace YuzuGenBin
 			ReaderClassDef.FieldDef fd;
 			fd = def.Fields[d.Reader.ReadInt16()];
 			if (1 != fd.OurIndex) throw dg.Error("1!=" + fd.OurIndex);
-			result.N = d.Reader.ReadBoolean() ? (global::System.Int32?)null : d.Reader.ReadInt32();
+			result.N = d.Reader.ReadBoolean() ? (int?)null : d.Reader.ReadInt32();
 			fd = def.Fields[d.Reader.ReadInt16()];
 			if (fd.OurIndex != ReaderClassDef.EOF) throw dg.Error("Unfinished object");
 		}
@@ -194,10 +194,10 @@ namespace YuzuGenBin
 			result.Value = d.Reader.ReadInt32();
 			fd = def.Fields[d.Reader.ReadInt16()];
 			if (2 == fd.OurIndex) {
-				result.Children = (global::System.Collections.Generic.Dictionary<global::System.String,global::YuzuTest.SampleDict>)null;
+				result.Children = (global::System.Collections.Generic.Dictionary<string, global::YuzuTest.SampleDict>)null;
 				var tmp1 = d.Reader.ReadInt32();
 				if (tmp1 >= 0) {
-					result.Children = new global::System.Collections.Generic.Dictionary<global::System.String,global::YuzuTest.SampleDict>();
+					result.Children = new global::System.Collections.Generic.Dictionary<string, global::YuzuTest.SampleDict>();
 					while (--tmp1 >= 0) {
 						var tmp2 = d.Reader.ReadString();
 						if (tmp2 == "" && d.Reader.ReadBoolean()) tmp2 = null;
@@ -224,10 +224,10 @@ namespace YuzuGenBin
 			ReaderClassDef.FieldDef fd;
 			fd = def.Fields[d.Reader.ReadInt16()];
 			if (1 == fd.OurIndex) {
-				result.d = (global::System.Collections.Generic.SortedDictionary<global::System.String,global::System.Int32>)null;
+				result.d = (global::System.Collections.Generic.SortedDictionary<string, int>)null;
 				var tmp1 = d.Reader.ReadInt32();
 				if (tmp1 >= 0) {
-					result.d = new global::System.Collections.Generic.SortedDictionary<global::System.String,global::System.Int32>();
+					result.d = new global::System.Collections.Generic.SortedDictionary<string, int>();
 					while (--tmp1 >= 0) {
 						var tmp2 = d.Reader.ReadString();
 						if (tmp2 == "" && d.Reader.ReadBoolean()) tmp2 = null;
@@ -254,10 +254,10 @@ namespace YuzuGenBin
 			ReaderClassDef.FieldDef fd;
 			fd = def.Fields[d.Reader.ReadInt16()];
 			if (1 != fd.OurIndex) throw dg.Error("1!=" + fd.OurIndex);
-			result.E = (global::System.Collections.Generic.Dictionary<global::YuzuTest.SampleEnum,global::System.Int32>)null;
+			result.E = (global::System.Collections.Generic.Dictionary<global::YuzuTest.SampleEnum, int>)null;
 			var tmp1 = d.Reader.ReadInt32();
 			if (tmp1 >= 0) {
-				result.E = new global::System.Collections.Generic.Dictionary<global::YuzuTest.SampleEnum,global::System.Int32>();
+				result.E = new global::System.Collections.Generic.Dictionary<global::YuzuTest.SampleEnum, int>();
 				while (--tmp1 >= 0) {
 					var tmp2 = (global::YuzuTest.SampleEnum)d.Reader.ReadInt32();
 					var tmp3 = d.Reader.ReadInt32();
@@ -266,10 +266,10 @@ namespace YuzuGenBin
 			}
 			fd = def.Fields[d.Reader.ReadInt16()];
 			if (2 != fd.OurIndex) throw dg.Error("2!=" + fd.OurIndex);
-			result.I = (global::System.Collections.Generic.Dictionary<global::System.Int32,global::System.Int32>)null;
+			result.I = (global::System.Collections.Generic.Dictionary<int, int>)null;
 			var tmp4 = d.Reader.ReadInt32();
 			if (tmp4 >= 0) {
-				result.I = new global::System.Collections.Generic.Dictionary<global::System.Int32,global::System.Int32>();
+				result.I = new global::System.Collections.Generic.Dictionary<int, int>();
 				while (--tmp4 >= 0) {
 					var tmp5 = d.Reader.ReadInt32();
 					var tmp6 = d.Reader.ReadInt32();
@@ -278,10 +278,10 @@ namespace YuzuGenBin
 			}
 			fd = def.Fields[d.Reader.ReadInt16()];
 			if (3 != fd.OurIndex) throw dg.Error("3!=" + fd.OurIndex);
-			result.K = (global::System.Collections.Generic.Dictionary<global::YuzuTest.SampleKey,global::System.Int32>)null;
+			result.K = (global::System.Collections.Generic.Dictionary<global::YuzuTest.SampleKey, int>)null;
 			var tmp7 = d.Reader.ReadInt32();
 			if (tmp7 >= 0) {
-				result.K = new global::System.Collections.Generic.Dictionary<global::YuzuTest.SampleKey,global::System.Int32>();
+				result.K = new global::System.Collections.Generic.Dictionary<global::YuzuTest.SampleKey, int>();
 				while (--tmp7 >= 0) {
 					var tmp8 = (global::YuzuTest.SampleKey)dg.ReadObject<global::YuzuTest.SampleKey>();
 					var tmp9 = d.Reader.ReadInt32();
@@ -326,10 +326,10 @@ namespace YuzuGenBin
 			ReaderClassDef.FieldDef fd;
 			fd = def.Fields[d.Reader.ReadInt16()];
 			if (1 != fd.OurIndex) throw dg.Error("1!=" + fd.OurIndex);
-			result.A = (global::System.String[])null;
+			result.A = (string[])null;
 			var tmp1 = d.Reader.ReadInt32();
 			if (tmp1 >= 0) {
-				var tmp2 = new global::System.String[tmp1];
+				var tmp2 = new string[tmp1];
 				for(tmp1 = 0; tmp1 < tmp2.Length; ++tmp1) {
 					tmp2[tmp1] = d.Reader.ReadString();
 					if (tmp2[tmp1] == "" && d.Reader.ReadBoolean()) tmp2[tmp1] = null;
@@ -354,15 +354,15 @@ namespace YuzuGenBin
 			ReaderClassDef.FieldDef fd;
 			fd = def.Fields[d.Reader.ReadInt16()];
 			if (1 != fd.OurIndex) throw dg.Error("1!=" + fd.OurIndex);
-			result.A = (global::System.Int32[][])null;
+			result.A = (int[][])null;
 			var tmp1 = d.Reader.ReadInt32();
 			if (tmp1 >= 0) {
-				var tmp2 = new global::System.Int32[tmp1][];
+				var tmp2 = new int[tmp1][];
 				for(tmp1 = 0; tmp1 < tmp2.Length; ++tmp1) {
-					tmp2[tmp1] = (global::System.Int32[])null;
+					tmp2[tmp1] = (int[])null;
 					var tmp3 = d.Reader.ReadInt32();
 					if (tmp3 >= 0) {
-						var tmp4 = new global::System.Int32[tmp3];
+						var tmp4 = new int[tmp3];
 						for(tmp3 = 0; tmp3 < tmp4.Length; ++tmp3) {
 							tmp4[tmp3] = d.Reader.ReadInt32();
 						}
@@ -452,15 +452,15 @@ namespace YuzuGenBin
 			ReaderClassDef.FieldDef fd;
 			fd = def.Fields[d.Reader.ReadInt16()];
 			if (1 != fd.OurIndex) throw dg.Error("1!=" + fd.OurIndex);
-			result.M = (global::System.Collections.Generic.List<global::System.Collections.Generic.List<global::System.Int32>>)null;
+			result.M = (global::System.Collections.Generic.List<global::System.Collections.Generic.List<int>>)null;
 			var tmp1 = d.Reader.ReadInt32();
 			if (tmp1 >= 0) {
-				result.M = new global::System.Collections.Generic.List<global::System.Collections.Generic.List<global::System.Int32>>();
+				result.M = new global::System.Collections.Generic.List<global::System.Collections.Generic.List<int>>();
 				while (--tmp1 >= 0) {
-					var tmp2 = (global::System.Collections.Generic.List<global::System.Int32>)null;
+					var tmp2 = (global::System.Collections.Generic.List<int>)null;
 					var tmp3 = d.Reader.ReadInt32();
 					if (tmp3 >= 0) {
-						tmp2 = new global::System.Collections.Generic.List<global::System.Int32>();
+						tmp2 = new global::System.Collections.Generic.List<int>();
 						while (--tmp3 >= 0) {
 							var tmp4 = d.Reader.ReadInt32();
 							tmp2.Add(tmp4);
@@ -744,7 +744,7 @@ namespace YuzuGenBin
 
 		private static void Read_YuzuTest__SampleInterfacedGeneric_String(BinaryDeserializer d, ReaderClassDef def, object obj)
 		{
-			var result = (global::YuzuTest.SampleInterfacedGeneric<global::System.String>)obj;
+			var result = (global::YuzuTest.SampleInterfacedGeneric<string>)obj;
 			var dg = (BinaryDeserializerGen)d;
 			ReaderClassDef.FieldDef fd;
 			fd = def.Fields[d.Reader.ReadInt16()];
@@ -760,7 +760,7 @@ namespace YuzuGenBin
 
 		private static object Make_YuzuTest__SampleInterfacedGeneric_String(BinaryDeserializer d, ReaderClassDef def)
 		{
-			var result = new global::YuzuTest.SampleInterfacedGeneric<global::System.String>();
+			var result = new global::YuzuTest.SampleInterfacedGeneric<string>();
 			Read_YuzuTest__SampleInterfacedGeneric_String(d, def, result);
 			return result;
 		}
@@ -802,10 +802,10 @@ namespace YuzuGenBin
 			}
 			fd = def.Fields[d.Reader.ReadInt16()];
 			if (2 == fd.OurIndex) {
-				result.B = (global::YuzuTest.SampleCollection<global::System.Int32>)null;
+				result.B = (global::YuzuTest.SampleCollection<int>)null;
 				var tmp3 = d.Reader.ReadInt32();
 				if (tmp3 >= 0) {
-					result.B = new global::YuzuTest.SampleCollection<global::System.Int32>();
+					result.B = new global::YuzuTest.SampleCollection<int>();
 					while (--tmp3 >= 0) {
 						var tmp4 = d.Reader.ReadInt32();
 						result.B.Add(tmp4);
@@ -1120,7 +1120,7 @@ namespace YuzuGenBin
 			readCache[typeof(global::YuzuTest.SampleNested)] = Read_YuzuTest__SampleNested;
 			readCache[typeof(global::YuzuTest.SamplePerson)] = Read_YuzuTest__SamplePerson;
 			readCache[typeof(global::YuzuTest.SampleInterfaceField)] = Read_YuzuTest__SampleInterfaceField;
-			readCache[typeof(global::YuzuTest.SampleInterfacedGeneric<global::System.String>)] = Read_YuzuTest__SampleInterfacedGeneric_String;
+			readCache[typeof(global::YuzuTest.SampleInterfacedGeneric<string>)] = Read_YuzuTest__SampleInterfacedGeneric_String;
 			readCache[typeof(global::YuzuTest.SampleConcrete)] = Read_YuzuTest__SampleConcrete;
 			readCache[typeof(global::YuzuTest.SampleWithCollection)] = Read_YuzuTest__SampleWithCollection;
 			readCache[typeof(global::YuzuTest.SampleAfter2)] = Read_YuzuTest__SampleAfter2;
@@ -1162,7 +1162,7 @@ namespace YuzuGenBin
 			makeCache[typeof(global::YuzuTest.SampleNested)] = Make_YuzuTest__SampleNested;
 			makeCache[typeof(global::YuzuTest.SamplePerson)] = Make_YuzuTest__SamplePerson;
 			makeCache[typeof(global::YuzuTest.SampleInterfaceField)] = Make_YuzuTest__SampleInterfaceField;
-			makeCache[typeof(global::YuzuTest.SampleInterfacedGeneric<global::System.String>)] = Make_YuzuTest__SampleInterfacedGeneric_String;
+			makeCache[typeof(global::YuzuTest.SampleInterfacedGeneric<string>)] = Make_YuzuTest__SampleInterfacedGeneric_String;
 			makeCache[typeof(global::YuzuTest.SampleConcrete)] = Make_YuzuTest__SampleConcrete;
 			makeCache[typeof(global::YuzuTest.SampleWithCollection)] = Make_YuzuTest__SampleWithCollection;
 			makeCache[typeof(global::YuzuTest.SampleAfter2)] = Make_YuzuTest__SampleAfter2;
