@@ -137,6 +137,8 @@ namespace YuzuTest
 				jd.Generate<SampleWithCollection>();
 				jd.Generate<SampleConcreteCollection>();
 				jd.Generate<SampleAfter2>();
+				jd.Generate<SampleAfterSerialization>();
+				jd.Generate<SampleBeforeDeserialization>();
 				jd.Generate<SampleMerge>();
 				jd.Generate<SampleAssemblyDerivedR>();
 				jd.Generate<SampleAliasMany>();
@@ -183,6 +185,8 @@ namespace YuzuTest
 				bd.Generate<SampleConcrete>();
 				bd.Generate<SampleWithCollection>();
 				bd.Generate<SampleAfter2>();
+				bd.Generate<SampleAfterSerialization>();
+				bd.Generate<SampleBeforeDeserialization>();
 				bd.Generate<SampleMerge>();
 				bd.Generate<SampleAssemblyDerivedR>();
 				bd.Generate<SampleAoS.Color>();

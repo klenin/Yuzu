@@ -588,6 +588,23 @@ namespace YuzuTest
 		public void Before3() { X += "3"; }
 	}
 
+	public class SampleAfterSerialization
+	{
+		[YuzuRequired]
+		public string X;
+		[YuzuAfterSerialization]
+		public void After() { X += "1"; }
+	}
+
+	public class SampleBeforeDeserialization
+	{
+		private string hidden = "X";
+		[YuzuRequired]
+		public string X { get { return hidden; }  set { hidden += value; } }
+		[YuzuBeforeDeserialization]
+		public void Before() { hidden = "2"; }
+	}
+
 	public class SampleAfterDeserialization
 	{
 		[YuzuRequired]

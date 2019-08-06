@@ -428,6 +428,7 @@ namespace Yuzu.Json
 			cw.Put("{\n");
 			cw.Put("var result = ({0})obj;\n", typeSpec);
 			if (icoll == null) {
+				cw.GenerateActionList(meta.BeforeDeserialization);
 				cw.ResetTempNames();
 				foreach (var yi in meta.Items) {
 					if (yi.IsOptional) {
@@ -458,6 +459,7 @@ namespace Yuzu.Json
 				cw.Put("protected override object ReadFieldsCompact(object obj)\n");
 				cw.Put("{\n");
 				cw.Put("var result = ({0})obj;\n", typeSpec);
+				cw.GenerateActionList(meta.BeforeDeserialization);
 				bool isFirst = true;
 				cw.ResetTempNames();
 				foreach (var yi in meta.Items) {

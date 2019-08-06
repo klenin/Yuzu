@@ -106,6 +106,8 @@ namespace Yuzu
 	public class YuzuCompact : Attribute { }
 
 	public class YuzuBeforeSerialization : Attribute { }
+	public class YuzuAfterSerialization : Attribute { }
+	public class YuzuBeforeDeserialization : Attribute { }
 	public class YuzuAfterDeserialization : Attribute { }
 
 	public class YuzuMerge : Attribute { }
@@ -256,6 +258,8 @@ namespace Yuzu
 		public Type SerializeIfAttribute = typeof(YuzuSerializeCondition);
 		public Type SerializeItemIfAttribute = typeof(YuzuSerializeItemIf);
 		public Type BeforeSerializationAttribute = typeof(YuzuBeforeSerialization);
+		public Type AfterSerializationAttribute = typeof(YuzuAfterSerialization);
+		public Type BeforeDeserializationAttribute = typeof(YuzuBeforeDeserialization);
 		public Type AfterDeserializationAttribute = typeof(YuzuAfterDeserialization);
 		public Type MergeAttribute = typeof(YuzuMerge);
 		public Type MustAttribute = typeof(YuzuMust);

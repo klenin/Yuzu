@@ -420,6 +420,7 @@ namespace Yuzu.Binary
 
 		private static void ReadFields(BinaryDeserializer d, ReaderClassDef def, object obj)
 		{
+			def.Meta.BeforeDeserialization.Run(obj);
 			d.objStack.Push(obj);
 			try {
 				if (def.Meta.IsCompact) {

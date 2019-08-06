@@ -698,6 +698,7 @@ namespace Yuzu.Json
 			}
 			WriteIndent();
 			writer.Write((byte)'}');
+			meta.AfterSerialization.Run(obj);
 		}
 
 		private void WriteObjectCompact(object obj, Meta meta, List<Action<object>> fieldWriters)
@@ -732,6 +733,7 @@ namespace Yuzu.Json
 				WriteFieldSeparator();
 			WriteIndent();
 			writer.Write((byte)']');
+			meta.AfterSerialization.Run(obj);
 		}
 
 		private void WriteObjectCompactOneline(object obj, Meta meta, List<Action<object>> fieldWriters)
@@ -761,6 +763,7 @@ namespace Yuzu.Json
 				objStack.Pop();
 			};
 			writer.Write((byte)']');
+			meta.AfterSerialization.Run(obj);
 		}
 
 		protected override void ToWriter(object obj) => GetWriteFunc(obj.GetType())(obj);

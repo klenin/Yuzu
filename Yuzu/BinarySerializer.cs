@@ -375,6 +375,7 @@ namespace Yuzu.Binary
 			finally {
 				objStack.Pop();
 			}
+			def.Meta.AfterSerialization.Run(obj);
 		}
 
 		private ClassDef WriteClassId(object obj)
@@ -534,6 +535,7 @@ namespace Yuzu.Binary
 			finally {
 				objStack.Pop();
 			}
+			def.Meta.AfterSerialization.Run(obj);
 		}
 
 		private Action<object> MakeWriteIEnumerable(Type t)

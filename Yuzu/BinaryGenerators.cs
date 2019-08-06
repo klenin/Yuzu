@@ -209,12 +209,17 @@ namespace Yuzu.Binary
 				String.Format("new {0}()", Utils.GetTypeSpec(meta.Type)) :
 				String.Format("{0}.{1}()", Utils.GetTypeSpec(meta.Type), meta.FactoryMethod.Name);
 
+		private bool CanInline(Meta meta) =>
+			meta.IsCompact && meta.Surrogate.FuncFrom == null &&
+			meta.BeforeDeserialization.Actions.Count == 0 &&
+			meta.AfterDeserialization.Actions.Count == 0;
+
 		private bool GenerateSetValueInline(Type t, string name, Meta.Item item)
 		{
 			if (t.IsGenericType || !Utils.IsStruct(t) || item == null || simpleValueReader.ContainsKey(t))
 				return false;
 			var meta = Meta.Get(t, options);
-			if (meta.IsCompact && meta.Surrogate.FuncFrom == null && meta.AfterDeserialization.Actions.Count == 0) {
+			if (CanInline(meta)) {
 				cw.Put("dg.EnsureClassDef(typeof({0}));\n", Utils.GetTypeSpec(t));
 				if (item.PropInfo == null) {
 					foreach (var yi in meta.Items)
@@ -281,6 +286,7 @@ namespace Yuzu.Binary
 
 		private void GenerateReaderBody(Meta meta)
 		{
+			cw.GenerateActionList(meta.BeforeDeserialization);
 			cw.ResetTempNames();
 			if (IsDeserializerGenRequired(meta))
 				cw.Put("var dg = (BinaryDeserializerGen)d;\n", Utils.GetTypeSpec(meta.Type));

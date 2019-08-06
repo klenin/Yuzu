@@ -84,6 +84,8 @@ namespace Yuzu.Metadata
 		public Func<object, YuzuUnknownStorage> GetUnknownStorage;
 
 		public ActionList BeforeSerialization = new ActionList();
+		public ActionList AfterSerialization = new ActionList();
+		public ActionList BeforeDeserialization = new ActionList();
 		public ActionList AfterDeserialization = new ActionList();
 
 #if !iOS // Apple forbids code generation.
@@ -272,6 +274,8 @@ namespace Yuzu.Metadata
 				SerializeItemIf = YuzuSerializeItemIf.MakeChecker(m);
 			}
 			BeforeSerialization.MaybeAdd(m, Options.BeforeSerializationAttribute);
+			AfterSerialization.MaybeAdd(m, Options.AfterSerializationAttribute);
+			BeforeDeserialization.MaybeAdd(m, Options.BeforeDeserializationAttribute);
 			AfterDeserialization.MaybeAdd(m, Options.AfterDeserializationAttribute);
 
 			if (attrs.HasAttr(Options.FactoryAttribute)) {

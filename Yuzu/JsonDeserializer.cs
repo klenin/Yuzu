@@ -742,6 +742,7 @@ namespace Yuzu.Json
 		protected virtual object ReadFields(object obj, string name)
 		{
 			var meta = Meta.Get(obj.GetType(), Options);
+			meta.BeforeDeserialization.Run(obj);
 			objStack.Push(obj);
 			try {
 				// Optimization: duplicate loop to extract options check.
@@ -823,6 +824,7 @@ namespace Yuzu.Json
 				return meta.Surrogate.FuncFrom(
 					ReadFieldsCompact(Activator.CreateInstance(meta.Surrogate.SurrogateType)));
 			}
+			meta.BeforeDeserialization.Run(obj);
 			bool isFirst = true;
 			objStack.Push(obj);
 			try {
