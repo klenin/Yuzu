@@ -183,4 +183,24 @@ namespace YuzuTest
 		public NestedClass NestedClassField;
 	}
 
+	[YuzuAlias("YuzuTest.SampleAliasClassToBeRenamed, YuzuTest")]
+	public class SampleAliasClassToBeRenamed_Renamed
+	{
+		[YuzuMember]
+		public int Foo;
+
+		[YuzuMember]
+		public SampleAliasClassToBeRenamed_Renamed Bar_Renamed;
+
+		public YuzuUnknownStorage UnknownStorage = new YuzuUnknownStorage();
+	}
+
+	public class SampleAliasWithinUnknownContainer
+	{
+		[YuzuMember]
+		public SampleAliasClassToBeRenamed_Renamed Foo_Renamed;
+
+		public YuzuUnknownStorage UnknownStorage = new YuzuUnknownStorage();
+	}
+
 }
