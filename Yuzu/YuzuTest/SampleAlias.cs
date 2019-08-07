@@ -202,5 +202,4 @@ namespace YuzuTest
 
 		public YuzuUnknownStorage UnknownStorage = new YuzuUnknownStorage();
 	}
-
 }

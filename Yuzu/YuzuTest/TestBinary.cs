@@ -2051,19 +2051,23 @@ namespace YuzuTest.Binary
 			var bytes = SX("20 01 00 " + XS(typeof(SampleAliasWithinUnknownContainer)) + " 01 00 " +
 				XS("Foo") + " 20 01 00 02 00 " +
 				XS("YuzuTest.SampleAliasClassToBeRenamed, YuzuTest") + " 02 00 " +
-				XS("Bar") + " 20 " + XS("Foo")
-				+ " 05 01 00 02 00 02 00 BC 01 00 00 00 00 02 00 DE 00 00 00 00 00 00 00");
+				XS("Bar") + " 20 " + XS("Foo") +
+				" 05 01 00 02 00 02 00 BC 01 00 00 00 00 02 00 DE 00 00 00 00 00 00 00");
 			var bd = new BinaryDeserializer();
 			bd.Options.AllowUnknownFields = true;
+			Meta.Get(typeof(SampleAliasClassToBeRenamed_Renamed), bd.Options);
 			var r = bd.FromBytes<SampleAliasWithinUnknownContainer>(bytes);
-			Assert.IsTrue(r.UnknownStorage.Fields.Count == 1);
-			Assert.IsTrue(r.UnknownStorage.Fields[0].Value.GetType() == typeof(SampleAliasClassToBeRenamed_Renamed));
+			Assert.AreEqual(1, r.UnknownStorage.Fields.Count);
+			Assert.IsInstanceOfType(
+				r.UnknownStorage.Fields[0].Value, typeof(SampleAliasClassToBeRenamed_Renamed));
 			r.Foo_Renamed = (SampleAliasClassToBeRenamed_Renamed)r.UnknownStorage.Fields[0].Value;
-			Assert.IsTrue(r.Foo_Renamed.Foo == 222);
-			Assert.IsTrue(r.Foo_Renamed.UnknownStorage.Fields.Count == 1);
-			Assert.IsTrue(r.Foo_Renamed.UnknownStorage.Fields[0].Value.GetType() == typeof(SampleAliasClassToBeRenamed_Renamed));
-			r.Foo_Renamed.Bar_Renamed = (SampleAliasClassToBeRenamed_Renamed)r.Foo_Renamed.UnknownStorage.Fields[0].Value;
-			Assert.IsTrue(r.Foo_Renamed.Bar_Renamed.Foo == 444);
+			Assert.AreEqual(222, r.Foo_Renamed.Foo);
+			Assert.AreEqual(1, r.Foo_Renamed.UnknownStorage.Fields.Count);
+			Assert.IsInstanceOfType(
+				r.Foo_Renamed.UnknownStorage.Fields[0].Value, typeof(SampleAliasClassToBeRenamed_Renamed));
+			r.Foo_Renamed.Bar_Renamed =
+				(SampleAliasClassToBeRenamed_Renamed)r.Foo_Renamed.UnknownStorage.Fields[0].Value;
+			Assert.AreEqual(444, r.Foo_Renamed.Bar_Renamed.Foo);
 		}
 
 		[TestMethod]
