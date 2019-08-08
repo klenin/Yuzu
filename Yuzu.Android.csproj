@@ -58,6 +58,7 @@
     <Compile Include="Yuzu\BinarySerializer.cs" />
     <Compile Include="Yuzu\Clone.cs" />
     <Compile Include="Yuzu\Code.cs" />
+    <Compile Include="Yuzu\DictOfObjects.cs" />
     <Compile Include="Yuzu\Grisu\DiyFp.cs" />
     <Compile Include="Yuzu\Grisu\Grisu.cs" />
     <Compile Include="Yuzu\Grisu\GrisuDouble.cs" />
