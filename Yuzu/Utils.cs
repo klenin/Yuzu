@@ -8,20 +8,6 @@ using System.Text.RegularExpressions;
 
 namespace Yuzu.Util
 {
-	// Compatilility with .NET 4
-	internal static class Net4
-	{
-		public static Attribute GetCustomAttribute_Compat(this MemberInfo m, Type t, bool inherit)
-		{
-			if (t == null)
-				return null;
-			var attrs = m.GetCustomAttributes(t, inherit);
-			if (attrs.Count() > 1)
-				throw new AmbiguousMatchException();
-			return (Attribute)attrs.FirstOrDefault();
-		}
-	}
-
 	internal static class Utils
 	{
 		public static object[] ZeroObjects = new object[] { };
