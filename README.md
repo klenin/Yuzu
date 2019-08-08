@@ -9,4 +9,5 @@ Yet another C# serialization library.
 ## Documentation
 
 * [Reference](Yuzu/docs/reference.md)
+* [Binary format](Yuzu/docs/binary.md)
 
