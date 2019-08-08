@@ -1216,6 +1216,7 @@ namespace YuzuTest.Json
 			var js = new JsonSerializer();
 			js.JsonOptions.Indent = "";
 			js.JsonOptions.FieldSeparator = "";
+			var jd = new JsonDeserializer();
 			{
 				var s = "\"/{\u0001}\n\t\"\"";
 				var v = new Sample1 { Y = s };
@@ -1223,7 +1224,6 @@ namespace YuzuTest.Json
 				Assert.AreEqual("{\"X\":0,\"Y\":\"\\\"/{\\u0001}\\n\\t\\\"\\\"\"}", result);
 
 				var w = new Sample1();
-				var jd = new JsonDeserializer();
 				jd.FromString(w, result);
 				Assert.AreEqual(s, w.Y);
 
@@ -1242,12 +1242,12 @@ namespace YuzuTest.Json
 				Assert.AreEqual(v.Y, w.Y);
 			}
 			{
-				var a = "\ud801\udc37";
+				var a = "\ud801\udc37!!\ud801\udc37\ud801\udc37";
 				var result = js.ToBytes(a);
 				var quote = new byte[] { 34 };
 				var b = quote.Concat(Encoding.UTF8.GetBytes(a)).Concat(quote).ToArray();
 				CollectionAssert.AreEqual(b, result);
-				// FIXME: Assert.AreEqual(a, jd.FromBytes(b));
+				Assert.AreEqual(a, jd.FromBytes(b));
 			}
 		}
 

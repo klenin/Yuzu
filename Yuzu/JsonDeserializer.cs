@@ -142,7 +142,17 @@ namespace Yuzu.Json
 			if (RequireOrNull('"')) return null;
 			while (true) {
 				// Optimization: buf is guaranteed to be empty after Require, so no need to call Next.
-				var ch = Reader.ReadChar();
+				char ch;
+				try {
+					ch = Reader.ReadChar();
+				}
+				catch (ArgumentException) {
+					// Encountered surrogate pair. Ignore replacement (\uFFFD) inserted by ReadChars.
+					var chars = Reader.ReadChars(3);
+					sb.Append(chars[1]);
+					sb.Append(chars[2]);
+					continue;
+				}
 				if (ch == '"')
 					break;
 				if (ch == '\\') {
