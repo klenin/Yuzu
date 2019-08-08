@@ -8,6 +8,7 @@ using Yuzu;
 using Yuzu.Binary;
 using Yuzu.Clone;
 using Yuzu.Code;
+using Yuzu.DictOfObjects;
 using Yuzu.Json;
 using Yuzu.Metadata;
 using Yuzu.Util;
@@ -63,6 +64,21 @@ namespace YuzuTest
 			Assert.IsTrue(t.Contains(typeof(Sample1)));
 			Assert.IsFalse(t.Contains(typeof(SampleInterfacedGeneric<>)));
 			Assert.IsTrue(t.Contains(typeof(Metadata.TestMeta.AllDefault)));
+		}
+
+		[TestMethod]
+		public void TestDictObjObjects()
+		{
+			var src = new Sample3 { F = 7, S1 = new Sample1 { X = 3 }, S2 = null };
+			var d = DictOfObjects.Pack(src);
+			Assert.AreEqual(3, d.Count);
+			Assert.AreEqual(src.F, d["F"]);
+			Assert.AreEqual(src.S1, d["S1"]);
+			Assert.AreEqual(src.S2, d["S2"]);
+			var dst = DictOfObjects.Unpack<Sample3>(d);
+			Assert.AreEqual(src.F, dst.F);
+			Assert.AreEqual(src.S1, dst.S1);
+			Assert.AreEqual(src.S2, dst.S2);
 		}
 	}
 
