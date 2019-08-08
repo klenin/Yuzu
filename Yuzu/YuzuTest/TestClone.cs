@@ -3,15 +3,35 @@ using System.Collections.Generic;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
+using Yuzu.Binary;
 using Yuzu.Clone;
 using YuzuGenClone;
 
 namespace YuzuTest
 {
+	public class BinaryCloner : AbstractCloner
+	{
+		private BinarySerializer bs = new BinarySerializer();
+		private BinaryDeserializer bd = new BinaryDeserializer();
+
+		public override object ShallowObject(object src) => throw new NotSupportedException();
+		public override object DeepObject(object src) =>
+			bd.FromBytes(bs.ToBytes(src));
+		public override T Deep<T>(T src) =>
+			bd.FromBytes<T>(bs.ToBytes(src));
+	}
+
 	[TestClass]
 	public class TestClone
 	{
-		private void TestGen(Action<Cloner> test)
+		private void TestGen(Action<AbstractCloner> test)
+		{
+			test(new Cloner());
+			test(new ClonerGen());
+			test(new BinaryCloner());
+		}
+
+		private void TestGenNoBinary(Action<AbstractCloner> test)
 		{
 			test(new Cloner());
 			test(new ClonerGen());
@@ -212,14 +232,14 @@ namespace YuzuTest
 		[TestMethod]
 		public void TestObject()
 		{
-			TestGen(cl => {
+			TestGenNoBinary(cl => {
 				var src = new SampleObj { F = new int[] { 1 } };
 				var dst = cl.Deep(src);
 				Assert.AreNotEqual(src, dst);
 				Assert.AreNotEqual(src.F, dst.F);
 				CollectionAssert.AreEqual((int[])src.F, (int[])dst.F);
 			});
-			TestGen(cl => {
+			TestGenNoBinary(cl => {
 				var src = new SampleItemObj {
 					L = new List<object> { new int[] { 1 }, 2, new Sample1() },
 					D = new Dictionary<string, object> { { "abc", 5 } },

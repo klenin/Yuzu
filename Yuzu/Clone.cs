@@ -7,7 +7,17 @@ using Yuzu.Util;
 
 namespace Yuzu.Clone
 {
-	public class Cloner
+	public abstract class AbstractCloner
+	{
+
+		public abstract object ShallowObject(object src);
+		public virtual T Shallow<T>(T src) => (T)ShallowObject(src);
+
+		public abstract object DeepObject(object src);
+		public virtual T Deep<T>(T obj) => (T)DeepObject(obj);
+	}
+
+	public class Cloner : AbstractCloner
 	{
 		public CommonOptions Options;
 		public static Cloner Instance = new Cloner();
@@ -23,9 +33,7 @@ namespace Yuzu.Clone
 				clonerCache.Add(kv.Key, src => kv.Value(this, src));
 		}
 
-		public T Shallow <T>(T src) => (T)ShallowObject(src);
-
-		public object ShallowObject(object src)
+		public override object ShallowObject(object src)
 		{
 			var meta = Meta.Get(src.GetType(), Options);
 			meta.BeforeSerialization.Run(src);
@@ -259,6 +267,6 @@ namespace Yuzu.Clone
 			throw new NotImplementedException("Unable to clone type: " + t.FullName);
 		}
 
-		public object DeepObject(object src) => GetCloner(src.GetType())(src);
+		public override object DeepObject(object src) => GetCloner(src.GetType())(src);
 	}
 }
