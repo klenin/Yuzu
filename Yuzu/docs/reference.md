@@ -1,5 +1,7 @@
 # Yuzu reference
 
+  * [Serializers](#serializers)
+  * [Deserializers](#deserializers)
   * [Item attributes](#item-attributes)
   * [Method attributes](#method-attributes)
   * [Class attributes](#class-attributes)
@@ -10,6 +12,82 @@
   * [Cloning](#cloning)
   * [Type serialization](#type-serialization)
   * [Packing and unpacking to dictionary](#packing-and-unpacking-to-dictionary)
+
+## Serializers
+
+### `AbstractSerializer`
+
+Common base class for all serializers.
+
+#### `ToWriter(object, BinaryWriter)`
+Serialize to a given `BinaryWriter`. This is the most efficiant option as it avoids extra memory allocation.
+
+#### `ToString(object)`
+Serialize to a string and return it.
+
+#### `ToBytes(object)`
+Serialize to a byte array and return it.
+
+#### `ToBytes(object)`
+Serialize to a given `Stream`.
+
+### `JsonSerializer`
+Serializes into a JSON format with some extensions.
+```cs
+vas s = (new JsonSerializer()).ToString(new MyClass { MyField = 5 });
+```
+
+### `BinarySerializer`
+Serializes into a Yuzu-specific binary format.
+```cs
+var b = (new BinarySerializer()).ToBytes(new MyClass { MyField = 5 });
+```
+
+## Deserializers
+
+### `AbstractDeserializer`
+
+Common base class for all deserializers.
+
+#### `FromReader(object, BinaryReader)`
+Deserialize from a given `BinaryReader` into a given object.
+
+#### `FromString(object, string)`
+Deserialize from a given string into a given object.
+
+#### `FromStream(object, Stream)`
+Deserialize from a given `Stream` into a given object.
+
+#### `FromBytes(object, byte[])`
+Deserialize from a given byte array into a given object.
+
+#### `FromReader(BinaryReader)` or `FromReader<T>(BinaryReader)`.
+Deserialize from a given `BinaryReader` and return the result.
+Generic version generates exception if deserialized object type is not compatible with `T`.
+
+#### `FromString(string)` or `FromString<T>(string)`
+Deserialize from a given string and return the result.
+Generic version generates exception if deserialized object type is not compatible with `T`.
+
+#### `FromStream(Stream)` or `FromStream<T>(Stream)`
+Deserialize from a given `Stream` and return the result.
+Generic version generates exception if deserialized object type is not compatible with `T`.
+
+#### `FromBytes(byte[])` or `FromBytes<T>(byte[])`
+Deserialize from a given byte array and return the result.
+Generic version generates exception if deserialized object type is not compatible with `T`.
+
+### `JsonDeserializer`
+Deserializes from a JSON format with some extensions.
+```cs
+var t = (new JsonDeserializer()).FromString<MyClass>("{ \"MyField\": 5 }");
+```
+
+### `BinaryDeserializer`
+Deserializes from a Yuzu-specific binary format.
+```cs
+var t = (new BinaryDeserializer()).FromBytes<MyClass>(b);
+```
 
 ## Item attributes
 
@@ -366,7 +444,7 @@ Structured type instances may be converted to/from `Dictionary<string, object>` 
 by using `Pack` and `Unpack` functions of `Yuzu.DictOfObjects.DictOfObjects` class.
 
 This is indended as a helper for reading badly structured JSON, e.g.
-```
+```cs
 var d = (Dictionary<string, object>)JsonDeserializer.Instance.FromString(response);
 if (d["type"] == "someType")
     return DictOfObjects.Unpack<SomeType>(d["value"]);
