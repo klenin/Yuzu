@@ -200,4 +200,34 @@ namespace Yuzu.Json
 		}
 	}
 
+	internal static class JsonStringWriter
+	{
+		public static void WriteEscapedString(BinaryWriter writer, string s)
+		{
+			writer.Write((byte)'"');
+			var surrogatePair = new char[2];
+			foreach (var ch in s) {
+				var escape = ch <= '\\' ? JsonEscapeData.escapeChars[ch] : '\0';
+				if (escape > 0) {
+					writer.Write((byte)'\\');
+					writer.Write(escape);
+				}
+				else if (ch < ' ') {
+					writer.Write((byte)'\\');
+					writer.Write((byte)'u');
+					for (int i = 3 * 4; i >= 0; i -= 4)
+						writer.Write(JsonEscapeData.digitHex[ch >> i & 0xf]);
+				}
+				else if (char.IsHighSurrogate(ch))
+					surrogatePair[0] = ch;
+				else if (char.IsLowSurrogate(ch)) {
+					surrogatePair[1] = ch;
+					writer.Write(surrogatePair);
+				}
+				else
+					writer.Write(ch);
+			}
+			writer.Write((byte)'"');
+		}
+	}
 }

@@ -135,33 +135,8 @@ namespace Yuzu.Json
 			writer.Write((byte)'"');
 		}
 
-		private void WriteEscapedString(object obj)
-		{
-			writer.Write((byte)'"');
-			var surrogatePair = new char[2];
-			foreach (var ch in obj.ToString()) {
-				var escape = ch <= '\\' ? JsonEscapeData.escapeChars[ch] : '\0';
-				if (escape > 0) {
-					writer.Write((byte)'\\');
-					writer.Write(escape);
-				}
-				else if (ch < ' ') {
-					writer.Write((byte)'\\');
-					writer.Write((byte)'u');
-					for (int i = 3 * 4; i >= 0; i -= 4)
-						writer.Write(JsonEscapeData.digitHex[ch >> i & 0xf]);
-				}
-				else if(char.IsHighSurrogate(ch))
-					surrogatePair[0] = ch;
-				else if (char.IsLowSurrogate(ch)) {
-					surrogatePair[1] = ch;
-					writer.Write(surrogatePair);
-				}
-				else
-					writer.Write(ch);
-			}
-			writer.Write((byte)'"');
-		}
+		private void WriteChar(object obj) =>
+			JsonStringWriter.WriteEscapedString(writer, obj.ToString());
 
 		private void WriteNullableEscapedString(object obj)
 		{
@@ -169,7 +144,7 @@ namespace Yuzu.Json
 				writer.Write(nullBytes);
 				return;
 			}
-			WriteEscapedString(obj);
+			JsonStringWriter.WriteEscapedString(writer, obj.ToString());
 		}
 
 		private void WriteBool(object obj) => WriteStrCached((bool)obj ? "true" : "false");
@@ -208,13 +183,15 @@ namespace Yuzu.Json
 				writer.Write((byte)'"');
 			}
 			else
-				WriteEscapedString(d.ToString(JsonOptions.DateFormat, CultureInfo.InvariantCulture));
+				JsonStringWriter.WriteEscapedString(
+					writer, d.ToString(JsonOptions.DateFormat, CultureInfo.InvariantCulture));
 		}
 
 		private void WriteDateTimeOffset(object obj)
 		{
 			var d = (DateTimeOffset)obj;
-			WriteEscapedString(d.ToString(JsonOptions.DateTimeOffsetFormat, CultureInfo.InvariantCulture));
+			JsonStringWriter.WriteEscapedString(
+				writer, d.ToString(JsonOptions.DateTimeOffsetFormat, CultureInfo.InvariantCulture));
 		}
 
 		private void WriteTimeSpan(object obj)
@@ -245,7 +222,8 @@ namespace Yuzu.Json
 				writer.Write((byte)'"');
 			}
 			else
-				WriteEscapedString(t.ToString(JsonOptions.TimeSpanFormat, CultureInfo.InvariantCulture));
+				JsonStringWriter.WriteEscapedString(
+					writer, t.ToString(JsonOptions.TimeSpanFormat, CultureInfo.InvariantCulture));
 		}
 
 		private bool CondTrue(object obj, int index, object item) => true;
@@ -305,7 +283,7 @@ namespace Yuzu.Json
 						WriteSep(ref isFirst);
 						WriteIndent();
 						// TODO: Option to not escape dictionary keys.
-						WriteEscapedString(elem.Key.ToString());
+						JsonStringWriter.WriteEscapedString(writer, elem.Key.ToString());
 						writer.Write((byte)':');
 						wf(elem.Value);
 					}
@@ -452,7 +430,7 @@ namespace Yuzu.Json
 				writerCache[typeof(ulong)] = WriteULong;
 			}
 			writerCache[typeof(bool)] = WriteBool;
-			writerCache[typeof(char)] = WriteEscapedString;
+			writerCache[typeof(char)] = WriteChar;
 			if (string.IsNullOrEmpty(JsonOptions.FloatingPointFormat)) {
 				writerCache[typeof(double)] = WriteDouble;
 				writerCache[typeof(float)] = WriteSingle;
