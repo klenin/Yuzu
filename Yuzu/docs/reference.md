@@ -207,6 +207,11 @@ Controls the format of arrays.
 If `true`, array length is serialized before array items, allowing to preallocate memory during deserialization.
 Default value is `false`.
 
+#### `SaveRootClass`
+
+If `true`, the name of the root structured type will be serialized even if it concides with generic argument type.
+Default value is `false`.
+
 #### `IgnoreCompact`
 
 Globally controls `[YuzuCompact]` attribute. If `true`, `[YuzuCompact]` attribute has no effect.
@@ -256,7 +261,7 @@ If empty, `float` and `double` values are serialized by internal code. Otherwise
 Note that roundtrip is only guaranteed when using internal serializer.
 Default value is empty string.
 
-## `BinarySerializeOptions`
+## `Binary options`
 
 #### `Signature`
 
