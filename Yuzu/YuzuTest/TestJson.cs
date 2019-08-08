@@ -9,7 +9,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using Yuzu;
 using Yuzu.Json;
-using Yuzu.Metadata;
+using Yuzu.Util;
 using YuzuTestAssembly;
 using YuzuGen.YuzuTest;
 

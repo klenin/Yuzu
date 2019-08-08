@@ -333,4 +333,36 @@ namespace Yuzu.Util
 		}
 	}
 
+	public static class IdGenerator
+	{
+		static char[] lastId = new char[] { 'A', 'A', 'A', 'A' };
+
+		private static void NextId()
+		{
+			var i = lastId.Length - 1;
+			do {
+				switch (lastId[i]) {
+					case 'Z':
+						lastId[i] = 'a';
+						return;
+					case 'z':
+						lastId[i] = 'A';
+						break;
+					default:
+						lastId[i] = (char)((int)lastId[i] + 1);
+						return;
+				}
+				i--;
+			} while (lastId[i] != 'A');
+			lastId[i] = 'B';
+		}
+
+		public static string GetNextId()
+		{
+			NextId();
+			return new string(lastId);
+		}
+
+	}
+
 }
