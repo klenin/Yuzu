@@ -17,7 +17,9 @@ namespace YuzuTest
 	class SampleOrderExt : SampleOrder
 	{
 		[YuzuMember]
+#pragma warning disable CS0649
 		public bool StarterPackOffered;
+#pragma warning restore CS0649
 	}
 
 	[YuzuAlias("NewNameForAliasField")]

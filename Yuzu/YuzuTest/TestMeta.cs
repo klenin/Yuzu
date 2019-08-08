@@ -63,7 +63,9 @@ namespace YuzuTest.Metadata
 			public int F1 = 0;
 			[YuzuRequired]
 			public int P1 { get; set; }
+#pragma warning disable CS0414
 			private int F2 = 0;
+#pragma warning restore CS0414
 			private int P2 { get; set; }
 		}
 
@@ -81,7 +83,9 @@ namespace YuzuTest.Metadata
 		{
 			public int F1 = 0;
 			public int P1 { get; set; }
+#pragma warning disable CS0414
 			private int F2 = 0;
+#pragma warning restore CS0414
 			private int P2 { get; set; }
 			[YuzuRequired]
 			public int R = 0;
@@ -92,7 +96,9 @@ namespace YuzuTest.Metadata
 		{
 			public int F1 = 0;
 			public int P1 { get; set; }
+#pragma warning disable CS0414
 			private int F2 = 0;
+#pragma warning restore CS0414
 			private int P2 { get; set; }
 			[YuzuMember]
 			public int M = 0;
@@ -244,14 +250,18 @@ namespace YuzuTest.Metadata
 		internal class DuplicateReadAlias
 		{
 			[YuzuRequired]
+#pragma warning disable CS0649
 			public int X;
+#pragma warning restore CS0649
 		}
 
 		[YuzuAlias("")]
 		internal class EmptyReadAlias
 		{
 			[YuzuRequired]
+#pragma warning disable CS0649
 			public int X;
+#pragma warning restore CS0649
 		}
 
 		[TestMethod]
@@ -310,8 +320,10 @@ namespace YuzuTest.Metadata
 
 		internal class Overridden
 		{
+#pragma warning disable CS0649
 			public int X;
 			public string Y;
+#pragma warning restore CS0649
 		}
 
 		[TestMethod]

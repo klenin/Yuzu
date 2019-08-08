@@ -1765,7 +1765,7 @@ namespace YuzuTest.Json
 		[TestMethod]
 		public void TestSurrogateHash()
 		{
-			return;
+			/*
 			var js = new JsonSerializer();
 			var jd = new JsonDeserializer();
 
@@ -1775,6 +1775,7 @@ namespace YuzuTest.Json
 
 			var w1 = jd.FromString<SampleSurrogateHashSet>(result1);
 			CollectionAssert.AreEqual(v1.OrderBy(ch => ch).ToList(), w1.OrderBy(ch => ch).ToList());
+			*/
 		}
 
 		[TestMethod]
