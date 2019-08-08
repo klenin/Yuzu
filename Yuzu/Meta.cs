@@ -366,6 +366,21 @@ namespace Yuzu.Metadata
 
 		private static Func<CommonOptions, Dictionary<string, Type>> MakeReadAliases =
 			CommonOptions => new Dictionary<string, Type>();
+
+		private void CheckForNoFields(CommonOptions options)
+		{
+			if (Surrogate.SurrogateType != null)
+				return;
+			if (Utils.GetIEnumerable(Type) != null) {
+				if (Items.Count > 0)
+					throw Error("Serializable fields in collection are not supported");
+			}
+			else if (
+				!options.AllowEmptyTypes && Items.Count == 0 && !(Type.IsInterface || Type.IsAbstract)
+			)
+				throw Error("No serializable fields");
+		}
+
 		private Meta(Type t, CommonOptions options)
 		{
 			Type = t;
@@ -389,16 +404,7 @@ namespace Yuzu.Metadata
 				ExploreType(i, options);
 			ExploreType(t, options);
 			Surrogate.Complete();
-
-			if (Utils.GetIEnumerable(t) != null) {
-				if (Items.Count > 0)
-					throw Error("Serializable fields in collection are not supported");
-			}
-			else if (
-				!options.AllowEmptyTypes && Items.Count == 0 && !(t.IsInterface || t.IsAbstract) &&
-				Surrogate.SurrogateType == null
-			)
-				throw Error("No serializable fields");
+			CheckForNoFields(options);
 
 			Items.Sort();
 			Item prev = null;
