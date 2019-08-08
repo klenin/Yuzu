@@ -9,6 +9,7 @@
   * [Meta overrides](#meta-overrides)
   * [Cloning](#cloning)
   * [Type serialization](#type-serialization)
+  * [Packing and unpacking to dictionary](#packing-and-unpacking-to-dictionary)
 
 ## Item attributes
 
@@ -358,3 +359,15 @@ Types are serialized as strings.
 To serialize type, use `Yuzu.Util.TypeSerializer.Serialize(typeof(MyType))`.
 
 To deserialize type, use `Yuzu.Util.TypeSerializer.Deserialize("SerializedTypeName")`.
+
+## Packing and unpacking to dictionary
+
+Structured type instances may be converted to/from `Dictionary<string, object>` representation
+by using `Pack` and `Unpack` functions of `Yuzu.DictOfObjects.DictOfObjects` class.
+
+This is indended as a helper for reading badly structured JSON, e.g.
+```
+var d = (Dictionary<string, object>)JsonDeserializer.Instance.FromString(response);
+if (d["type"] == "someType")
+    return DictOfObjects.Unpack<SomeType>(d["value"]);
+```
