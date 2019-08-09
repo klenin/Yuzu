@@ -182,7 +182,7 @@ namespace YuzuGenClone
 			if (src == null) return null;
 			var s = (global::YuzuTest.SampleGenNoGen)src;
 			var result = new global::YuzuTest.SampleGenNoGen();
-			result.NG = cl.Deep(s.NG);
+			result.NG = (global::YuzuTest.SampleNoGen)cl.DeepObject(s.NG);
 			return result;
 		}
 

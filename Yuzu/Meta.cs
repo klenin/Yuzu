@@ -381,6 +381,10 @@ namespace Yuzu.Metadata
 				throw Error("No serializable fields");
 		}
 
+		public bool HasAnyTrigger() =>
+			BeforeSerialization.Actions.Any() || AfterSerialization.Actions.Any() ||
+			BeforeDeserialization.Actions.Any() || AfterDeserialization.Actions.Any();
+
 		private Meta(Type t, CommonOptions options)
 		{
 			Type = t;
@@ -455,10 +459,7 @@ namespace Yuzu.Metadata
 					throw Error("Empty write alias");
 			}
 
-			if (
-				BeforeSerialization.Actions.Any() || AfterSerialization.Actions.Any() ||
-				BeforeDeserialization.Actions.Any() || AfterDeserialization.Actions.Any()
-			)
+			if (HasAnyTrigger())
 				IsCopyable = false;
 		}
 

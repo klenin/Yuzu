@@ -147,7 +147,7 @@ namespace Yuzu.Clone
 					return;
 				}
 			}
-			cw.Put("result.{0} = cl.Deep(s.{0});\n", yi.Name);
+			cw.Put("result.{0} = ({1})cl.DeepObject(s.{0});\n", yi.Name, Utils.GetTypeSpec(yi.Type));
 		}
 
 		private void GenerateClonerBody(Meta meta)

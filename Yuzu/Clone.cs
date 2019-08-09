@@ -46,7 +46,7 @@ namespace Yuzu.Clone
 			return result;
 		}
 
-		public T Deep<T>(T obj) => (T)DeepObject(obj);
+		public override T Deep<T>(T obj) => (T)DeepObject(obj);
 
 		public static bool IsCopyable(Type t, CommonOptions options) =>
 			Utils.IsCopyable(t) ?? Meta.Get(t, options).IsCopyable;
@@ -242,27 +242,71 @@ namespace Yuzu.Clone
 					return surrogateCloner;
 				if (meta.Items.Count == 0)
 					return src => meta.Factory();
-				var cloners = new Func<object, object>[meta.Items.Count];
-				return src => {
-					if (cloners[0] == null) {
-						// Initialize 'cloners' lazily to prevent infinite recursion.
-						int i = 0;
-						foreach (var item in meta.Items)
-							cloners[i++] = GetCloner(item.Type);
-					}
-					if (src == null)
-						return null;
-					meta.BeforeSerialization.Run(src);
-					var result = meta.Factory();
-					meta.BeforeDeserialization.Run(result);
-					int j = 0;
-					foreach (var item in meta.Items)
-						item.SetValue(result, cloners[j++](item.GetValue(src)));
-					meta.AfterSerialization.Run(src);
-					meta.AfterDeserialization.Run(result);
-					return result;
-				};
-
+				var copyable = new List<Meta.Item>();
+				int nonCopyableCount = 0;
+				foreach (var yi in meta.Items) {
+					if (IsCopyable(yi.Type))
+						copyable.Add(yi);
+					else
+						nonCopyableCount += 1;
+				}
+				// Initialize 'cloners' lazily to prevent infinite recursion.
+				var cloners = new Action<object, object>[nonCopyableCount];
+				// Duplicate code to optimize fast path.
+				if (!meta.HasAnyTrigger() && nonCopyableCount == 0) {
+					return src => {
+						if (src == null)
+							return null;
+						var result = meta.Factory();
+						foreach (var yi in copyable)
+							yi.SetValue(result, yi.GetValue(src));
+						return result;
+					};
+				}
+				if (meta.HasAnyTrigger()) {
+					return src => {
+						if (src == null)
+							return null;
+						meta.BeforeSerialization.Run(src);
+						var result = meta.Factory();
+						if (cloners.Length > 0 && cloners[0] == null) {
+							int i = 0;
+							foreach (var yi in meta.Items)
+								if (!IsCopyable(yi.Type)) {
+									var cloner = GetCloner(yi.Type);
+									cloners[i++] = (r, s) => yi.SetValue(r, cloner(yi.GetValue(s)));
+								}
+						}
+						meta.BeforeDeserialization.Run(result);
+						foreach (var yi in copyable)
+							yi.SetValue(result, yi.GetValue(src));
+						foreach (var cloner in cloners)
+							cloner(result, src);
+						meta.AfterSerialization.Run(src);
+						meta.AfterDeserialization.Run(result);
+						return result;
+					};
+				}
+				else {
+					return src => {
+						if (src == null)
+							return null;
+						var result = meta.Factory();
+						if (cloners.Length > 0 && cloners[0] == null) {
+							int i = 0;
+							foreach (var yi in meta.Items)
+								if (!IsCopyable(yi.Type)) {
+									var cloner = GetCloner(yi.Type);
+									cloners[i++] = (r, s) => yi.SetValue(r, cloner(yi.GetValue(s)));
+								}
+						}
+						foreach (var yi in copyable)
+							yi.SetValue(result, yi.GetValue(src));
+						foreach (var cloner in cloners)
+							cloner(result, src);
+						return result;
+					};
+				}
 			}
 			throw new NotImplementedException("Unable to clone type: " + t.FullName);
 		}
