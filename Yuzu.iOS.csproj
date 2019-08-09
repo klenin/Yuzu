@@ -143,6 +143,7 @@
     <Compile Include="Yuzu\Utils.cs" />
     <Compile Include="Yuzu\Yuzu.cs" />
     <Compile Include="Yuzu\Properties\AssemblyInfo.cs" />
+    <Compile Include="Yuzu\CloneGenerator.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Grisu\LICENSE" />
