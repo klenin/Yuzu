@@ -434,7 +434,22 @@ namespace Yuzu.Json
 
 		protected static Dictionary<Type, Func<string, object>> keyParsers = new Dictionary<Type, Func<string, object>> {
 			{ typeof(int), s => int.Parse(s) },
+			{ typeof(uint), s => uint.Parse(s) },
+			{ typeof(long), s => long.Parse(s) },
+			{ typeof(ulong), s => ulong.Parse(s) },
+			{ typeof(short), s => short.Parse(s) },
+			{ typeof(ushort), s => ushort.Parse(s) },
+			{ typeof(sbyte), s => sbyte.Parse(s) },
+			{ typeof(byte), s => byte.Parse(s) },
+			{ typeof(char), s => char.Parse(s) },
 			{ typeof(string), s => s },
+			{ typeof(bool), s => bool.Parse(s) },
+			{ typeof(float), s => float.Parse(s) },
+			{ typeof(double), s => double.Parse(s) },
+			{ typeof(DateTime), s => DateTime.Parse(s) },
+			{ typeof(DateTimeOffset), s => DateTimeOffset.Parse(s) },
+			{ typeof(TimeSpan), s => TimeSpan.Parse(s) },
+			{ typeof(Guid), s => Guid.Parse(s) },
 		};
 
 		public static void RegisterKeyParser(Type t, Func<string, object> parser)

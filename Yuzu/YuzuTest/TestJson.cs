@@ -764,6 +764,10 @@ namespace YuzuTest.Json
 			Assert.AreEqual(8, w.E[SampleEnum.E2]);
 			Assert.AreEqual(1, w.K.Count);
 			Assert.AreEqual(9, w.K[new SampleKey { V = 3 }]);
+			{
+				var s = js.ToString(new Dictionary<char, int> { { 'a', 7 } });
+				Assert.AreEqual(7, jd.FromString<Dictionary<char, int>>(s)['a']);
+			}
 		}
 
 		[TestMethod]
@@ -2040,6 +2044,8 @@ namespace YuzuTest.Json
 			XAssert.Throws<YuzuException>(() => jd.FromString(
 				"{\"class\":\"YuzuTest.SampleInterfaceField, YuzuTest\",\"I\":{\"class\":\"YuzuTest.Sample1, YuzuTest\"}}"),
 				"ISample");
+			XAssert.Throws<YuzuException>(() =>
+				jd.FromString<Dictionary<Sample2, int>>("{\"a\":1}"), "Sample2");
 
 			XAssert.Throws<YuzuException>(() => jd.FromString(
 				"{\"class\":\"YuzuTest.SampleList, YuzuTest\",\"E\":[5, 4, 3]}"), "5");
