@@ -21,6 +21,9 @@ namespace YuzuTest
 	public class TestSpeed
 	{
 		private static MemoryStream bsStructProp = new MemoryStream();
+		private static List<Sample1> listSample1 = new List<Sample1>();
+		private static List<Sample2> listSample2 = new List<Sample2>();
+
 		[ClassInitialize]
 		public static void Init(TestContext context)
 		{
@@ -30,6 +33,11 @@ namespace YuzuTest
 			}
 			var bs = new BinarySerializer();
 			bs.ToStream(a, bsStructProp);
+
+			for (int i = 0; i < 200000; ++i)
+				listSample1.Add(new Sample1 { X = 5, Y = i % 2 == 0 ? "zzz" : "ttt" });
+			for (int i = 0; i < 200000; ++i)
+				listSample2.Add(new Sample2 { X = 5, Y = i % 2 == 0 ? "5" : "6" });
 		}
 
 		[TestMethod]
@@ -255,6 +263,22 @@ namespace YuzuTest
 			bsStructProp.Position = 0;
 			var p = bd.FromReader<List<SampleStructWithProps>>(new BinaryReader(bsStructProp));
 			Assert.AreEqual(101, p[101].P.X);
+		}
+
+		[TestMethod]
+		public void TestBinarySerializeIf()
+		{
+			var bs = new BinarySerializer();
+			var p = bs.ToBytes(listSample2);
+			Assert.AreEqual(41 + (14 / 2 + 10 / 2) * listSample2.Count, p.Length);
+		}
+
+		[TestMethod]
+		public void TestBinarySerializeDefault()
+		{
+			var bs = new BinarySerializer();
+			var p = bs.ToBytes(listSample1);
+			Assert.AreEqual(41 + (16 / 2 + 10 / 2) * listSample1.Count, p.Length);
 		}
 
 	}

@@ -226,7 +226,7 @@ namespace Yuzu.Metadata
 				Alias = Options.GetAlias(ia.Any()) ?? m.Name,
 				IsOptional = ia.Required == null,
 				IsCompact = attrs.HasAttr(Options.CompactAttribute),
-				SerializeIf = serializeIf != null ? Options.GetSerializeCondition(serializeIf) : null,
+				SerializeIf = serializeIf != null ? Options.GetSerializeCondition(serializeIf, Type) : null,
 				Name = m.Name,
 			};
 			if (!item.IsOptional)
@@ -277,6 +277,7 @@ namespace Yuzu.Metadata
 			}
 			if (Options.GetOverride(item.Type).HasAttr(Options.CompactAttribute))
 				item.IsCompact = true;
+
 			if (ia.Member != null && item.SerializeIf == null && !Type.IsAbstract && !Type.IsInterface)
 				item.SerializeIf = GetSerializeIf(item, options);
 			CheckCopyable(item.Type, options);

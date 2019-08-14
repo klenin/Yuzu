@@ -54,7 +54,7 @@ namespace Yuzu
 
 	public abstract class YuzuSerializeCondition : Attribute
 	{
-		public abstract bool Check(object obj, object field);
+		public abstract Func<object, object, bool> MakeChecker(Type tObj);
 	}
 
 	public class YuzuSerializeIf : YuzuSerializeCondition
@@ -62,18 +62,15 @@ namespace Yuzu
 		public readonly string Method;
 		public YuzuSerializeIf(string method) { Method = method; }
 
-		private Func<object, bool> checker;
-
-		public override bool Check(object obj, object field) {
-			if (checker == null) {
-				var fn = obj.GetType().GetMethod(Method);
-				if (fn == null)
-					throw new YuzuException();
-				var p = Expression.Parameter(typeof(object));
-				var e = Expression.Call(Expression.Convert(p, obj.GetType()), fn);
-				checker = Expression.Lambda<Func<object, bool>>(e, p).Compile();
-			}
-			return checker(obj);
+		public override Func<object, object, bool> MakeChecker(Type tObj)
+		{
+			var fn = tObj.GetMethod(Method);
+			if (fn == null)
+				throw new YuzuException();
+			var p = Expression.Parameter(typeof(object));
+			var pf = Expression.Parameter(typeof(object));
+			var e = Expression.Call(Expression.Convert(p, tObj), fn);
+			return Expression.Lambda<Func<object, object, bool>>(e, p, pf).Compile();
 		}
 	}
 
@@ -92,15 +89,14 @@ namespace Yuzu
 
 	public class YuzuDefault : YuzuSerializeCondition
 	{
-		public readonly object Value;
+		public object Value;
 		public YuzuDefault(object value)
 		{
 			Value = value;
 		}
-		public override bool Check(object obj, object field)
-		{
-			return !Value.Equals(field);
-		}
+
+		private bool Check(object obj, object field) => !Value.Equals(field);
+		public override Func<object, object, bool> MakeChecker(Type tObj) => Check;
 	}
 
 	public class YuzuCompact : Attribute { }
@@ -242,8 +238,8 @@ namespace Yuzu
 		public Type FromSurrogateAttribute = typeof(YuzuFromSurrogate);
 
 		public Func<Attribute, string> GetAlias = attr => (attr as YuzuField).Alias;
-		public Func<Attribute, Func<object, object, bool>> GetSerializeCondition =
-			attr => (attr as YuzuSerializeCondition).Check;
+		public Func<Attribute, Type, Func<object, object, bool>> GetSerializeCondition =
+			(attr, t) => (attr as YuzuSerializeCondition).MakeChecker(t);
 		public Func<Attribute, YuzuItemKind> GetItemKind = attr => (attr as YuzuMust).Kind;
 		public Func<Attribute, Tuple<YuzuItemOptionality, YuzuItemKind>> GetItemOptionalityAndKind =
 			attr => Tuple.Create((attr as YuzuAll).Optionality, (attr as YuzuAll).Kind);
