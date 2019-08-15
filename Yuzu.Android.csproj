@@ -79,13 +79,6 @@
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <ItemGroup>
-    <Compile Include="Yuzu\Code.cs" />
-    <Compile Include="Yuzu\JsonGenerators.cs" />
-    <Compile Include="Yuzu\ProtoBuf.cs" />
-    <Compile Include="Yuzu\Utils.cs" />
-    <Compile Include="Yuzu\Yuzu.cs" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Yuzu\Grisu\LICENSE" />
   </ItemGroup>
 </Project>
