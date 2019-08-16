@@ -1206,6 +1206,32 @@ namespace YuzuTest.Json
 		}
 
 		[TestMethod]
+		public void TestUnknownStorageDict()
+		{
+			var js = new JsonSerializer();
+			js.JsonOptions.Indent = "";
+			js.JsonOptions.FieldSeparator = "";
+			js.JsonOptions.SaveRootClass = true;
+			var jd = new JsonDeserializer();
+			jd.Options.AllowUnknownFields = true;
+
+			var data1 =
+				"{\"class\":\"YuzuTest.SampleUnknown, YuzuTest\",\"F\":{\"a\":[" +
+				"{\"class\":\"YuzuTest.SampleBool, YuzuTest\",\"B\":true}" +
+				"]},\"X\":12}";
+			var w1 = jd.FromString<SampleUnknown>(data1);
+			Assert.AreEqual(12, w1.X);
+			var data2 = js.ToString(w1);
+			Assert.AreEqual(data1, data2);
+			var w2 = jd.FromString<SampleUnknown>(data2);
+			var dict = (Dictionary<string, object>)w2.Storage.Fields[0].Value;
+			Assert.AreEqual(1, dict.Count);
+			var lst = (List<object>)dict["a"];
+			Assert.AreEqual(1, lst.Count);
+			Assert.IsTrue(((SampleBool)lst[0]).B);
+		}
+
+		[TestMethod]
 		public void TestSpaces()
 		{
 			var jd = new JsonDeserializer();

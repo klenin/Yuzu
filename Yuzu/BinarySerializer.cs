@@ -553,11 +553,39 @@ namespace Yuzu.Binary
 			return WriteObjectUnknown;
 		}
 
+		private Action<object> WriteDataStructureOfRecord(Type t)
+		{
+			if (t == typeof(Record))
+				return WriteRecord;
+			if (!t.IsGenericType)
+				return null;
+			var g = t.GetGenericTypeDefinition();
+			if (g == typeof(List<>)) {
+				var writeValue = WriteDataStructureOfRecord(t.GetGenericArguments()[0]);
+				if (writeValue == null) return null;
+				return obj => WriteIEnumerable<object>(obj, writeValue);
+			}
+			if (g == typeof(Dictionary<,>)) {
+				var a = t.GetGenericArguments();
+				var writeValue = WriteDataStructureOfRecord(a[1]);
+				if (writeValue == null) return null;
+				var d = (Action<object, Action<object>, Action<object>>)Delegate.CreateDelegate(
+					typeof(Action<object, Action<object>, Action<object>>), this,
+					Utils.GetPrivateGeneric(GetType(), nameof(WriteIDictionary), a[0], typeof(object))
+				);
+				return obj => d(obj, GetWriteFunc(a[0]), writeValue);
+			}
+			return null;
+		}
+
 		private Action<object> MakeWriteFunc(Type t)
 		{
 			if (t.IsEnum)
 				return GetWriteFunc(Enum.GetUnderlyingType(t));
 			if (t.IsGenericType) {
+				var writeRecord = WriteDataStructureOfRecord(t);
+				if (writeRecord != null)
+					return writeRecord;
 				var g = t.GetGenericTypeDefinition();
 				if (g == typeof(Action<>))
 					return WriteAction;
