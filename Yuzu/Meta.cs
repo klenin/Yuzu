@@ -200,7 +200,7 @@ namespace Yuzu.Metadata
 					IsCopyable = false;
 			}
 			else {
-				if (Utils.IsStruct(itemType) || itemType != typeof(object) && itemType.IsClass) {
+				if (Utils.IsStruct(itemType)) {
 					var meta = Get(itemType, options);
 					if (!meta.IsCopyable)
 						IsCopyable = false;
@@ -275,12 +275,14 @@ namespace Yuzu.Metadata
 				if (!item.Type.IsClass && !item.Type.IsInterface || item.Type == typeof(object))
 					throw Error("Unable to either set or merge item {0}", item.Name);
 			}
-			if (Options.GetOverride(item.Type).HasAttr(Options.CompactAttribute))
+			var over = Options.GetOverride(item.Type);
+			if (over.HasAttr(Options.CompactAttribute))
 				item.IsCompact = true;
+			if (!over.HasAttr(Options.CopyableAttribute))
+				CheckCopyable(item.Type, options);
 
 			if (ia.Member != null && item.SerializeIf == null && !Type.IsAbstract && !Type.IsInterface)
 				item.SerializeIf = GetSerializeIf(item, options);
-			CheckCopyable(item.Type, options);
 			Items.Add(item);
 		}
 

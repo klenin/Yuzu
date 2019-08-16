@@ -362,6 +362,27 @@ namespace YuzuTest.Metadata
 			}
 		}
 
+		internal class MutualRec1
+		{
+#pragma warning disable CS0649
+			[YuzuRequired]
+			public MutualRec2 R;
+#pragma warning restore CS0649
+		}
+
+		internal class MutualRec2
+		{
+#pragma warning disable CS0649
+			[YuzuRequired]
+			public MutualRec1 R;
+#pragma warning restore CS0649
+		}
+
+		[TestMethod]
+		public void TestMutualRec()
+		{
+			Meta.Get(typeof(MutualRec1), new CommonOptions());
+		}
 	}
 
 }
