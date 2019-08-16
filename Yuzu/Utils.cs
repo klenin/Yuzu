@@ -39,9 +39,8 @@ namespace Yuzu.Util
 
 		public static bool? IsCopyable(Type t) =>
 			t.IsPrimitive || t.IsEnum || t == typeof(string) ? true :
-			!t.IsValueType ? false :
-			t.Namespace == "System" ? (bool?)true :
-			null;
+			t.Namespace == "System" ? t.IsValueType :
+			t.IsClass || t.IsValueType ? null : (bool?)false;
 
 		public static Type GetICollection(Type t)
 		{

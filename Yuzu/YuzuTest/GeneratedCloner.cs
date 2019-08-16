@@ -139,6 +139,9 @@ namespace YuzuGenClone
 			return result;
 		}
 
+		private static global::YuzuTest.SampleCopyable Clone_YuzuTest__SampleCopyable(Cloner cl, object src) =>
+			(global::YuzuTest.SampleCopyable)src;
+
 		private static global::YuzuTest.SampleDict Clone_YuzuTest__SampleDict(Cloner cl, object src)
 		{
 			if (src == null) return null;
@@ -307,6 +310,15 @@ namespace YuzuGenClone
 			return result;
 		}
 
+		private static global::YuzuTest.SampleWithCopyable Clone_YuzuTest__SampleWithCopyable(Cloner cl, object src)
+		{
+			if (src == null) return null;
+			var s = (global::YuzuTest.SampleWithCopyable)src;
+			var result = new global::YuzuTest.SampleWithCopyable();
+			result.P = s.P;
+			return result;
+		}
+
 		static ClonerGen()
 		{
 			clonerCache[typeof(global::YuzuTest.Color)] = Clone_YuzuTest__Color;
@@ -321,6 +333,7 @@ namespace YuzuGenClone
 			clonerCache[typeof(global::YuzuTest.SampleBefore2)] = Clone_YuzuTest__SampleBefore2;
 			clonerCache[typeof(global::YuzuTest.SampleBeforeDeserialization)] = Clone_YuzuTest__SampleBeforeDeserialization;
 			clonerCache[typeof(global::YuzuTest.SampleBeforeSerialization)] = Clone_YuzuTest__SampleBeforeSerialization;
+			clonerCache[typeof(global::YuzuTest.SampleCopyable)] = ValueCopyCloner;
 			clonerCache[typeof(global::YuzuTest.SampleDict)] = Clone_YuzuTest__SampleDict;
 			clonerCache[typeof(global::YuzuTest.SampleDictKeys)] = Clone_YuzuTest__SampleDictKeys;
 			clonerCache[typeof(global::YuzuTest.SampleGenNoGen)] = Clone_YuzuTest__SampleGenNoGen;
@@ -335,6 +348,7 @@ namespace YuzuGenClone
 			clonerCache[typeof(global::YuzuTest.SampleRect)] = Clone_YuzuTest__SampleRect;
 			clonerCache[typeof(global::YuzuTest.SampleStructWithClass)] = Clone_YuzuTest__SampleStructWithClass_obj;
 			clonerCache[typeof(global::YuzuTest.SampleSurrogateColor)] = Clone_YuzuTest__SampleSurrogateColor;
+			clonerCache[typeof(global::YuzuTest.SampleWithCopyable)] = Clone_YuzuTest__SampleWithCopyable;
 		}
 	}
 }

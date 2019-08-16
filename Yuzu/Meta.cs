@@ -192,16 +192,16 @@ namespace Yuzu.Metadata
 				Delegate.CreateDelegate(typeof(Func<object, object, bool>), this, mi);
 		}
 
-		private void CheckCopyable(Type t, CommonOptions options)
+		private void CheckCopyable(Type itemType, CommonOptions options)
 		{
-			var isCopyable = Utils.IsCopyable(t);
+			var isCopyable = Utils.IsCopyable(itemType);
 			if (isCopyable.HasValue) {
 				if (!isCopyable.Value)
 					IsCopyable = false;
 			}
 			else {
-				if (Utils.IsStruct(t)) {
-					var meta = Get(t, options);
+				if (Utils.IsStruct(itemType) || itemType != typeof(object) && itemType.IsClass) {
+					var meta = Get(itemType, options);
 					if (!meta.IsCopyable)
 						IsCopyable = false;
 				}
@@ -460,7 +460,9 @@ namespace Yuzu.Metadata
 					throw Error("Empty write alias");
 			}
 
-			if (HasAnyTrigger())
+			if (over.HasAttr(Options.CopyableAttribute))
+				IsCopyable = true;
+			else if (HasAnyTrigger())
 				IsCopyable = false;
 		}
 

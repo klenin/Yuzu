@@ -191,6 +191,11 @@ This attrubute can be used for increasing serialization and deserialization spee
 
 Can be substituted by changing `MetaOptions.CompactAttribute`.
 
+#### `[YuzuCopyable]`
+Denotes that instances of this class should be cloned by direct assignment, even if they are or contain reference types.
+
+Can be substituted by changing `MetaOptions.CopyableAttribute`.
+
 #### `[YuzuMust]` or `[YuzuMust(itemKind)]`
 Denotes that all items must be serialized. Exception is thrown if at least one public item lacks serialization attribute. If present, `itemKind` argument limits the requirement to either just fields (`YuzuItemKind.Field`) or just properties (`YuzuItemKind.Property`).
 

@@ -75,6 +75,18 @@ namespace YuzuTest
 		public SampleNoGen NG;
 	}
 
+	[YuzuCopyable]
+	public class SampleCopyable {
+		[YuzuRequired]
+		public int X;
+	}
+
+	public class SampleWithCopyable
+	{
+		[YuzuRequired]
+		public SampleCopyable P = new SampleCopyable();
+	}
+
 	[YuzuAllowReadingFromAncestor]
 	public class Sample2Allow : Sample2
 	{

@@ -353,5 +353,16 @@ namespace YuzuTest
 			XAssert.Throws<Yuzu.YuzuException>(
 				() => new Cloner().Deep(new SampleSurrogateColorIf()), "Both");
 		}
+
+		[TestMethod]
+		public void TestCopyable()
+		{
+			TestGenNoBinary(cl => {
+				var src = new SampleWithCopyable { P = new SampleCopyable { X = 43 } };
+				var dst = cl.Deep(src);
+				Assert.AreNotEqual(src, dst);
+				Assert.AreEqual(src.P, dst.P);
+			});
+		}
 	}
 }

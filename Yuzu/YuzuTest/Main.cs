@@ -245,6 +245,8 @@ namespace YuzuTest
 				cd.Generate<SampleAfter2>();
 				cd.Generate<SampleSurrogateColor>();
 				cd.Generate<Color>();
+				cd.Generate<SampleWithCopyable>();
+				cd.Generate<SampleCopyable>();
 			});
 		}
 	}
