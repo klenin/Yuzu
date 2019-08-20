@@ -9,6 +9,7 @@ namespace Yuzu.Clone
 {
 	public abstract class AbstractCloner
 	{
+		public CommonOptions Options;
 
 		public abstract object ShallowObject(object src);
 		public virtual T Shallow<T>(T src) => (T)ShallowObject(src);
@@ -19,7 +20,6 @@ namespace Yuzu.Clone
 
 	public class Cloner : AbstractCloner
 	{
-		public CommonOptions Options;
 		public static Cloner Instance = new Cloner();
 
 		private Dictionary<Type, Func<object, object>> clonerCache =

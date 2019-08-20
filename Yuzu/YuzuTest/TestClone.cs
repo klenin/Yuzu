@@ -15,10 +15,16 @@ namespace YuzuTest
 		private BinaryDeserializer bd = new BinaryDeserializer();
 
 		public override object ShallowObject(object src) => throw new NotSupportedException();
-		public override object DeepObject(object src) =>
-			bd.FromBytes(bs.ToBytes(src));
-		public override T Deep<T>(T src) =>
-			bd.FromBytes<T>(bs.ToBytes(src));
+		public override object DeepObject(object src)
+		{
+			bd.Options = Options;
+			return bd.FromBytes(bs.ToBytes(src));
+		}
+		public override T Deep<T>(T src)
+		{
+			bd.Options = Options;
+			return bd.FromBytes<T>(bs.ToBytes(src));
+		}
 	}
 
 	[TestClass]
