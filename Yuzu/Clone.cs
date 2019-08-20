@@ -25,6 +25,8 @@ namespace Yuzu.Clone
 
 		private Dictionary<Type, Func<object, object>> clonerCache =
 			new Dictionary<Type, Func<object, object>>();
+		private Dictionary<Type, Action<object, object>> mergerCache =
+			new Dictionary<Type, Action<object, object>>();
 
 		public Cloner() { }
 
@@ -110,6 +112,35 @@ namespace Yuzu.Clone
 			return result;
 		}
 
+		protected void MergeIDictionary<I, K, V>(
+			object dst, object src, Func<object, object> cloneKey, Func<object, object> cloneValue
+		) where I : class, IDictionary<K, V>, new()
+		{
+			if (src == null || dst == null)
+				return;
+			foreach (var kv in (I)src)
+				((I)dst).Add((K)cloneKey(kv.Key), (V)cloneValue(kv.Value));
+		}
+
+		protected void MergeIDictionaryPrimiviteKey<I, K, V>(
+			object dst, object src, Func<object, object> cloneValue
+		) where I : class, IDictionary<K, V>, new()
+		{
+			if (src == null || dst == null)
+				return;
+			foreach (var kv in (I)src)
+				((I)dst).Add(kv.Key, (V)cloneValue(kv.Value));
+		}
+
+		protected void MergeIDictionaryPrimivite<I, K, V>(object dst, object src)
+			where I : class, IDictionary<K, V>, new()
+		{
+			if (src == null || dst == null)
+				return;
+			foreach (var kv in (I)src)
+				((I)dst).Add(kv);
+		}
+
 		protected I CloneCollection<I, E>(object src, Func<object, object> cloneElem)
 			where I : class, ICollection<E>, new()
 		{
@@ -132,6 +163,24 @@ namespace Yuzu.Clone
 			return result;
 		}
 
+		protected void MergeCollection<I, E>(object dst, object src, Func<object, object> cloneElem)
+			where I : class, ICollection<E>
+		{
+			if (src == null || dst == null)
+				return;
+			foreach (var item in (I)src)
+				((I)dst).Add((E)cloneElem(item));
+		}
+
+		protected void MergeCollectionPrimitive<I, E>(object dst, object src)
+			where I : class, ICollection<E>
+		{
+			if (src == null || dst == null)
+				return;
+			foreach (var item in (I)src)
+				((I)dst).Add(item);
+		}
+
 		public static object ValueCopy(object src) => src;
 		private static object CloneNull(object src) => null;
 
@@ -145,6 +194,20 @@ namespace Yuzu.Clone
 			return cloner;
 		}
 		public Func<object, object> GetCloner<T>() => GetCloner(typeof(T));
+
+		public Action<object, object> GetMerger(Type t)
+		{
+			Action<object, object> merger;
+			if (!mergerCache.TryGetValue(t, out merger)) {
+				merger = MakeMerger(t);
+				mergerCache.Add(t, merger);
+			}
+			return merger;
+		}
+		public Action<object, object> GetMerger<T>() => GetMerger(typeof(T));
+
+		private T MakeDelegate<T>(MethodInfo m) where T: Delegate =>
+			(T)Delegate.CreateDelegate(typeof(T), this, m);
 
 		protected Func<object, object> MakeDelegateFunc(MethodInfo m) =>
 			(Func<object, object>)Delegate.CreateDelegate(typeof(Func<object, object>), this, m);
@@ -166,6 +229,22 @@ namespace Yuzu.Clone
 				throw new YuzuException("Both FromSurrogate and ToSurrogate must be defined for cloning");
 			var surrogateCloner = GetCloner(sg.SurrogateType);
 			return src => sg.FuncFrom(surrogateCloner(sg.FuncTo(src)));
+		}
+
+		private void MakeFieldCloners(Action<object, object>[] cloners, Meta meta)
+		{
+			int i = 0;
+			foreach (var yi in meta.Items) {
+				if (IsCopyable(yi.Type)) continue;
+				if (yi.SetValue != null) {
+					var cloner = GetCloner(yi.Type);
+					cloners[i++] = (dst, src) => yi.SetValue(dst, cloner(yi.GetValue(src)));
+				}
+				else {
+					var merger = GetMerger(yi.Type);
+					cloners[i++] = (dst, src) => merger(yi.GetValue(dst), yi.GetValue(src));
+				}
+			}
 		}
 
 		private Func<object, object> MakeCloner(Type t)
@@ -263,14 +342,8 @@ namespace Yuzu.Clone
 							return null;
 						meta.BeforeSerialization.Run(src);
 						var result = meta.Factory();
-						if (cloners.Length > 0 && cloners[0] == null) {
-							int i = 0;
-							foreach (var yi in meta.Items)
-								if (!IsCopyable(yi.Type)) {
-									var cloner = GetCloner(yi.Type);
-									cloners[i++] = (r, s) => yi.SetValue(r, cloner(yi.GetValue(s)));
-								}
-						}
+						if (cloners.Length > 0 && cloners[0] == null)
+							MakeFieldCloners(cloners, meta);
 						meta.BeforeDeserialization.Run(result);
 						foreach (var yi in copyable)
 							yi.SetValue(result, yi.GetValue(src));
@@ -286,14 +359,8 @@ namespace Yuzu.Clone
 						if (src == null)
 							return null;
 						var result = meta.Factory();
-						if (cloners.Length > 0 && cloners[0] == null) {
-							int i = 0;
-							foreach (var yi in meta.Items)
-								if (!IsCopyable(yi.Type)) {
-									var cloner = GetCloner(yi.Type);
-									cloners[i++] = (r, s) => yi.SetValue(r, cloner(yi.GetValue(s)));
-								}
-						}
+						if (cloners[0] == null)
+							MakeFieldCloners(cloners, meta);
 						foreach (var yi in copyable)
 							yi.SetValue(result, yi.GetValue(src));
 						foreach (var cloner in cloners)
@@ -303,6 +370,101 @@ namespace Yuzu.Clone
 				}
 			}
 			throw new NotImplementedException("Unable to clone type: " + t.FullName);
+		}
+
+		private Action<object, object> MakeMerger(Type t)
+		{
+			{
+				var idict = Utils.GetIDictionary(t);
+				if (idict != null) {
+					var a = idict.GetGenericArguments();
+					if (!IsCopyable(a[0])) {
+						var сk = GetCloner(a[0]);
+						var сv = GetCloner(a[1]);
+						var m = Utils.GetPrivateGeneric(
+							GetType(), nameof(MergeIDictionary), t, a[0], a[1]);
+						var d = MakeDelegate<
+							Action<object, object, Func<object, object>, Func<object, object>>>(m);
+						return (dst, src) => d(dst, src, сk, сv);
+					}
+					else if (!IsCopyable(a[1])) {
+						var сv = GetCloner(a[1]);
+						var m = Utils.GetPrivateGeneric(
+							GetType(), nameof(MergeIDictionaryPrimiviteKey), t, a[0], a[1]);
+						var d = MakeDelegate<Action<object, object, Func<object, object>>>(m);
+						return (dst, src) => d(dst, src, сv);
+					}
+					else {
+						var m = Utils.GetPrivateGeneric(
+							GetType(), nameof(MergeIDictionaryPrimivite), t, a[0], a[1]);
+						return MakeDelegate<Action<object, object>>(m);
+					}
+				}
+			}
+			{
+				var icoll = Utils.GetICollection(t);
+				if (icoll != null) {
+					var a = icoll.GetGenericArguments();
+					if (!IsCopyable(a[0])) {
+						var сe = GetCloner(a[0]);
+						var m = Utils.GetPrivateGeneric(GetType(), nameof(MergeCollection), t, a[0]);
+						var d = MakeDelegate<Action<object, object, Func<object, object>>>(m);
+						return (dst, src) => d(dst, src, сe);
+					}
+					else {
+						var m = Utils.GetPrivateGeneric(
+							GetType(), nameof(MergeCollectionPrimitive), t, a[0]);
+						return MakeDelegate<Action<object, object>>(m);
+					}
+				}
+			}
+			if (t.IsClass || t.IsInterface || Utils.IsStruct(t)) {
+				var meta = Meta.Get(t, Options);
+				if (meta.Items.Count == 0)
+					return (dst, src) => {};
+				var copyable = meta.Items.Where(yi => IsCopyable(yi.Type)).ToList();
+				// Initialize 'cloners' lazily to prevent infinite recursion.
+				var cloners = new Action<object, object>[meta.Items.Count - copyable.Count];
+				// Duplicate code to optimize fast path.
+				if (!meta.HasAnyTrigger() && cloners.Length == 0) {
+					return (dst, src) => {
+						if (src == null || dst == null)
+							return;
+						foreach (var yi in copyable)
+							yi.SetValue(dst, yi.GetValue(src));
+					};
+				}
+				if (meta.HasAnyTrigger()) {
+					return (dst, src) => {
+						if (src == null || dst == null)
+							return;
+						meta.BeforeSerialization.Run(src);
+						var result = meta.Factory();
+						if (cloners.Length > 0 && cloners[0] == null)
+							MakeFieldCloners(cloners, meta);
+						meta.BeforeDeserialization.Run(result);
+						foreach (var yi in copyable)
+							yi.SetValue(result, yi.GetValue(src));
+						foreach (var cloner in cloners)
+							cloner(result, src);
+						meta.AfterSerialization.Run(src);
+						meta.AfterDeserialization.Run(result);
+					};
+				}
+				else {
+					return (dst, src) => {
+						if (src == null || dst == null)
+							return;
+						if (cloners[0] == null)
+							MakeFieldCloners(cloners, meta);
+						foreach (var yi in copyable)
+							yi.SetValue(dst, yi.GetValue(src));
+						foreach (var cloner in cloners)
+							cloner(dst, src);
+					};
+				}
+			}
+			throw new NotImplementedException("Unable to merge type: " + t.FullName);
 		}
 
 		public override object DeepObject(object src) => GetCloner(src.GetType())(src);

@@ -234,6 +234,40 @@ namespace YuzuGenClone
 			return result;
 		}
 
+		private static global::YuzuTest.SampleMerge Clone_YuzuTest__SampleMerge(Cloner cl, object src)
+		{
+			if (src == null) return null;
+			var s = (global::YuzuTest.SampleMerge)src;
+			var result = new global::YuzuTest.SampleMerge();
+			if (s.DI != null) {
+				foreach (var tmp1 in s.DI)
+					result.DI.Add(tmp1.Key, tmp1.Value);
+			}
+			if (s.LI != null) {
+				foreach (var tmp2 in s.LI)
+					result.LI.Add(tmp2);
+			}
+			cl.GetMerger<global::YuzuTest.Sample1>()(result.M, s.M);
+			return result;
+		}
+
+		private static global::YuzuTest.SampleMergeNonPrimitive Clone_YuzuTest__SampleMergeNonPrimitive(Cloner cl, object src)
+		{
+			if (src == null) return null;
+			var s = (global::YuzuTest.SampleMergeNonPrimitive)src;
+			var result = new global::YuzuTest.SampleMergeNonPrimitive();
+			if (s.DI != null) {
+				foreach (var tmp1 in s.DI)
+					result.DI.Add(tmp1.Key, Clone_YuzuTest__Sample1(cl, tmp1.Value));
+			}
+			if (s.LI != null) {
+				foreach (var tmp2 in s.LI)
+					result.LI.Add(Clone_YuzuTest__Sample1(cl, tmp2));
+			}
+			cl.GetMerger<global::YuzuTest.Sample1>()(result.M, s.M);
+			return result;
+		}
+
 		private static global::YuzuTest.SampleNullable Clone_YuzuTest__SampleNullable(Cloner cl, object src)
 		{
 			if (src == null) return null;
@@ -340,6 +374,8 @@ namespace YuzuGenClone
 			clonerCache[typeof(global::YuzuTest.SampleItemObj)] = Clone_YuzuTest__SampleItemObj;
 			clonerCache[typeof(global::YuzuTest.SampleList)] = Clone_YuzuTest__SampleList;
 			clonerCache[typeof(global::YuzuTest.SampleMatrix)] = Clone_YuzuTest__SampleMatrix;
+			clonerCache[typeof(global::YuzuTest.SampleMerge)] = Clone_YuzuTest__SampleMerge;
+			clonerCache[typeof(global::YuzuTest.SampleMergeNonPrimitive)] = Clone_YuzuTest__SampleMergeNonPrimitive;
 			clonerCache[typeof(global::YuzuTest.SampleNullable)] = Clone_YuzuTest__SampleNullable;
 			clonerCache[typeof(global::YuzuTest.SampleObj)] = Clone_YuzuTest__SampleObj;
 			clonerCache[typeof(global::YuzuTest.SamplePerson)] = Clone_YuzuTest__SamplePerson;

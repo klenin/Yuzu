@@ -370,5 +370,55 @@ namespace YuzuTest
 				Assert.AreEqual(src.P, dst.P);
 			});
 		}
+
+		[TestMethod]
+		public void TestMerge()
+		{
+			TestGenNoBinary(cl => {
+				var src = new SampleMerge();
+				src.DI.Add(3, 4);
+				src.LI.Add(33);
+				src.M = new Sample1 { X = 768, Y = "ttt" };
+				var dst = cl.Deep(src);
+				Assert.AreNotEqual(src, dst);
+				CollectionAssert.AreEqual(src.DI, dst.DI);
+				CollectionAssert.AreEqual(src.LI, dst.LI);
+				Assert.AreNotEqual(src.M, dst.M);
+				Assert.IsNull(dst.M);
+			});
+			TestGen(cl => {
+				cl.Options.Meta = new Yuzu.MetaOptions().AddOverride(typeof(SampleMerge), o =>
+					o.AddItem(nameof(SampleMerge.Make), i => i.AddAttr(new Yuzu.YuzuFactory()))
+				);
+				var src = new SampleMerge();
+				src.DI.Add(3, 4);
+				src.LI.Add(33);
+				src.M = new Sample1 { X = 768, Y = "ttt" };
+				var dst = cl.Deep(src);
+				Assert.AreNotEqual(src, dst);
+				CollectionAssert.AreEqual(src.DI, dst.DI);
+				CollectionAssert.AreEqual(src.LI, dst.LI);
+				Assert.AreNotEqual(src.M, dst.M);
+				// Generated cloner is not affected by meta override.
+				if (cl is ClonerGenBase)
+					Assert.IsNull(dst.M);
+				else
+					Assert.AreEqual(src.M.X, dst.M.X);
+			});
+			TestGen(cl => {
+				var src = new SampleMergeNonPrimitive();
+				src.DI.Add(3, new Sample1 { X = 13 });
+				src.LI.Add(new Sample1 { X = 14 });
+				src.M = new Sample1 { X = 15 };
+				var dst = cl.Deep(src);
+				Assert.AreNotEqual(src, dst);
+				Assert.AreEqual(src.DI.Count, dst.DI.Count);
+				Assert.AreEqual(src.DI[3].X, dst.DI[3].X);
+				Assert.AreEqual(src.LI.Count, dst.LI.Count);
+				Assert.AreEqual(src.LI[0].X, dst.LI[0].X);
+				Assert.AreNotEqual(src.M, dst.M);
+				Assert.AreEqual(src.M.X, dst.M.X);
+			});
+		}
 	}
 }

@@ -649,14 +649,24 @@ namespace YuzuTest
 
 	public class SampleMerge
 	{
-		private Dictionary<int, int> di = new Dictionary<int, int>();
-		private List<int> li = new List<int>();
 		[YuzuRequired]
-		public Dictionary<int, int> DI { get { return di; } }
+		public Dictionary<int, int> DI { get; } = new Dictionary<int, int>();
 		[YuzuRequired]
-		public List<int> LI { get { return li; } }
+		public List<int> LI { get; } = new List<int>();
 		[YuzuOptional, YuzuMerge]
 		public Sample1 M;
+
+		public static SampleMerge Make() => new SampleMerge { M = new Sample1() };
+	}
+
+	public class SampleMergeNonPrimitive
+	{
+		[YuzuRequired]
+		public Dictionary<int, Sample1> DI { get; } = new Dictionary<int, Sample1>();
+		[YuzuRequired]
+		public List<Sample1> LI { get; } = new List<Sample1>();
+		[YuzuOptional, YuzuMerge]
+		public Sample1 M = new Sample1();
 	}
 
 	public class SampleNested

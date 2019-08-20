@@ -98,10 +98,12 @@ namespace Yuzu.Clone
 
 		private void GenerateCloneItem(Meta meta, Meta.Item yi)
 		{
-			var simpleCloner = GenerateClonerSimple(yi.Type, "s." + yi.Name);
-			if (simpleCloner != null) {
-				cw.Put("result.{0} = {1};\n", yi.Name, simpleCloner);
-				return;
+			if (yi.SetValue != null) {
+				var simpleCloner = GenerateClonerSimple(yi.Type, "s." + yi.Name);
+				if (simpleCloner != null) {
+					cw.Put("result.{0} = {1};\n", yi.Name, simpleCloner);
+					return;
+				}
 			}
 			if (yi.Type.IsArray) {
 				var e = yi.Type.GetElementType();
@@ -123,7 +125,8 @@ namespace Yuzu.Clone
 				if (idict != null) {
 					var a = idict.GetGenericArguments();
 					cw.Put("if (s.{0} != null) {{\n", yi.Name);
-					cw.Put("result.{0} = new {1}();\n", yi.Name, Utils.GetTypeSpec(yi.Type));
+					if (yi.SetValue != null)
+						cw.Put("result.{0} = new {1}();\n", yi.Name, Utils.GetTypeSpec(yi.Type));
 					var itemName = cw.GetTempName();
 					var clonerCallK = GenerateClonerInit(a[0], string.Format("{0}.Key", itemName));
 					var clonerCallV = GenerateClonerInit(a[1], string.Format("{0}.Value", itemName));
@@ -138,7 +141,8 @@ namespace Yuzu.Clone
 				if (icoll != null) {
 					var a = icoll.GetGenericArguments();
 					cw.Put("if (s.{0} != null) {{\n", yi.Name);
-					cw.Put("result.{0} = new {1}();\n", yi.Name, Utils.GetTypeSpec(yi.Type));
+					if (yi.SetValue != null)
+						cw.Put("result.{0} = new {1}();\n", yi.Name, Utils.GetTypeSpec(yi.Type));
 					var itemName = cw.GetTempName();
 					var clonerCall = GenerateClonerInit(a[0], itemName);
 					cw.Put("foreach (var {0} in s.{1})\n", itemName, yi.Name);
@@ -147,7 +151,10 @@ namespace Yuzu.Clone
 					return;
 				}
 			}
-			cw.Put("result.{0} = ({1})cl.DeepObject(s.{0});\n", yi.Name, Utils.GetTypeSpec(yi.Type));
+			if (yi.SetValue != null)
+				cw.Put("result.{0} = ({1})cl.DeepObject(s.{0});\n", yi.Name, Utils.GetTypeSpec(yi.Type));
+			else
+				cw.Put("cl.GetMerger<{1}>()(result.{0}, s.{0});\n", yi.Name, Utils.GetTypeSpec(yi.Type));
 		}
 
 		private void GenerateClonerBody(Meta meta)
