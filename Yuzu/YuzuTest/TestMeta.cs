@@ -360,6 +360,18 @@ namespace YuzuTest.Metadata
 				Assert.AreEqual(1, meta.Items.Count);
 				Assert.AreEqual("Y", meta.Items[0].Name);
 			}
+			{
+				var metaOptions = new MetaOptions();
+				var opt = new CommonOptions { Meta = metaOptions };
+				metaOptions.AddOverride(
+					typeof(Sample1),
+					over => over.
+						AddItem(nameof(Sample1.X), i => i.NegateAttr(typeof(YuzuRequired)))
+				);
+				var meta = Meta.Get(typeof(Sample1), opt);
+				Assert.AreEqual(1, meta.Items.Count);
+				Assert.AreEqual("Y", meta.Items[0].Name);
+			}
 		}
 
 		internal class MutualRec1

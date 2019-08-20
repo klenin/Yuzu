@@ -369,6 +369,16 @@ namespace YuzuTest
 				Assert.AreNotEqual(src, dst);
 				Assert.AreEqual(src.P, dst.P);
 			}, useBinary: false);
+			TestGen(cl => {
+				cl.Options.Meta = new MetaOptions().AddOverride(typeof(SampleCopyable), o =>
+					o.NegateAttr(typeof(YuzuCopyable))
+				);
+				var src = new SampleWithCopyable { P = new SampleCopyable { X = 43 } };
+				var dst = cl.Deep(src);
+				Assert.AreNotEqual(src, dst);
+				Assert.AreNotEqual(src.P, dst.P);
+				Assert.AreEqual(src.P.X, dst.P.X);
+			}, useGen: false);
 		}
 
 		[TestMethod]

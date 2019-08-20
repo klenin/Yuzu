@@ -398,6 +398,11 @@ Returns `this` to allow chaining.
 Adds an attribute to either type or item override.
 Returns `this` to allow chaining.
 
+### `NegateAttr(Type attrType)`
+
+Negates an existing attribute on either type or item.
+Returns `this` to allow chaining.
+
 ### `AddItem(string itemName, Action after)`
 
 Creates an override for item `itemName`. Upon success, executes `after` action with newly created override as an argument.

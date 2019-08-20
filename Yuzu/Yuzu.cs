@@ -164,6 +164,7 @@ namespace Yuzu
 	{
 		public MemberInfo Info;
 		public ConcurrentBag<Attribute> Attributes = new ConcurrentBag<Attribute>();
+		public ConcurrentBag<Type> NegatedAttributes = new ConcurrentBag<Type>();
 
 		public MetaItemOverride AddAttr(Attribute attr)
 		{
@@ -171,13 +172,19 @@ namespace Yuzu
 			return this;
 		}
 
+		public MetaItemOverride NegateAttr(Type attrType)
+		{
+			NegatedAttributes.Add(attrType);
+			return this;
+		}
+
 		public Attribute Attr(Type attrType) =>
-			attrType == null ? null :
+			attrType == null || NegatedAttributes.Contains(attrType) ? null :
 				Attributes.SingleOrDefault(a => a.GetType() == attrType) ??
 				Info.GetCustomAttribute(attrType);
 
 		public bool HasAttr(Type attrType) =>
-			attrType != null &&
+			attrType != null && !NegatedAttributes.Contains(attrType) &&
 				(Attributes.Any(a => a.GetType() == attrType) || Info.IsDefined(attrType));
 
 	}
@@ -190,6 +197,12 @@ namespace Yuzu
 		public new MetaOverride AddAttr(Attribute attr)
 		{
 			Attributes.Add(attr);
+			return this;
+		}
+
+		public new MetaItemOverride NegateAttr(Type attrType)
+		{
+			NegatedAttributes.Add(attrType);
 			return this;
 		}
 
