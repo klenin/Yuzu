@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 
 using Yuzu.Metadata;
@@ -242,18 +243,11 @@ namespace Yuzu.Clone
 					return surrogateCloner;
 				if (meta.Items.Count == 0)
 					return src => meta.Factory();
-				var copyable = new List<Meta.Item>();
-				int nonCopyableCount = 0;
-				foreach (var yi in meta.Items) {
-					if (IsCopyable(yi.Type))
-						copyable.Add(yi);
-					else
-						nonCopyableCount += 1;
-				}
+				var copyable = meta.Items.Where(yi => IsCopyable(yi.Type)).ToList();
 				// Initialize 'cloners' lazily to prevent infinite recursion.
-				var cloners = new Action<object, object>[nonCopyableCount];
+				var cloners = new Action<object, object>[meta.Items.Count - copyable.Count];
 				// Duplicate code to optimize fast path.
-				if (!meta.HasAnyTrigger() && nonCopyableCount == 0) {
+				if (!meta.HasAnyTrigger() && cloners.Length == 0) {
 					return src => {
 						if (src == null)
 							return null;
