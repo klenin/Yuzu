@@ -353,6 +353,16 @@ namespace YuzuGenClone
 			return result;
 		}
 
+		private static global::YuzuTest.SampleWithCopyableItems Clone_YuzuTest__SampleWithCopyableItems(Cloner cl, object src)
+		{
+			if (src == null) return null;
+			var s = (global::YuzuTest.SampleWithCopyableItems)src;
+			var result = new global::YuzuTest.SampleWithCopyableItems();
+			result.L = s.L;
+			result.P = s.P;
+			return result;
+		}
+
 		static ClonerGen()
 		{
 			clonerCache[typeof(global::YuzuTest.Color)] = Clone_YuzuTest__Color;
@@ -385,6 +395,7 @@ namespace YuzuGenClone
 			clonerCache[typeof(global::YuzuTest.SampleStructWithClass)] = Clone_YuzuTest__SampleStructWithClass_obj;
 			clonerCache[typeof(global::YuzuTest.SampleSurrogateColor)] = Clone_YuzuTest__SampleSurrogateColor;
 			clonerCache[typeof(global::YuzuTest.SampleWithCopyable)] = Clone_YuzuTest__SampleWithCopyable;
+			clonerCache[typeof(global::YuzuTest.SampleWithCopyableItems)] = Clone_YuzuTest__SampleWithCopyableItems;
 		}
 	}
 }

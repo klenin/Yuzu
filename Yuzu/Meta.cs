@@ -33,6 +33,7 @@ namespace Yuzu.Metadata
 			}
 			public bool IsOptional;
 			public bool IsCompact;
+			public bool IsCopyable;
 			public Func<object, object, bool> SerializeIf;
 			public Type Type;
 			public Func<object, object> GetValue;
@@ -226,6 +227,7 @@ namespace Yuzu.Metadata
 				Alias = Options.GetAlias(ia.Any()) ?? m.Name,
 				IsOptional = ia.Required == null,
 				IsCompact = attrs.HasAttr(Options.CompactAttribute),
+				IsCopyable = attrs.HasAttr(Options.CopyableAttribute),
 				SerializeIf = serializeIf != null ? Options.GetSerializeCondition(serializeIf, Type) : null,
 				Name = m.Name,
 			};

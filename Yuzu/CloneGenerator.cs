@@ -99,7 +99,8 @@ namespace Yuzu.Clone
 		private void GenerateCloneItem(Meta meta, Meta.Item yi)
 		{
 			if (yi.SetValue != null) {
-				var simpleCloner = GenerateClonerSimple(yi.Type, "s." + yi.Name);
+				var n = "s." + yi.Name;
+				var simpleCloner = yi.IsCopyable ? n : GenerateClonerSimple(yi.Type, n);
 				if (simpleCloner != null) {
 					cw.Put("result.{0} = {1};\n", yi.Name, simpleCloner);
 					return;

@@ -55,6 +55,7 @@ namespace Yuzu.Clone
 			Utils.IsCopyable(t) ?? Meta.Get(t, options).IsCopyable;
 
 		private bool IsCopyable(Type t) => IsCopyable(t, Options);
+		private bool IsCopyable(Meta.Item yi) => yi.IsCopyable || IsCopyable(yi.Type, Options);
 
 		protected T[] CloneArray<T>(object src, Func<object, object> cloneElem)
 		{
@@ -235,7 +236,7 @@ namespace Yuzu.Clone
 		{
 			int i = 0;
 			foreach (var yi in meta.Items) {
-				if (IsCopyable(yi.Type)) continue;
+				if (IsCopyable(yi)) continue;
 				if (yi.SetValue != null) {
 					var cloner = GetCloner(yi.Type);
 					cloners[i++] = (dst, src) => yi.SetValue(dst, cloner(yi.GetValue(src)));
@@ -322,7 +323,7 @@ namespace Yuzu.Clone
 					return surrogateCloner;
 				if (meta.Items.Count == 0)
 					return src => meta.Factory();
-				var copyable = meta.Items.Where(yi => IsCopyable(yi.Type)).ToList();
+				var copyable = meta.Items.Where(IsCopyable).ToList();
 				// Initialize 'cloners' lazily to prevent infinite recursion.
 				var cloners = new Action<object, object>[meta.Items.Count - copyable.Count];
 				// Duplicate code to optimize fast path.
@@ -422,7 +423,7 @@ namespace Yuzu.Clone
 				var meta = Meta.Get(t, Options);
 				if (meta.Items.Count == 0)
 					return (dst, src) => {};
-				var copyable = meta.Items.Where(yi => IsCopyable(yi.Type)).ToList();
+				var copyable = meta.Items.Where(IsCopyable).ToList();
 				// Initialize 'cloners' lazily to prevent infinite recursion.
 				var cloners = new Action<object, object>[meta.Items.Count - copyable.Count];
 				// Duplicate code to optimize fast path.

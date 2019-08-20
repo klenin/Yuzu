@@ -136,6 +136,11 @@ The downside is that changing `YuzuCompact` item will break compatibility with b
 
 Can be substituted by changing `MetaOptions.CompactAttribute`.
 
+#### `[YuzuCopyable]`
+Denotes that an item should be cloned by direct assignment, even if it is of a reference type or contains one.
+
+Can be substituted by changing `MetaOptions.CopyableAttribute`.
+
 #### `[YuzuExclude]`
 Denotes that an item must not be serialized and deserialized despite the presence of `YuzuAll` attribute on the containing class.
 

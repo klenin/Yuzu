@@ -87,6 +87,14 @@ namespace YuzuTest
 		public SampleCopyable P = new SampleCopyable();
 	}
 
+	public class SampleWithCopyableItems
+	{
+		[YuzuRequired, YuzuCopyable]
+		public Sample1 P = new Sample1();
+		[YuzuRequired, YuzuCopyable]
+		public List<int> L = new List<int>();
+	}
+
 	[YuzuAllowReadingFromAncestor]
 	public class Sample2Allow : Sample2
 	{

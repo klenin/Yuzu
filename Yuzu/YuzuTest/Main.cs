@@ -247,6 +247,7 @@ namespace YuzuTest
 				cd.Generate<Color>();
 				cd.Generate<SampleWithCopyable>();
 				cd.Generate<SampleCopyable>();
+				cd.Generate<SampleWithCopyableItems>();
 				cd.Generate<SampleMerge>();
 				cd.Generate<SampleMergeNonPrimitive>();
 			});
