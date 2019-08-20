@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
+using Yuzu;
 using Yuzu.Binary;
 using Yuzu.Clone;
 using YuzuGenClone;
@@ -30,17 +31,16 @@ namespace YuzuTest
 	[TestClass]
 	public class TestClone
 	{
-		private void TestGen(Action<AbstractCloner> test)
+		private void TestGen(
+			Action<AbstractCloner> test,
+			bool useCloner = true, bool useGen = true, bool useBinary = true)
 		{
-			test(new Cloner());
-			test(new ClonerGen());
-			test(new BinaryCloner());
-		}
-
-		private void TestGenNoBinary(Action<AbstractCloner> test)
-		{
-			test(new Cloner());
-			test(new ClonerGen());
+			if (useCloner)
+				test(new Cloner());
+			if (useGen)
+				test(new ClonerGen());
+			if (useBinary)
+				test(new BinaryCloner());
 		}
 
 		[TestMethod]
@@ -238,14 +238,14 @@ namespace YuzuTest
 		[TestMethod]
 		public void TestObject()
 		{
-			TestGenNoBinary(cl => {
+			TestGen(cl => {
 				var src = new SampleObj { F = new int[] { 1 } };
 				var dst = cl.Deep(src);
 				Assert.AreNotEqual(src, dst);
 				Assert.AreNotEqual(src.F, dst.F);
 				CollectionAssert.AreEqual((int[])src.F, (int[])dst.F);
-			});
-			TestGenNoBinary(cl => {
+			}, useBinary: false);
+			TestGen(cl => {
 				var src = new SampleItemObj {
 					L = new List<object> { new int[] { 1 }, 2, new Sample1() },
 					D = new Dictionary<string, object> { { "abc", 5 } },
@@ -257,7 +257,7 @@ namespace YuzuTest
 				Assert.AreEqual((int)src.L[1], (int)dst.L[1]);
 				Assert.AreEqual(((Sample1)src.L[2]).X, ((Sample1)dst.L[2]).X);
 				Assert.AreEqual((int)src.D["abc"], (int)dst.D["abc"]);
-			});
+			}, useBinary: false);
 		}
 
 		[TestMethod]
@@ -356,25 +356,25 @@ namespace YuzuTest
 				Assert.AreEqual(src.G, dst.G);
 				Assert.AreEqual(src.B, dst.B);
 			});
-			XAssert.Throws<Yuzu.YuzuException>(
+			XAssert.Throws<YuzuException>(
 				() => new Cloner().Deep(new SampleSurrogateColorIf()), "Both");
 		}
 
 		[TestMethod]
 		public void TestCopyable()
 		{
-			TestGenNoBinary(cl => {
+			TestGen(cl => {
 				var src = new SampleWithCopyable { P = new SampleCopyable { X = 43 } };
 				var dst = cl.Deep(src);
 				Assert.AreNotEqual(src, dst);
 				Assert.AreEqual(src.P, dst.P);
-			});
+			}, useBinary: false);
 		}
 
 		[TestMethod]
 		public void TestMerge()
 		{
-			TestGenNoBinary(cl => {
+			TestGen(cl => {
 				var src = new SampleMerge();
 				src.DI.Add(3, 4);
 				src.LI.Add(33);
@@ -385,10 +385,10 @@ namespace YuzuTest
 				CollectionAssert.AreEqual(src.LI, dst.LI);
 				Assert.AreNotEqual(src.M, dst.M);
 				Assert.IsNull(dst.M);
-			});
+			}, useBinary: false);
 			TestGen(cl => {
-				cl.Options.Meta = new Yuzu.MetaOptions().AddOverride(typeof(SampleMerge), o =>
-					o.AddItem(nameof(SampleMerge.Make), i => i.AddAttr(new Yuzu.YuzuFactory()))
+				cl.Options.Meta = new MetaOptions().AddOverride(typeof(SampleMerge), o =>
+					o.AddItem(nameof(SampleMerge.Make), i => i.AddAttr(new YuzuFactory()))
 				);
 				var src = new SampleMerge();
 				src.DI.Add(3, 4);
