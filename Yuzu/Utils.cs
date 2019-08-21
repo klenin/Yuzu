@@ -90,12 +90,6 @@ namespace Yuzu.Util
 			callerType.GetMethod(name, BindingFlags.Instance | BindingFlags.NonPublic).
 				MakeGenericMethod(parameters);
 
-		public static MethodInfo GetPublicGeneric(
-			Type callerType, string name, params Type[] parameters
-		) =>
-			callerType.GetMethod(name, BindingFlags.Instance | BindingFlags.Public).
-				MakeGenericMethod(parameters);
-
 		public static MethodInfo GetPrivateCovariantGeneric(Type callerType, string name, Type container)
 		{
 			var t = container.HasElementType ? container.GetElementType() : container.GetGenericArguments()[0];

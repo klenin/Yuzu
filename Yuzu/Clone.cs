@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
+using Yuzu.CloneUtil;
 using Yuzu.Metadata;
 using Yuzu.Util;
 
@@ -57,134 +58,6 @@ namespace Yuzu.Clone
 		private bool IsCopyable(Type t) => IsCopyable(t, Options);
 		private bool IsCopyable(Meta.Item yi) => yi.IsCopyable || IsCopyable(yi.Type, Options);
 
-		protected T[] CloneArray<T>(object src, Func<object, object> cloneElem)
-		{
-			if (src == null)
-				return null;
-			var a = (T[])src;
-			var result = new T[a.Length];
-			for (int i = 0; i < a.Length; ++i)
-				result[i] = (T)cloneElem(a[i]);
-			return result;
-		}
-
-		protected T[] CloneArrayPrimitive<T>(object src)
-		{
-			if (src == null)
-				return null;
-			var a = (T[])src;
-			var result = new T[a.Length];
-			Array.Copy(a, result, a.Length);
-			return result;
-		}
-
-		protected I CloneIDictionary<I, K, V>(
-			object src, Func<object, object> cloneKey, Func<object, object> cloneValue
-		) where I : class, IDictionary<K, V>, new()
-		{
-			if (src == null)
-				return null;
-			var result = new I();
-			foreach (var kv in (I)src)
-				result.Add((K)cloneKey(kv.Key), (V)cloneValue(kv.Value));
-			return result;
-		}
-
-		protected I CloneIDictionaryPrimiviteKey<I, K, V>(
-			object src, Func<object, object> cloneValue
-		) where I : class, IDictionary<K, V>, new()
-		{
-			if (src == null)
-				return null;
-			var result = new I();
-			foreach (var kv in (I)src)
-				result.Add(kv.Key, (V)cloneValue(kv.Value));
-			return result;
-		}
-
-		protected I CloneIDictionaryPrimivite<I, K, V>(object src)
-			where I : class, IDictionary<K, V>, new()
-		{
-			if (src == null)
-				return null;
-			var result = new I();
-			foreach (var kv in (I)src)
-				result.Add(kv);
-			return result;
-		}
-
-		protected void MergeIDictionary<I, K, V>(
-			object dst, object src, Func<object, object> cloneKey, Func<object, object> cloneValue
-		) where I : class, IDictionary<K, V>, new()
-		{
-			if (src == null || dst == null)
-				return;
-			foreach (var kv in (I)src)
-				((I)dst).Add((K)cloneKey(kv.Key), (V)cloneValue(kv.Value));
-		}
-
-		protected void MergeIDictionaryPrimiviteKey<I, K, V>(
-			object dst, object src, Func<object, object> cloneValue
-		) where I : class, IDictionary<K, V>, new()
-		{
-			if (src == null || dst == null)
-				return;
-			foreach (var kv in (I)src)
-				((I)dst).Add(kv.Key, (V)cloneValue(kv.Value));
-		}
-
-		protected void MergeIDictionaryPrimivite<I, K, V>(object dst, object src)
-			where I : class, IDictionary<K, V>, new()
-		{
-			if (src == null || dst == null)
-				return;
-			foreach (var kv in (I)src)
-				((I)dst).Add(kv);
-		}
-
-		protected I CloneCollection<I, E>(object src, Func<object, object> cloneElem)
-			where I : class, ICollection<E>, new()
-		{
-			if (src == null)
-				return null;
-			var result = new I();
-			foreach (var item in (I)src)
-				result.Add((E)cloneElem(item));
-			return result;
-		}
-
-		protected I CloneCollectionPrimitive<I, E>(object src)
-			where I : class, ICollection<E>, new()
-		{
-			if (src == null)
-				return null;
-			var result = new I();
-			foreach (var item in (I)src)
-				result.Add(item);
-			return result;
-		}
-
-		protected void MergeCollection<I, E>(object dst, object src, Func<object, object> cloneElem)
-			where I : class, ICollection<E>
-		{
-			if (src == null || dst == null)
-				return;
-			foreach (var item in (I)src)
-				((I)dst).Add((E)cloneElem(item));
-		}
-
-		protected void MergeCollectionPrimitive<I, E>(object dst, object src)
-			where I : class, ICollection<E>
-		{
-			if (src == null || dst == null)
-				return;
-			foreach (var item in (I)src)
-				((I)dst).Add(item);
-		}
-
-		public static object ValueCopy(object src) => src;
-		private static object CloneNull(object src) => null;
-
 		public Func<object, object> GetCloner(Type t)
 		{
 			Func<object, object> cloner;
@@ -206,20 +79,6 @@ namespace Yuzu.Clone
 			return merger;
 		}
 		public Action<object, object> GetMerger<T>() => GetMerger(typeof(T));
-
-		private T MakeDelegate<T>(MethodInfo m) where T: Delegate =>
-			(T)Delegate.CreateDelegate(typeof(T), this, m);
-
-		protected Func<object, object> MakeDelegateFunc(MethodInfo m) =>
-			(Func<object, object>)Delegate.CreateDelegate(typeof(Func<object, object>), this, m);
-
-		protected Func<object, TParam, object> MakeDelegateParam<TParam>(MethodInfo m) =>
-			(Func<object, TParam, object>)Delegate.CreateDelegate(
-				typeof(Func<object, TParam, object>), this, m);
-
-		protected Func<object, TParam1, TParam2, object> MakeDelegateParam2<TParam1, TParam2>(MethodInfo m) =>
-			(Func<object, TParam1, TParam2, object>)Delegate.CreateDelegate(
-				typeof(Func<object, TParam1, TParam2, object>), this, m);
 
 		private Func<object, object> MakeSurrogateCloner(Meta meta)
 		{
@@ -250,7 +109,7 @@ namespace Yuzu.Clone
 
 		private Func<object, object> MakeCloner(Type t)
 		{
-			if (IsCopyable(t)) return ValueCopy;
+			if (IsCopyable(t)) return CloneUtils.ValueCopy;
 			if (t.IsGenericType) {
 				var g = t.GetGenericTypeDefinition();
 				if (g == typeof(Nullable<>)) {
@@ -261,13 +120,13 @@ namespace Yuzu.Clone
 			if (t.IsArray) {
 				var e = t.GetElementType();
 				if (IsCopyable(e)) {
-					var m = Utils.GetPrivateGeneric(GetType(), nameof(CloneArrayPrimitive), e);
-					return MakeDelegateFunc(m);
+					var m = CloneUtils.GetGeneric(nameof(CloneUtils.CloneArrayPrimitive), e);
+					return CloneUtils.MakeDelegate<Func<object, object>>(m);
 				}
 				else {
 					var cloneElem = GetCloner(e);
-					var m = Utils.GetPrivateGeneric(GetType(), nameof(CloneArray), e);
-					var d = MakeDelegateParam<Func<object, object>>(m);
+					var m = CloneUtils.GetGeneric(nameof(CloneUtils.CloneArray), e);
+					var d = CloneUtils.MakeDelegate<Func<object, Func<object, object>, object>>(m);
 					return src => d(src, cloneElem);
 				}
 			}
@@ -278,22 +137,22 @@ namespace Yuzu.Clone
 					if (!IsCopyable(a[0])) {
 						var сk = GetCloner(a[0]);
 						var сv = GetCloner(a[1]);
-						var m = Utils.GetPrivateGeneric(
-							GetType(), nameof(CloneIDictionary), t, a[0], a[1]);
-						var d = MakeDelegateParam2<Func<object, object>, Func<object, object>>(m);
+						var m = CloneUtils.GetGeneric(nameof(CloneUtils.CloneIDictionary), t, a[0], a[1]);
+						var d = CloneUtils.MakeDelegate<
+							Func<object, Func<object, object>, Func<object, object>, object>>(m);
 						return obj => d(obj, сk, сv);
 					}
 					else if (!IsCopyable(a[1])) {
 						var сv = GetCloner(a[1]);
-						var m = Utils.GetPrivateGeneric(
-							GetType(), nameof(CloneIDictionaryPrimiviteKey), t, a[0], a[1]);
-						var d = MakeDelegateParam<Func<object, object>>(m);
+						var m = CloneUtils.GetGeneric(
+							nameof(CloneUtils.CloneIDictionaryPrimiviteKey), t, a[0], a[1]);
+						var d = CloneUtils.MakeDelegate<Func<object, Func<object, object>, object>>(m);
 						return obj => d(obj, сv);
 					}
 					else {
-						var m = Utils.GetPrivateGeneric(
-							GetType(), nameof(CloneIDictionaryPrimivite), t, a[0], a[1]);
-						return MakeDelegateFunc(m);
+						var m = CloneUtils.GetGeneric(
+							nameof(CloneUtils.CloneIDictionaryPrimivite), t, a[0], a[1]);
+						return CloneUtils.MakeDelegate<Func<object, object>>(m);
 					}
 				}
 			}
@@ -305,14 +164,13 @@ namespace Yuzu.Clone
 					var a = icoll.GetGenericArguments();
 					if (!IsCopyable(a[0])) {
 						var сe = GetCloner(a[0]);
-						var m = Utils.GetPrivateGeneric(GetType(), nameof(CloneCollection), t, a[0]);
-						var d = MakeDelegateParam<Func<object, object>>(m);
+						var m = CloneUtils.GetGeneric(nameof(CloneUtils.CloneCollection), t, a[0]);
+						var d = CloneUtils.MakeDelegate<Func<object, Func<object, object>, object>>(m);
 						return obj => d(obj, сe);
 					}
 					else {
-						var m = Utils.GetPrivateGeneric(
-							GetType(), nameof(CloneCollectionPrimitive), t, a[0]);
-						return MakeDelegateFunc(m);
+						var m = CloneUtils.GetGeneric(nameof(CloneUtils.CloneCollectionPrimitive), t, a[0]);
+						return CloneUtils.MakeDelegate<Func<object, object>>(m);
 					}
 				}
 			}
@@ -382,23 +240,22 @@ namespace Yuzu.Clone
 					if (!IsCopyable(a[0])) {
 						var сk = GetCloner(a[0]);
 						var сv = GetCloner(a[1]);
-						var m = Utils.GetPrivateGeneric(
-							GetType(), nameof(MergeIDictionary), t, a[0], a[1]);
-						var d = MakeDelegate<
+						var m = CloneUtils.GetGeneric(nameof(CloneUtils.MergeIDictionary), t, a[0], a[1]);
+						var d = CloneUtils.MakeDelegate<
 							Action<object, object, Func<object, object>, Func<object, object>>>(m);
 						return (dst, src) => d(dst, src, сk, сv);
 					}
 					else if (!IsCopyable(a[1])) {
 						var сv = GetCloner(a[1]);
-						var m = Utils.GetPrivateGeneric(
-							GetType(), nameof(MergeIDictionaryPrimiviteKey), t, a[0], a[1]);
-						var d = MakeDelegate<Action<object, object, Func<object, object>>>(m);
+						var m = CloneUtils.GetGeneric(
+							nameof(CloneUtils.MergeIDictionaryPrimiviteKey), t, a[0], a[1]);
+						var d = CloneUtils.MakeDelegate<Action<object, object, Func<object, object>>>(m);
 						return (dst, src) => d(dst, src, сv);
 					}
 					else {
-						var m = Utils.GetPrivateGeneric(
-							GetType(), nameof(MergeIDictionaryPrimivite), t, a[0], a[1]);
-						return MakeDelegate<Action<object, object>>(m);
+						var m = CloneUtils.GetGeneric(
+							nameof(CloneUtils.MergeIDictionaryPrimivite), t, a[0], a[1]);
+						return CloneUtils.MakeDelegate<Action<object, object>>(m);
 					}
 				}
 			}
@@ -408,14 +265,14 @@ namespace Yuzu.Clone
 					var a = icoll.GetGenericArguments();
 					if (!IsCopyable(a[0])) {
 						var сe = GetCloner(a[0]);
-						var m = Utils.GetPrivateGeneric(GetType(), nameof(MergeCollection), t, a[0]);
-						var d = MakeDelegate<Action<object, object, Func<object, object>>>(m);
+						var m = CloneUtils.GetGeneric(nameof(CloneUtils.MergeCollection), t, a[0]);
+						var d = CloneUtils.MakeDelegate<Action<object, object, Func<object, object>>>(m);
 						return (dst, src) => d(dst, src, сe);
 					}
 					else {
-						var m = Utils.GetPrivateGeneric(
-							GetType(), nameof(MergeCollectionPrimitive), t, a[0]);
-						return MakeDelegate<Action<object, object>>(m);
+						var m = CloneUtils.GetGeneric(
+							nameof(CloneUtils.MergeCollectionPrimitive), t, a[0]);
+						return CloneUtils.MakeDelegate<Action<object, object>>(m);
 					}
 				}
 			}
