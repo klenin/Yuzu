@@ -179,8 +179,6 @@ namespace Yuzu.Clone
 				var surrogateCloner = MakeSurrogateCloner(meta);
 				if (surrogateCloner != null)
 					return surrogateCloner;
-				if (meta.Items.Count == 0)
-					return src => meta.Factory();
 				var copyable = meta.Items.Where(IsCopyable).ToList();
 				// Initialize 'cloners' lazily to prevent infinite recursion.
 				var cloners = new Action<object, object>[meta.Items.Count - copyable.Count];

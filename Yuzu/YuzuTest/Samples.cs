@@ -41,6 +41,12 @@ namespace YuzuTest
 	{
 	}
 
+	public class SampleEmptyDerivied: Empty
+	{
+		[YuzuRequired]
+		public int D;
+	}
+
 	[ProtoContract]
 	public class Sample1
 	{

@@ -455,6 +455,13 @@ namespace YuzuTest
 				Assert.AreEqual(src.FB, dst.FB);
 			});
 			TestGen(cl => {
+				cl.Options.AllowEmptyTypes = true;
+				var src = new SampleEmptyDerivied { D = 98 };
+				var dst = cl.Deep<Empty>(src);
+				Assert.AreNotEqual(src, dst);
+				Assert.AreEqual(src.D, ((SampleEmptyDerivied)dst).D);
+			});
+			TestGen(cl => {
 				var src = new SampleClassList {
 					E = new List<SampleBase> {
 						new SampleDerivedA(),
