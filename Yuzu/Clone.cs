@@ -189,6 +189,8 @@ namespace Yuzu.Clone
 					return src => {
 						if (src == null)
 							return null;
+						if (src.GetType() != t)
+							return DeepObject(src);
 						var result = meta.Factory();
 						foreach (var yi in copyable)
 							yi.SetValue(result, yi.GetValue(src));
@@ -199,6 +201,8 @@ namespace Yuzu.Clone
 					return src => {
 						if (src == null)
 							return null;
+						if (src.GetType() != t)
+							return DeepObject(src);
 						meta.BeforeSerialization.Run(src);
 						var result = meta.Factory();
 						if (cloners.Length > 0 && cloners[0] == null)
@@ -217,6 +221,8 @@ namespace Yuzu.Clone
 					return src => {
 						if (src == null)
 							return null;
+						if (src.GetType() != t)
+							return DeepObject(src);
 						var result = meta.Factory();
 						if (cloners[0] == null)
 							MakeFieldCloners(cloners, meta);

@@ -31,6 +31,12 @@ namespace YuzuTest
 		public int FB;
 	}
 
+	public sealed class SampleSealed
+	{
+		[YuzuRequired]
+		public int FB;
+	}
+
 	public class Empty
 	{
 	}

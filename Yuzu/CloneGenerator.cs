@@ -199,7 +199,8 @@ namespace Yuzu.Clone
 			var meta = Meta.Get(t, options);
 
 			if (Cloner.IsCopyable(meta.Type, options)) {
-				cw.Put("private static {0} {1}(Cloner cl, object src) =>\n", Utils.GetTypeSpec(t), clonerName);
+				cw.Put("private static {0} {1}(Cloner cl, object src) =>\n",
+					Utils.GetTypeSpec(t), clonerName);
 				cw.PutInd("({0})src;\n", Utils.GetTypeSpec(t));
 				cw.Put("\n");
 				return;
@@ -207,8 +208,13 @@ namespace Yuzu.Clone
 
 			cw.Put("private static {0} {1}(Cloner cl, object src)\n", Utils.GetTypeSpec(t), clonerName);
 			cw.Put("{\n");
-			if (!Utils.IsStruct(t))
+			if (!Utils.IsStruct(t)) {
 				cw.Put("if (src == null) return null;\n");
+				if (!t.IsSealed) {
+					cw.Put("if (src.GetType() != typeof({0}))\n", Utils.GetTypeSpec(t));
+					cw.PutInd("return ({0})cl.DeepObject(src);\n", Utils.GetTypeSpec(t));
+				}
+			}
 			cw.Put("var s = ({0})src;\n", Utils.GetTypeSpec(t));
 			cw.GenerateActionList(meta.BeforeSerialization, "s");
 			if (!GenerateSurrogateCloner(meta)) {

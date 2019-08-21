@@ -438,5 +438,38 @@ namespace YuzuTest
 				Assert.AreEqual(src.M.X, dst.M.X);
 			});
 		}
+
+		[TestMethod]
+		public void TestInheritance()
+		{
+			TestGen(cl => {
+				var src = new SampleDerivedB { FB = 99 };
+				var dst = cl.Deep<SampleBase>(src);
+				Assert.AreNotEqual(src, dst);
+				Assert.AreEqual(src.FB, ((SampleDerivedB)dst).FB);
+			});
+			TestGen(cl => {
+				var src = new SampleSealed { FB = 99 };
+				var dst = cl.Deep(src);
+				Assert.AreNotEqual(src, dst);
+				Assert.AreEqual(src.FB, dst.FB);
+			});
+			TestGen(cl => {
+				var src = new SampleClassList {
+					E = new List<SampleBase> {
+						new SampleDerivedA(),
+						new SampleDerivedB { FB = 9 },
+						new SampleDerivedB { FB = 8 },
+					}
+				};
+				var dst = cl.Deep(src);
+				Assert.AreNotEqual(src, dst);
+				Assert.AreNotEqual(src.E, dst.E);
+				Assert.AreEqual(src.E.Count, dst.E.Count);
+				for (int i = 0; i < src.E.Count; ++i)
+					Assert.AreNotEqual(src.E[i], dst.E[i]);
+				Assert.IsInstanceOfType(dst.E[0], typeof(SampleDerivedA));
+			});
+		}
 	}
 }

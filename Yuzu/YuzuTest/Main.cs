@@ -250,6 +250,10 @@ namespace YuzuTest
 				cd.Generate<SampleWithCopyableItems>();
 				cd.Generate<SampleMerge>();
 				cd.Generate<SampleMergeNonPrimitive>();
+				cd.Generate<SampleBase>();
+				cd.Generate<SampleDerivedA>();
+				cd.Generate<SampleDerivedB>();
+				cd.Generate<SampleSealed>();
 			});
 		}
 	}
