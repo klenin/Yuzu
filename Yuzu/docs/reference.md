@@ -92,22 +92,29 @@ var t = (new BinaryDeserializer()).FromBytes<MyClass>(b);
 ## Item attributes
 
 Item attributes can be applied to either a public field or a public readable property.
-The item is considered for serialization and deserialization if it is annotated with exacty one of (`[YuzuRequired]`, `[YuzuOptional]` and `[YuzuMember]`) attributes.
+The item is considered for serialization and deserialization if it is annotated with exacty one of
+(`[YuzuRequired]`, `[YuzuOptional]` and `[YuzuMember]`) attributes.
 
 #### `[YuzuRequired]` or `[YuzuRequired("alias")]`
-Denotes required item. This item is always serialized. An exception is thrown if the item is absent during deserialization. If `alias` is provided, it is used instead of the item name both for serialization and deserialization.
+Denotes required item. This item is always serialized. An exception is thrown if the item is absent during deserialization.
+If `alias` is provided, it is used instead of the item name both for serialization and deserialization.
 Mutually exclusive with `[YuzuOptional]` and `[YuzuMember]`.
 
 Can be substituted by changing `MetaOptions.RequiredAttribute` and/or `MetaOptions.GetAlias`.
 
 #### `[YuzuOptional]` or `[YuzuOptional("alias")]`
-Denotes optional item. This item may be omitted during serialization by using `YuzuSerializeIf` attribute. If the item is absent during deserialization, its value in the target object is left unchanged. If `alias` is provided, it is used instead of the item name both for serialization and deserialization.
+Denotes optional item. This item may be omitted during serialization by using `YuzuSerializeIf` attribute.
+If the item is absent during deserialization, its value in the target object is left unchanged.
+If `alias` is provided, it is used instead of the item name both for serialization and deserialization.
 Mutually exclusive with `[YuzuRequired]` and `[YuzuMember]`.
 
 Can be substituted by changing `MetaOptions.OptionalAttribute` and/or `MetaOptions.GetAlias`.
 
 #### `[YuzuMember]` or `[YuzuMember("alias")]`
-Denotes optional item with the default falue. Immediately before serialization of the scalar item, item value is compared with the default value of the item's type. If the item is `ICollection`, it is checked for emptiness instead. If the item is absent during deserialization, its value in the target object is left unchanged.
+Denotes optional item with the default falue.
+Immediately before serialization of the scalar item, item value is compared with the default value of the item's type.
+If the item is `ICollection`, it is checked for emptiness instead.
+If the item is absent during deserialization, its value in the target object is left unchanged.
 If `alias` is provided, it is used instead of the item name both for serialization and deserialization.
 Mutually exclusive with `[YuzuRequired]` and `[YuzuOptional]`.
 
@@ -115,17 +122,25 @@ Can be substituted by changing `MetaOptions.MemberAttribute` and/or `MetaOptions
 
 #### `[YuzuSerializeIf(nameof(conditionFunc))]`
 #### `public bool conditionFunc() { ... }`
-Denotes serialization condition. Can only be applied to `YuzuOptional` item. The argument must be a name of boolean function without arguments, member of the current class. Immediately before serialization of the item, this function is called. If the function returns `true`, the item is serialized, otherwise the item is omitted.
+Denotes serialization condition. Can only be applied to `YuzuOptional` item.
+The argument must be a name of boolean function without arguments, member of the current class.
+Immediately before serialization of the item, this function is called.
+If the function returns `true`, the item is serialized, otherwise the item is omitted.
 
 Can be substituted by changing `MetaOptions.SerializeIfAttribute` and/or `MetaOptions.GetSerializeCondition`.
 
 #### `[YuzuDefault(defValue)]`
-Denotes default value for serialization. Can only be applied to `YuzuOptional` item. Immediately before serialization of the item, item value is compared with `defValue`. If they are equal, the item is omitted, otherwise the item is serialized.
+Denotes default value for serialization. Can only be applied to `YuzuOptional` item.
+Immediately before serialization of the item, item value is compared with `defValue`.
+If they are equal, the item is omitted, otherwise the item is serialized.
 
 #### `[YuzuMerge]`
-Denotes that the deserialized value must be merged with the original item value instead of replacing it. Can only be applied to items of structured types: `class`, `struct`, `interface` or `object`.
-When deserializing an item of structured type without merging, a new object is constructed, then sub-item values are deserialized into this new object, and finally new object is assigned to the item of the containing object.
-When deserializing an item of structured type with merging, sub-item values are deserialized into the existing object. If some of the sub-items are omitted, previous values are retained.
+Denotes that the deserialized value must be merged with the original item value instead of replacing it.
+Can only be applied to items of structured types: `class`, `struct`, `interface` or `object`.
+When deserializing an item of structured type without merging, a new object is constructed,
+sub-item values are deserialized into this new object, and finally new object is assigned to the item of the containing object.
+When deserializing an item of structured type with merging,
+sub-item values are deserialized into the existing object. If some of the sub-items are omitted, previous values are retained.
 
 Can be substituted by changing `MetaOptions.MergeAttribute`.
 
@@ -150,26 +165,30 @@ Can be substituted by changing `MetaOptions.ExcludeAttribute`.
 
 #### `[YuzuBeforeSerialization]`
 Denotes a `void` method without arguments, which will be called immediately before this object is serialized.
-If there are several `[YuzuBeforeSerialization]` methods, first methods of the current class are called in the order of source code definition, then methods from the parent class are called. This order is opposite of `[YuzuAfterDeserialization]`.
+If there are several `[YuzuBeforeSerialization]` methods, first methods of the current class are called in the order of source code definition,
+then methods from the parent class are called. This order is opposite of `[YuzuAfterDeserialization]`.
 
 Can be substituted by changing `MetaOptions.BeforeSerializationAttribute`.
 
 #### `[YuzuAfterSerialization]`
 Denotes a `void` method without arguments, which will be called immediately after this object is serialized.
-If there are several `[YuzuAfterSerialization]` methods, first methods of the current class are called in the order of source code definition, then methods from the parent class are called. This order is opposite of `[YuzuBeforeDeserialization]`.
+If there are several `[YuzuAfterSerialization]` methods, first methods of the current class are called in the order of source code definition,
+then methods from the parent class are called. This order is opposite of `[YuzuBeforeDeserialization]`.
 
 Can be substituted by changing `MetaOptions.AfterSerializationAttribute`.
 
 #### `[YuzuBeforeDeserialization]`
 Denotes a `void` method without arguments, which will be called immediately before this object is deserialized.
 Usually this method is called immediately after construction of deserialized object, except when merging into existing object.
-If there are several `[YuzuBeforeDeserialization]` methods, first methods from the parent class are called, then methods of the current class are called in the order of source code definition. This order is opposite of `[YuzuAfterSerialization]`.
+If there are several `[YuzuBeforeDeserialization]` methods, first methods from the parent class are called,
+then methods of the current class are called in the order of source code definition. This order is opposite of `[YuzuAfterSerialization]`.
 
 Can be substituted by changing `MetaOptions.YuzuBeforeDeserializationAttribute`.
 
 #### `[YuzuAfterDeserialization]`
 Denotes a `void` method without arguments, which will be called immediately after this object is deserialized.
-If there are several `[YuzuAfterDeserialization]` methods, first methods from the parent class are called, then methods of the current class are called in the order of source code definition. This order is opposite of `[YuzuBeforeSerialization]`.
+If there are several `[YuzuAfterDeserialization]` methods, first methods from the parent class are called,
+then methods of the current class are called in the order of source code definition. This order is opposite of `[YuzuBeforeSerialization]`.
 
 Can be substituted by changing `MetaOptions.YuzuAfterDeserializationAttribute`.
 
@@ -192,7 +211,8 @@ Can be substituted by changing `MetaOptions.FactoryAttribute`.
 
 #### `[YuzuCompact]`
 Selects more compact serialized representation at the expense of backward and forward compatibility.
-This attrubute can be used for increasing serialization and deserialization speed as well as readablity of text-based formats. The downside is that changing `YuzuCompact` class will break compatibility with both old and new versions of the serialized data.
+This attrubute can be used for increasing serialization and deserialization speed as well as readablity of text-based formats.
+The downside is that changing `YuzuCompact` class will break compatibility with both old and new versions of the serialized data.
 
 Can be substituted by changing `MetaOptions.CompactAttribute`.
 
@@ -202,22 +222,34 @@ Denotes that instances of this class should be cloned by direct assignment, even
 Can be substituted by changing `MetaOptions.CopyableAttribute`.
 
 #### `[YuzuMust]` or `[YuzuMust(itemKind)]`
-Denotes that all items must be serialized. Exception is thrown if at least one public item lacks serialization attribute. If present, `itemKind` argument limits the requirement to either just fields (`YuzuItemKind.Field`) or just properties (`YuzuItemKind.Property`).
+Denotes that all items must be serialized. Exception is thrown if at least one public item lacks serialization attribute.
+If present, `itemKind` argument limits the requirement to either just fields (`YuzuItemKind.Field`) or just properties (`YuzuItemKind.Property`).
 
 Can be substituted by changing `MetaOptions.MustAttribute` and/or `MetaOptions.GetItemKind`.
 
 #### `[YuzuAll]` or `[YuzuAll(optionality, itemKind)]`
-Denotes that all public items are serialized by default, even if not annotated by serialization attribute. Some items can be excluded by using `YuzuExclude` attrubute. If present, `optionality` argument indicates the level of optionality (`YuzuItemOptionality.Optional`, `YuzuItemOptionality.Required` or `YuzuItemOptionality.Member`) applied to the items by default. Annotating an item with `[YuzuRequired]`, `[YuzuOptional]` or `[YuzuMember]` attribute overrides default given by `YuzuAll`. If present, `itemKind` argument limits the default serialization to either fields (`YuzuItemKind.Field`) or properties (`YuzuItemKind.Property`). Using both `YuzuAll` and `YuzuMust` simultaneously prohibits `YuzuExclude`.
+Denotes that all public items are serialized by default, even if not annotated by serialization attribute.
+Some items can be excluded by using `YuzuExclude` attrubute.
+If present, `optionality` argument indicates the level of optionality
+(`YuzuItemOptionality.Optional`, `YuzuItemOptionality.Required` or `YuzuItemOptionality.Member`) applied to the items by default.
+Annotating an item with `[YuzuRequired]`, `[YuzuOptional]` or `[YuzuMember]` attribute overrides default given by `YuzuAll`.
+If present, `itemKind` argument limits the default serialization to either fields (`YuzuItemKind.Field`) or properties (`YuzuItemKind.Property`).
+Using both `YuzuAll` and `YuzuMust` simultaneously prohibits `YuzuExclude`.
 
 Can be substituted by changing `MetaOptions.AllAttribute`, and/or `MetaOptions.GetItemOptionalityAndKind`.
 
 #### `[YuzuAllowReadingFromAncestor]`
-Normally, an item of structured type can be deserialized if the serialized item is of the same class or descendant class. This attribute allows deserializing from ancestor class, as long as all fields not present in the ancestor are optional. It is NOT recommended to use this attribute.
+Normally, an item of structured type can be deserialized if the serialized item is of the same class or descendant class.
+This attribute allows deserializing from ancestor class, as long as all fields not present in the ancestor are optional.
+It is NOT recommended to use this attribute.
 
 Can be substituted by changing `MetaOptions.AllowReadingFromAncestorAttribute`.
 
 #### `[YuzuAlias("alias")]` or `[YuzuAlias(read: readAliasList, write: writeAlias)]`
-Denotes that during serializarion, `writeAlias` is used instead of class name, and during deserialization any of the given read aliases plus original class name can be used for this class. All read aliases must be globally unique between all classes. If the single-argument form is used, it defines both write alias and  a single read alias.
+Denotes that during serializarion, `writeAlias` is used instead of class name,
+and during deserialization any of the given read aliases plus original class name can be used for this class.
+All read aliases must be globally unique between all classes.
+If the single-argument form is used, it defines both write alias and  a single read alias.
 
 Can be substituted by changing `MetaOptions.AliasAttribute`, `MetaOptions.ReadAliases` and/or `MetaOptions.WriteAlias`.
 
@@ -280,7 +312,8 @@ Default value is `class`.
 
 #### `MaxOnelineFields`
 
-If `[YuzuCompact]` type contains only primitive fields, and their number is no more than `MaxOnelineFields`, `FieldSeparator` and `Indent` strings are not inserted around fields.
+If `[YuzuCompact]` type contains only primitive fields, and their number is no more than `MaxOnelineFields`,
+`FieldSeparator` and `Indent` strings are not inserted around fields.
 Default value is `0`.
 
 #### `EnumAsString`
@@ -308,7 +341,8 @@ Default value is `false`.
 
 #### `DateFormat`, `DateOffsetFormat`
 
-Controls the format of date and date offset values. Note that not all formats guarantee roundrtip due to possible information loss and culture differences.
+Controls the format of date and date offset values.
+Note that not all formats guarantee roundrtip due to possible information loss and culture differences.
 Default value is `"O"`, which does guarantee roundrtip.
 
 #### `TimeSpanFormat`
@@ -331,7 +365,8 @@ Default value is `false`.
 #### `Unordered`
 
 Controls ordering of object fields.
-If `false`, fields are serialized in alphabetical order of their names (or write aliases, if provided). Same ordering is also required on deserialization.
+If `false`, fields are serialized in alphabetical order of their names (or write aliases, if provided).
+Same ordering is also required on deserialization.
 If `true`, fields may be deserializad in any order, and serialization order is undefined.
 Note that `Unordered` mode does not guarantee text-data-text roundtrip and is not supported by generated deserializers.
 Default value is `false`.
