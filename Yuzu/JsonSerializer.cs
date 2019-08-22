@@ -635,7 +635,7 @@ namespace Yuzu.Json
 					foreach (var yi in meta.Items) {
 						fieldIndex += 1;
 						var value = yi.GetValue(obj);
-						if (yi.SerializeIf != null && !yi.SerializeIf(obj, value))
+						if (yi.SerializeCond != null && !yi.SerializeCond(obj, value))
 							continue;
 						WriteName(yi.Tag(Options), ref isFirst);
 						fieldWriters[fieldIndex](value);
@@ -652,7 +652,7 @@ namespace Yuzu.Json
 					foreach (var yi in meta.Items) {
 						fieldIndex += 1;
 						var value = yi.GetValue(obj);
-						if (yi.SerializeIf != null && !yi.SerializeIf(obj, value))
+						if (yi.SerializeCond != null && !yi.SerializeCond(obj, value))
 							continue;
 						var name = yi.Tag(Options);
 						for (; storageIndex < storage.Fields.Count; ++storageIndex) {

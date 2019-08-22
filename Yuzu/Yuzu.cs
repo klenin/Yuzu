@@ -233,7 +233,8 @@ namespace Yuzu
 		public Type OptionalAttribute = typeof(YuzuOptional);
 		public Type MemberAttribute = typeof(YuzuMember);
 		public Type CompactAttribute = typeof(YuzuCompact);
-		public Type SerializeIfAttribute = typeof(YuzuSerializeCondition);
+		public Type SerializeConditionAttribute = typeof(YuzuSerializeCondition);
+		public Type SerializeIfAttribute = typeof(YuzuSerializeIf);
 		public Type SerializeItemIfAttribute = typeof(YuzuSerializeItemIf);
 		public Type BeforeSerializationAttribute = typeof(YuzuBeforeSerialization);
 		public Type AfterSerializationAttribute = typeof(YuzuAfterSerialization);

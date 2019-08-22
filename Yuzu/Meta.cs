@@ -34,7 +34,7 @@ namespace Yuzu.Metadata
 			public bool IsOptional;
 			public bool IsCompact;
 			public bool IsCopyable;
-			public Func<object, object, bool> SerializeIf;
+			public Func<object, object, bool> SerializeCond;
 			public Type Type;
 			public Func<object, object> GetValue;
 			public Action<object, object> SetValue;
@@ -222,13 +222,14 @@ namespace Yuzu.Metadata
 			if (ia.Count != 1)
 				throw Error("More than one of optional, required and member attributes for field '{0}'", m.Name);
 			var attrs = Options.GetItem(m);
-			var serializeIf = attrs.Attr(Options.SerializeIfAttribute);
+			var serializeCond = attrs.Attr(Options.SerializeConditionAttribute);
 			var item = new Item {
 				Alias = Options.GetAlias(ia.Any()) ?? m.Name,
 				IsOptional = ia.Required == null,
 				IsCompact = attrs.HasAttr(Options.CompactAttribute),
 				IsCopyable = attrs.HasAttr(Options.CopyableAttribute),
-				SerializeIf = serializeIf != null ? Options.GetSerializeCondition(serializeIf, Type) : null,
+				SerializeCond = serializeCond != null ?
+					Options.GetSerializeCondition(serializeCond, Type) : null,
 				Name = m.Name,
 			};
 			if (!item.IsOptional)
@@ -283,8 +284,8 @@ namespace Yuzu.Metadata
 			if (!over.HasAttr(Options.CopyableAttribute))
 				CheckCopyable(item.Type, options);
 
-			if (ia.Member != null && item.SerializeIf == null && !Type.IsAbstract && !Type.IsInterface)
-				item.SerializeIf = GetSerializeIf(item, options);
+			if (ia.Member != null && item.SerializeCond == null && !Type.IsAbstract && !Type.IsInterface)
+				item.SerializeCond = GetSerializeIf(item, options);
 			Items.Add(item);
 		}
 

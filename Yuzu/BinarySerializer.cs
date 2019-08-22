@@ -283,10 +283,10 @@ namespace Yuzu.Binary
 				short j = (short)(i + 1); // Capture.
 				var wf = GetWriteFunc(yi.Type);
 				var fd = new ClassDef.FieldDef { Name = yi.Tag(Options), Type = yi.Type };
-				if (yi.SerializeIf != null)
+				if (yi.SerializeCond != null)
 					fd.WriteFunc = obj => {
 						var value = yi.GetValue(obj);
-						if (!yi.SerializeIf(obj, value))
+						if (!yi.SerializeCond(obj, value))
 							return;
 						writer.Write(j);
 						wf(value);
@@ -315,10 +315,10 @@ namespace Yuzu.Binary
 				if (cmp <= 0) {
 					var wf = GetWriteFunc(yi.Type);
 					var fd = new ClassDef.FieldDef { Name = ourName, Type = yi.Type };
-					if (yi.SerializeIf != null)
+					if (yi.SerializeCond != null)
 						fd.WriteFuncUnknown = (obj, storage, storageIndex) => {
 							var value = yi.GetValue(obj);
-							if (!yi.SerializeIf(obj, value))
+							if (!yi.SerializeCond(obj, value))
 								return;
 							writer.Write(j);
 							wf(value);
