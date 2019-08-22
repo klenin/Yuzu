@@ -34,7 +34,10 @@ namespace Yuzu.Metadata
 			public bool IsOptional;
 			public bool IsCompact;
 			public bool IsCopyable;
+			public bool IsMember;
+			public object DefaultValue;
 			public Func<object, object, bool> SerializeCond;
+			public MethodInfo SerializeIfMethod;
 			public Type Type;
 			public Func<object, object> GetValue;
 			public Action<object, object> SetValue;
@@ -228,8 +231,13 @@ namespace Yuzu.Metadata
 				IsOptional = ia.Required == null,
 				IsCompact = attrs.HasAttr(Options.CompactAttribute),
 				IsCopyable = attrs.HasAttr(Options.CopyableAttribute),
+				IsMember = ia.Member != null,
 				SerializeCond = serializeCond != null ?
 					Options.GetSerializeCondition(serializeCond, Type) : null,
+				SerializeIfMethod = serializeCond != null ?
+					Options.GetSerializeMethod(serializeCond, Type) : null,
+				DefaultValue = serializeCond != null ?
+					Options.GetDefault(serializeCond) : YuzuNoDefault.NoDefault,
 				Name = m.Name,
 			};
 			if (!item.IsOptional)

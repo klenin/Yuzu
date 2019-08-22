@@ -254,6 +254,7 @@ namespace YuzuTest
 				cd.Generate<SampleDerivedA>();
 				cd.Generate<SampleDerivedB>();
 				cd.Generate<SampleSealed>();
+				cd.Generate<SampleSerializeIf>();
 			});
 		}
 	}

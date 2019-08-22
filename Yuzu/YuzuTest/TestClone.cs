@@ -381,7 +381,9 @@ namespace YuzuTest
 			}, useGen: false);
 			TestGen(cl => {
 				var src = new SampleWithCopyableItems {
-					P = new Sample1 { X = 43 }, L = new List<int> { 7, 8 } };
+					P = new Sample1 { X = 43 },
+					L = new List<int> { 7, 8 }
+				};
 				var dst = cl.Deep(src);
 				Assert.AreNotEqual(src, dst);
 				Assert.AreEqual(src.P, dst.P);
@@ -476,6 +478,39 @@ namespace YuzuTest
 				for (int i = 0; i < src.E.Count; ++i)
 					Assert.AreNotEqual(src.E[i], dst.E[i]);
 				Assert.IsInstanceOfType(dst.E[0], typeof(SampleDerivedA));
+			});
+		}
+
+		[TestMethod]
+		public void TestSerializeIf()
+		{
+			TestGen(cl => {
+				var src = new Sample2 { X = 1, Y = "a" };
+				var dst = cl.Deep(src);
+				Assert.AreNotEqual(src, dst);
+				Assert.AreEqual(src.X, dst.X);
+				Assert.AreEqual(src.Y, dst.Y);
+			});
+			TestGen(cl => {
+				var src = new Sample2 { X = 1, Y = "1" };
+				var dst = cl.Deep(src);
+				Assert.AreNotEqual(src, dst);
+				Assert.AreEqual(src.X, dst.X);
+				Assert.IsNull(dst.Y);
+			});
+			TestGen(cl => {
+				var src = new SampleSerializeIf { X = 7, Y = new Sample1 { X = 7 } };
+				var dst = cl.Deep(src);
+				Assert.AreNotEqual(src, dst);
+				Assert.AreEqual(src.X, dst.X);
+				Assert.IsNull(dst.Y);
+			});
+			TestGen(cl => {
+				var src = new Sample1 { X = 7, Y = "ttt" };
+				var dst = cl.Deep(src);
+				Assert.AreNotEqual(src, dst);
+				Assert.AreEqual(src.X, dst.X);
+				Assert.AreEqual("zzz", dst.Y);
 			});
 		}
 	}

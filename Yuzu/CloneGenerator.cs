@@ -161,8 +161,20 @@ namespace Yuzu.Clone
 		private void GenerateClonerBody(Meta meta)
 		{
 			cw.ResetTempNames();
-			foreach (var yi in meta.Items)
-				GenerateCloneItem(meta, yi);
+			foreach (var yi in meta.Items) {
+				if (yi.SerializeCond != null) {
+					if (yi.SerializeIfMethod != null)
+						cw.Put("if (s.{0}()) {{\n", yi.SerializeIfMethod.Name);
+					else if (!yi.DefaultValue.Equals(YuzuNoDefault.NoDefault))
+						cw.Put("if (s.{0} != {1}) {{\n", yi.Name, Utils.CodeValueFormat(yi.DefaultValue));
+					else if (!yi.IsMember)
+						throw new NotImplementedException("Custom SerializeCondition is not supported");
+					GenerateCloneItem(meta, yi);
+					cw.Put("}\n");
+				}
+				else
+					GenerateCloneItem(meta, yi);
+			}
 		}
 
 		public void Generate<T>() { Generate(typeof(T)); }

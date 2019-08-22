@@ -52,9 +52,13 @@ namespace Yuzu
 		}
 	}
 
+	public enum YuzuNoDefault { NoDefault };
+
 	public abstract class YuzuSerializeCondition : Attribute
 	{
 		public abstract Func<object, object, bool> MakeChecker(Type tObj);
+		public virtual MethodInfo GetMethod(Type t) => null;
+		public virtual object GetDefault() => YuzuNoDefault.NoDefault;
 	}
 
 	public class YuzuSerializeIf : YuzuSerializeCondition
@@ -72,6 +76,7 @@ namespace Yuzu
 			var e = Expression.Call(Expression.Convert(p, tObj), fn);
 			return Expression.Lambda<Func<object, object, bool>>(e, p, pf).Compile();
 		}
+		public override MethodInfo GetMethod(Type t) => t.GetMethod(Method);
 	}
 
 	public class YuzuSerializeItemIf : Attribute
@@ -97,6 +102,7 @@ namespace Yuzu
 
 		private bool Check(object obj, object field) => !Value.Equals(field);
 		public override Func<object, object, bool> MakeChecker(Type tObj) => Check;
+		public override object GetDefault() => Value;
 	}
 
 	public class YuzuCompact : Attribute { }
@@ -234,7 +240,6 @@ namespace Yuzu
 		public Type MemberAttribute = typeof(YuzuMember);
 		public Type CompactAttribute = typeof(YuzuCompact);
 		public Type SerializeConditionAttribute = typeof(YuzuSerializeCondition);
-		public Type SerializeIfAttribute = typeof(YuzuSerializeIf);
 		public Type SerializeItemIfAttribute = typeof(YuzuSerializeItemIf);
 		public Type BeforeSerializationAttribute = typeof(YuzuBeforeSerialization);
 		public Type AfterSerializationAttribute = typeof(YuzuAfterSerialization);
@@ -256,6 +261,10 @@ namespace Yuzu
 		public Func<Attribute, string> GetAlias = attr => (attr as YuzuField).Alias;
 		public Func<Attribute, Type, Func<object, object, bool>> GetSerializeCondition =
 			(attr, t) => (attr as YuzuSerializeCondition).MakeChecker(t);
+		public Func<Attribute, Type, MethodInfo> GetSerializeMethod =
+			(attr, t) => (attr as YuzuSerializeCondition).GetMethod(t);
+		public Func<Attribute, object> GetDefault =
+			attr => (attr as YuzuSerializeCondition).GetDefault();
 		public Func<Attribute, YuzuItemKind> GetItemKind = attr => (attr as YuzuMust).Kind;
 		public Func<Attribute, Tuple<YuzuItemOptionality, YuzuItemKind>> GetItemOptionalityAndKind =
 			attr => Tuple.Create((attr as YuzuAll).Optionality, (attr as YuzuAll).Kind);

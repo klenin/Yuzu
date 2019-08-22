@@ -69,10 +69,19 @@ namespace YuzuTest
 		[YuzuSerializeIf(nameof(SaveYIf))]
 		public string Y { get; set; }
 
-		public bool SaveYIf()
-		{
-			return X.ToString() != Y;
-		}
+		public bool SaveYIf() => X.ToString() != Y;
+	}
+
+	public class SampleSerializeIf
+	{
+		[YuzuRequired]
+		public int X { get; set; }
+
+		[YuzuOptional]
+		[YuzuSerializeIf(nameof(SaveYIf))]
+		public Sample1 Y { get; set; }
+
+		public bool SaveYIf() => X != Y.X;
 	}
 
 	public class SampleNoGen

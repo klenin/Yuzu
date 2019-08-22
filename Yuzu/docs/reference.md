@@ -478,6 +478,9 @@ for(int i = 0; i < 1000000; ++i)
     result.Add(cl(new MyClass()));
 ```
 
+Cloning behaves as similarly as possible to serialize / deserialize sequence.
+In particular, it calls serialization and deserialization events, honors `[YuzuSerializeIf]` etc.
+
 Note: Cloning of recursive objects graphs is currently not supported.
 
 ## Type serialization

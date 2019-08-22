@@ -91,19 +91,49 @@ namespace Yuzu.Clone
 			return src => sg.FuncFrom(surrogateCloner(sg.FuncTo(src)));
 		}
 
+		private Action<object, object> MakeFieldCloner(Meta.Item yi)
+		{
+			if (yi.SetValue != null) {
+				var cloner = GetCloner(yi.Type);
+				if (yi.SerializeCond != null)
+					return (dst, src) => {
+						var v = yi.GetValue(src);
+						if (yi.SerializeCond(src, v))
+							yi.SetValue(dst, cloner(v));
+					};
+				else
+					return (dst, src) => yi.SetValue(dst, cloner(yi.GetValue(src)));
+			}
+			else {
+				var merger = GetMerger(yi.Type);
+				if (yi.SerializeCond != null)
+					return (dst, src) => {
+						var v = yi.GetValue(src);
+						if (yi.SerializeCond(src, v))
+							merger(yi.GetValue(dst), v);
+					};
+				else
+					return (dst, src) => merger(yi.GetValue(dst), yi.GetValue(src));
+			}
+		}
+
 		private void MakeFieldCloners(Action<object, object>[] cloners, Meta meta)
 		{
 			int i = 0;
-			foreach (var yi in meta.Items) {
-				if (IsCopyable(yi)) continue;
-				if (yi.SetValue != null) {
-					var cloner = GetCloner(yi.Type);
-					cloners[i++] = (dst, src) => yi.SetValue(dst, cloner(yi.GetValue(src)));
-				}
-				else {
-					var merger = GetMerger(yi.Type);
-					cloners[i++] = (dst, src) => merger(yi.GetValue(dst), yi.GetValue(src));
-				}
+			foreach (var yi in meta.Items)
+				if (!IsCopyable(yi)) 
+					cloners[i++] = MakeFieldCloner(yi);
+		}
+
+		private static void CopyCopyable(
+			object dst, object src, List<Meta.Item> copyable, List<Meta.Item> copyableIf)
+		{
+			foreach (var yi in copyable)
+				yi.SetValue(dst, yi.GetValue(src));
+			foreach (var yi in copyableIf) {
+				var v = yi.GetValue(src);
+				if (yi.SerializeCond(src, v))
+					yi.SetValue(dst, v);
 			}
 		}
 
@@ -179,9 +209,10 @@ namespace Yuzu.Clone
 				var surrogateCloner = MakeSurrogateCloner(meta);
 				if (surrogateCloner != null)
 					return surrogateCloner;
-				var copyable = meta.Items.Where(IsCopyable).ToList();
+				var copyable = meta.Items.Where(yi => IsCopyable(yi) && yi.SerializeCond == null).ToList();
+				var copyableIf = meta.Items.Where(yi => IsCopyable(yi) && yi.SerializeCond != null).ToList();
 				// Initialize 'cloners' lazily to prevent infinite recursion.
-				var cloners = new Action<object, object>[meta.Items.Count - copyable.Count];
+				var cloners = new Action<object, object>[meta.Items.Count - copyable.Count - copyableIf.Count];
 				// Duplicate code to optimize fast path.
 				if (!meta.HasAnyTrigger() && cloners.Length == 0) {
 					return src => {
@@ -190,8 +221,7 @@ namespace Yuzu.Clone
 						if (src.GetType() != t)
 							return DeepObject(src);
 						var result = meta.Factory();
-						foreach (var yi in copyable)
-							yi.SetValue(result, yi.GetValue(src));
+						CopyCopyable(result, src, copyable, copyableIf);
 						return result;
 					};
 				}
@@ -206,8 +236,7 @@ namespace Yuzu.Clone
 						if (cloners.Length > 0 && cloners[0] == null)
 							MakeFieldCloners(cloners, meta);
 						meta.BeforeDeserialization.Run(result);
-						foreach (var yi in copyable)
-							yi.SetValue(result, yi.GetValue(src));
+						CopyCopyable(result, src, copyable, copyableIf);
 						foreach (var cloner in cloners)
 							cloner(result, src);
 						meta.AfterSerialization.Run(src);
@@ -224,8 +253,7 @@ namespace Yuzu.Clone
 						var result = meta.Factory();
 						if (cloners[0] == null)
 							MakeFieldCloners(cloners, meta);
-						foreach (var yi in copyable)
-							yi.SetValue(result, yi.GetValue(src));
+						CopyCopyable(result, src, copyable, copyableIf);
 						foreach (var cloner in cloners)
 							cloner(result, src);
 						return result;
@@ -284,16 +312,16 @@ namespace Yuzu.Clone
 				var meta = Meta.Get(t, Options);
 				if (meta.Items.Count == 0)
 					return (dst, src) => {};
-				var copyable = meta.Items.Where(IsCopyable).ToList();
+				var copyable = meta.Items.Where(yi => IsCopyable(yi) && yi.SerializeCond == null).ToList();
+				var copyableIf = meta.Items.Where(yi => IsCopyable(yi) && yi.SerializeCond != null).ToList();
 				// Initialize 'cloners' lazily to prevent infinite recursion.
-				var cloners = new Action<object, object>[meta.Items.Count - copyable.Count];
+				var cloners = new Action<object, object>[meta.Items.Count - copyable.Count - copyableIf.Count];
 				// Duplicate code to optimize fast path.
 				if (!meta.HasAnyTrigger() && cloners.Length == 0) {
 					return (dst, src) => {
 						if (src == null || dst == null)
 							return;
-						foreach (var yi in copyable)
-							yi.SetValue(dst, yi.GetValue(src));
+						CopyCopyable(dst, src, copyable, copyableIf);
 					};
 				}
 				if (meta.HasAnyTrigger()) {
@@ -305,8 +333,7 @@ namespace Yuzu.Clone
 						if (cloners.Length > 0 && cloners[0] == null)
 							MakeFieldCloners(cloners, meta);
 						meta.BeforeDeserialization.Run(result);
-						foreach (var yi in copyable)
-							yi.SetValue(result, yi.GetValue(src));
+						CopyCopyable(dst, src, copyable, copyableIf);
 						foreach (var cloner in cloners)
 							cloner(result, src);
 						meta.AfterSerialization.Run(src);
@@ -319,8 +346,7 @@ namespace Yuzu.Clone
 							return;
 						if (cloners[0] == null)
 							MakeFieldCloners(cloners, meta);
-						foreach (var yi in copyable)
-							yi.SetValue(dst, yi.GetValue(src));
+						CopyCopyable(dst, src, copyable, copyableIf);
 						foreach (var cloner in cloners)
 							cloner(dst, src);
 					};
