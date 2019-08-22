@@ -199,7 +199,7 @@ Method must be a boolean function accepting integer and object arguments.
 Immediately before serialization of each collection item, this function is called.
 If the function returns `true`, the item is serialized, otherwise the item is omitted.
 
-Can be substituted by changing `MetaOptions.SerializeItemIfAttribute`.
+Can be substituted by changing `MetaOptions.SerializeItemIfAttribute` and/or `MetaOptions.GetSerializeItemCondition`.
 
 #### `[YuzuFactory]`
 Denotes a static method without arguments, which will be called to create an instance of this class during deserialization.

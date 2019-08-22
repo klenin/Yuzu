@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -511,6 +512,51 @@ namespace YuzuTest
 				Assert.AreNotEqual(src, dst);
 				Assert.AreEqual(src.X, dst.X);
 				Assert.AreEqual("zzz", dst.Y);
+			});
+		}
+		[TestMethod]
+		public void TestSerializeItemIf()
+		{
+			TestGen(cl => {
+				var src = new SampleCollection<int> { 5, 2, 4, 1 };
+
+				var dst1 = cl.Deep(src);
+				Assert.AreNotEqual(src, dst1);
+				Assert.AreEqual(src.Count, dst1.Count);
+				CollectionAssert.AreEqual(src.ToList(), dst1.ToList());
+
+				src.Filter = 1;
+				var dst2 = cl.Deep(src);
+				CollectionAssert.AreEqual(new List<int> { 5, 4 }, dst2.ToList());
+
+				src.Filter = 2;
+				var dst3 = cl.Deep(src);
+				CollectionAssert.AreEqual(new List<int> { 2, 4 }, dst3.ToList());
+
+				src.Filter = 3;
+				var dst4 = cl.Deep(src);
+				Assert.AreEqual(0, dst4.Count);
+			});
+			TestGen(cl => {
+				var src = new SampleCollection<Sample1>();
+				foreach (var i in new List<int> { 5, 2, 4, 1 })
+					src.Add(new Sample1 { X = i });
+
+				var dst1 = cl.Deep(src);
+				Assert.AreNotEqual(src, dst1);
+				Assert.AreEqual(src.Count, dst1.Count);
+				foreach (var t in src.Zip(dst1, Tuple.Create))
+					Assert.AreEqual(t.Item1.X, t.Item2.X);
+
+				src.Filter = 1;
+				var dst2 = cl.Deep(src);
+				Assert.AreEqual(2, dst2.Count);
+				Assert.AreEqual(5, dst2.First().X);
+				Assert.AreEqual(4, dst2.ElementAt(1).X);
+
+				src.Filter = 3;
+				var dst4 = cl.Deep(src);
+				Assert.AreEqual(0, dst4.Count);
 			});
 		}
 	}

@@ -175,6 +175,28 @@ namespace Yuzu.Clone
 				else
 					GenerateCloneItem(meta, yi);
 			}
+			{
+				var icoll = Utils.GetICollection(meta.Type);
+				if (icoll != null) {
+					var a = icoll.GetGenericArguments();
+					var itemName = cw.GetTempName();
+					var clonerCall = GenerateClonerInit(a[0], itemName);
+					if (meta.SerializeItemIfMethod != null) {
+						var indexName = cw.GetTempName();
+						cw.Put("int {0} = 0;\n", indexName);
+						cw.Put("foreach (var {0} in s) {{\n", itemName);
+						cw.Put("if (s.{0}({1}++, {2}))\n",
+							meta.SerializeItemIfMethod.Name, indexName, itemName);
+						cw.PutInd("result.Add({0});\n", clonerCall);
+						cw.Put("}\n");
+					}
+					else {
+						cw.Put("foreach (var {0} in s)\n", itemName);
+						cw.PutInd("result.Add({0});\n", clonerCall);
+					}
+					return;
+				}
+			}
 		}
 
 		public void Generate<T>() { Generate(typeof(T)); }

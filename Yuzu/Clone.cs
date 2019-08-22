@@ -9,6 +9,8 @@ using Yuzu.Util;
 
 namespace Yuzu.Clone
 {
+	using serializeItemIfType = Func<object, int, object, bool>;
+
 	public abstract class AbstractCloner
 	{
 		public CommonOptions Options;
@@ -188,24 +190,41 @@ namespace Yuzu.Clone
 			}
 			if (t == typeof(object))
 				return DeepObject;
+			var meta = Meta.Get(t, Options);
 			{
 				var icoll = Utils.GetICollection(t);
 				if (icoll != null) {
 					var a = icoll.GetGenericArguments();
 					if (!IsCopyable(a[0])) {
 						var сe = GetCloner(a[0]);
-						var m = CloneUtils.GetGeneric(nameof(CloneUtils.CloneCollection), t, a[0]);
-						var d = CloneUtils.MakeDelegate<Func<object, Func<object, object>, object>>(m);
-						return obj => d(obj, сe);
+						if (meta.SerializeItemIf != null) {
+							var m = CloneUtils.GetGeneric(nameof(CloneUtils.CloneCollectionIf), t, a[0]);
+							var d = CloneUtils.MakeDelegate<
+								Func<object, Func<object, object>, serializeItemIfType, object>>(m);
+							return obj => d(obj, сe, meta.SerializeItemIf);
+						}
+						else {
+							var m = CloneUtils.GetGeneric(nameof(CloneUtils.CloneCollection), t, a[0]);
+							var d = CloneUtils.MakeDelegate<Func<object, Func<object, object>, object>>(m);
+							return obj => d(obj, сe);
+						}
 					}
 					else {
-						var m = CloneUtils.GetGeneric(nameof(CloneUtils.CloneCollectionPrimitive), t, a[0]);
-						return CloneUtils.MakeDelegate<Func<object, object>>(m);
+						if (meta.SerializeItemIf != null) {
+							var m = CloneUtils.GetGeneric(
+								nameof(CloneUtils.CloneCollectionPrimitiveIf), t, a[0]);
+							var d = CloneUtils.MakeDelegate<Func<object, serializeItemIfType, object>>(m);
+							return src => d(src, meta.SerializeItemIf);
+						}
+						else {
+							var m = CloneUtils.GetGeneric(
+								nameof(CloneUtils.CloneCollectionPrimitive), t, a[0]);
+							return CloneUtils.MakeDelegate<Func<object, object>>(m);
+						}
 					}
 				}
 			}
 			if (t.IsClass || t.IsInterface || Utils.IsStruct(t)) {
-				var meta = Meta.Get(t, Options);
 				var surrogateCloner = MakeSurrogateCloner(meta);
 				if (surrogateCloner != null)
 					return surrogateCloner;

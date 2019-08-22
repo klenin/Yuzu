@@ -265,6 +265,8 @@ namespace Yuzu
 			(attr, t) => (attr as YuzuSerializeCondition).GetMethod(t);
 		public Func<Attribute, object> GetDefault =
 			attr => (attr as YuzuSerializeCondition).GetDefault();
+		public Func<MethodInfo, Func<object, int, object, bool>> GetSerializeItemCondition =
+			YuzuSerializeItemIf.MakeChecker;
 		public Func<Attribute, YuzuItemKind> GetItemKind = attr => (attr as YuzuMust).Kind;
 		public Func<Attribute, Tuple<YuzuItemOptionality, YuzuItemKind>> GetItemOptionalityAndKind =
 			attr => Tuple.Create((attr as YuzuAll).Optionality, (attr as YuzuAll).Kind);

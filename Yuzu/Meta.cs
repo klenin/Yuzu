@@ -80,6 +80,7 @@ namespace Yuzu.Metadata
 		public string WriteAlias;
 		public int RequiredCount { get; private set; }
 		public Func<object, int, object, bool> SerializeItemIf;
+		public MethodInfo SerializeItemIfMethod;
 
 		private object defaultFactory() => Activator.CreateInstance(Type);
 		public MethodInfo FactoryMethod;
@@ -305,7 +306,8 @@ namespace Yuzu.Metadata
 					throw Error("Duplicate SerializeItemIf");
 				if (Utils.GetIEnumerable(Type) == null)
 					throw Error("SerializeItemIf may only be used inside of IEnumerable");
-				SerializeItemIf = YuzuSerializeItemIf.MakeChecker(m);
+				SerializeItemIf = Options.GetSerializeItemCondition(m);
+				SerializeItemIfMethod = m;
 			}
 			BeforeSerialization.MaybeAdd(m, Options.BeforeSerializationAttribute);
 			AfterSerialization.MaybeAdd(m, Options.AfterSerializationAttribute);

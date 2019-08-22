@@ -120,6 +120,33 @@ namespace Yuzu.CloneUtil
 			return result;
 		}
 
+		public static I CloneCollectionIf<I, E>(
+			object src, Func<object, object> cloneElem, Func<object, int, object, bool> cond
+		) where I : class, ICollection<E>, new()
+		{
+			if (src == null)
+				return null;
+			var result = new I();
+			int index = 0;
+			foreach (var item in (I)src)
+				if (cond(src, index++, item))
+					result.Add((E)cloneElem(item));
+			return result;
+		}
+
+		public static I CloneCollectionPrimitiveIf<I, E>(object src, Func<object, int, object, bool> cond)
+			where I : class, ICollection<E>, new()
+		{
+			if (src == null)
+				return null;
+			var result = new I();
+			int index = 0;
+			foreach (var item in (I)src)
+				if (cond(src, index++, item))
+					result.Add(item);
+			return result;
+		}
+
 		public static void MergeCollection<I, E>(object dst, object src, Func<object, object> cloneElem)
 			where I : class, ICollection<E>
 		{

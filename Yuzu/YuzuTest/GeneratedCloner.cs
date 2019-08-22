@@ -178,6 +178,36 @@ namespace YuzuGenClone
 			return result;
 		}
 
+		private static global::YuzuTest.SampleCollection<int> Clone_YuzuTest__SampleCollection_Int32(Cloner cl, object src)
+		{
+			if (src == null) return null;
+			if (src.GetType() != typeof(global::YuzuTest.SampleCollection<int>))
+				return (global::YuzuTest.SampleCollection<int>)cl.DeepObject(src);
+			var s = (global::YuzuTest.SampleCollection<int>)src;
+			var result = new global::YuzuTest.SampleCollection<int>();
+			int tmp2 = 0;
+			foreach (var tmp1 in s) {
+				if (s.SaveItemIf(tmp2++, tmp1))
+					result.Add(tmp1);
+			}
+			return result;
+		}
+
+		private static global::YuzuTest.SampleCollection<global::YuzuTest.Sample1> Clone_YuzuTest__SampleCollection_Sample1(Cloner cl, object src)
+		{
+			if (src == null) return null;
+			if (src.GetType() != typeof(global::YuzuTest.SampleCollection<global::YuzuTest.Sample1>))
+				return (global::YuzuTest.SampleCollection<global::YuzuTest.Sample1>)cl.DeepObject(src);
+			var s = (global::YuzuTest.SampleCollection<global::YuzuTest.Sample1>)src;
+			var result = new global::YuzuTest.SampleCollection<global::YuzuTest.Sample1>();
+			int tmp2 = 0;
+			foreach (var tmp1 in s) {
+				if (s.SaveItemIf(tmp2++, tmp1))
+					result.Add(Clone_YuzuTest__Sample1(cl, tmp1));
+			}
+			return result;
+		}
+
 		private static global::YuzuTest.SampleCopyable Clone_YuzuTest__SampleCopyable(Cloner cl, object src) =>
 			(global::YuzuTest.SampleCopyable)src;
 
@@ -496,6 +526,8 @@ namespace YuzuGenClone
 			clonerCache[typeof(global::YuzuTest.SampleBefore2)] = Clone_YuzuTest__SampleBefore2;
 			clonerCache[typeof(global::YuzuTest.SampleBeforeDeserialization)] = Clone_YuzuTest__SampleBeforeDeserialization;
 			clonerCache[typeof(global::YuzuTest.SampleBeforeSerialization)] = Clone_YuzuTest__SampleBeforeSerialization;
+			clonerCache[typeof(global::YuzuTest.SampleCollection<int>)] = Clone_YuzuTest__SampleCollection_Int32;
+			clonerCache[typeof(global::YuzuTest.SampleCollection<global::YuzuTest.Sample1>)] = Clone_YuzuTest__SampleCollection_Sample1;
 			clonerCache[typeof(global::YuzuTest.SampleCopyable)] = ValueCopyCloner;
 			clonerCache[typeof(global::YuzuTest.SampleDerivedA)] = Clone_YuzuTest__SampleDerivedA;
 			clonerCache[typeof(global::YuzuTest.SampleDerivedB)] = Clone_YuzuTest__SampleDerivedB;
