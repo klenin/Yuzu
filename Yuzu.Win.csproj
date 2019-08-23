@@ -75,6 +75,7 @@
     <Compile Include="Yuzu\BinarySerializer.cs" />
     <Compile Include="Yuzu\Clone.cs" />
     <Compile Include="Yuzu\CloneGenerator.cs" />
+    <Compile Include="Yuzu\CloneObject.cs" />
     <Compile Include="Yuzu\CloneUtils.cs" />
     <Compile Include="Yuzu\Code.cs" />
     <Compile Include="Yuzu\DictOfObjects.cs" />
