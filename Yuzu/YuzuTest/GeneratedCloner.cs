@@ -350,7 +350,7 @@ namespace YuzuGenClone
 				foreach (var tmp1 in s.DI)
 					result.DI.Add(tmp1.Key, tmp1.Value);
 			}
-			if (s.LI != null) {
+			if (s.LI != null && result.LI != null) {
 				foreach (var tmp2 in s.LI)
 					result.LI.Add(tmp2);
 			}
@@ -369,7 +369,7 @@ namespace YuzuGenClone
 				foreach (var tmp1 in s.DI)
 					result.DI.Add(tmp1.Key, Clone_YuzuTest__Sample1(cl, tmp1.Value));
 			}
-			if (s.LI != null) {
+			if (s.LI != null && result.LI != null) {
 				foreach (var tmp2 in s.LI)
 					result.LI.Add(Clone_YuzuTest__Sample1(cl, tmp2));
 			}
@@ -488,6 +488,23 @@ namespace YuzuGenClone
 			return result;
 		}
 
+		private static global::YuzuTest.SampleWithCollectionMerge Clone_YuzuTest__SampleWithCollectionMerge(Cloner cl, object src)
+		{
+			if (src == null) return null;
+			if (src.GetType() != typeof(global::YuzuTest.SampleWithCollectionMerge))
+				return (global::YuzuTest.SampleWithCollectionMerge)cl.DeepObject(src);
+			var s = (global::YuzuTest.SampleWithCollectionMerge)src;
+			var result = new global::YuzuTest.SampleWithCollectionMerge();
+			if (s.A != null && result.A != null) {
+				int tmp2 = 0;
+				foreach (var tmp1 in s.A) {
+					if (s.A.SaveItemIf(tmp2++, tmp1))
+						result.A.Add(tmp1);
+				}
+			}
+			return result;
+		}
+
 		private static global::YuzuTest.SampleWithCopyable Clone_YuzuTest__SampleWithCopyable(Cloner cl, object src)
 		{
 			if (src == null) return null;
@@ -549,6 +566,7 @@ namespace YuzuGenClone
 			clonerCache[typeof(global::YuzuTest.SampleSerializeIf)] = Clone_YuzuTest__SampleSerializeIf;
 			clonerCache[typeof(global::YuzuTest.SampleStructWithClass)] = Clone_YuzuTest__SampleStructWithClass_obj;
 			clonerCache[typeof(global::YuzuTest.SampleSurrogateColor)] = Clone_YuzuTest__SampleSurrogateColor;
+			clonerCache[typeof(global::YuzuTest.SampleWithCollectionMerge)] = Clone_YuzuTest__SampleWithCollectionMerge;
 			clonerCache[typeof(global::YuzuTest.SampleWithCopyable)] = Clone_YuzuTest__SampleWithCopyable;
 			clonerCache[typeof(global::YuzuTest.SampleWithCopyableItems)] = Clone_YuzuTest__SampleWithCopyableItems;
 		}

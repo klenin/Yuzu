@@ -96,6 +96,25 @@ namespace Yuzu.Clone
 			return string.Format("({0}){1}({2})", Utils.GetTypeSpec(t), clonerName, itemName);
 		}
 
+		private void GenerateCloneCollection(Meta meta, Type itemType, string dstName, string srcName)
+		{
+			var itemName = cw.GetTempName();
+			var clonerCall = GenerateClonerInit(itemType, itemName);
+			if (meta.SerializeItemIfMethod != null) {
+				var indexName = cw.GetTempName();
+				cw.Put("int {0} = 0;\n", indexName);
+				cw.Put("foreach (var {0} in {1}) {{\n", itemName, srcName);
+				cw.Put("if ({0}.{1}({2}++, {3}))\n",
+					srcName, meta.SerializeItemIfMethod.Name, indexName, itemName);
+				cw.PutInd("{0}.Add({1});\n", dstName, clonerCall);
+				cw.Put("}\n");
+			}
+			else {
+				cw.Put("foreach (var {0} in {1})\n", itemName, srcName);
+				cw.PutInd("{0}.Add({1});\n", dstName, clonerCall);
+			}
+		}
+
 		private void GenerateCloneItem(Meta meta, Meta.Item yi)
 		{
 			if (yi.SetValue != null) {
@@ -140,14 +159,15 @@ namespace Yuzu.Clone
 			{
 				var icoll = Utils.GetICollection(yi.Type);
 				if (icoll != null) {
-					var a = icoll.GetGenericArguments();
-					cw.Put("if (s.{0} != null) {{\n", yi.Name);
-					if (yi.SetValue != null)
+					if (yi.SetValue != null) {
+						cw.Put("if (s.{0} != null) {{\n", yi.Name);
 						cw.Put("result.{0} = new {1}();\n", yi.Name, Utils.GetTypeSpec(yi.Type));
-					var itemName = cw.GetTempName();
-					var clonerCall = GenerateClonerInit(a[0], itemName);
-					cw.Put("foreach (var {0} in s.{1})\n", itemName, yi.Name);
-					cw.PutInd("result.{0}.Add({1});\n", yi.Name, clonerCall);
+					}
+					else
+						cw.Put("if (s.{0} != null && result.{0} != null) {{\n", yi.Name);
+					var a = icoll.GetGenericArguments();
+					GenerateCloneCollection(
+						Meta.Get(yi.Type, options), a[0], "result." + yi.Name, "s." + yi.Name);
 					cw.Put("}\n");
 					return;
 				}
@@ -179,21 +199,7 @@ namespace Yuzu.Clone
 				var icoll = Utils.GetICollection(meta.Type);
 				if (icoll != null) {
 					var a = icoll.GetGenericArguments();
-					var itemName = cw.GetTempName();
-					var clonerCall = GenerateClonerInit(a[0], itemName);
-					if (meta.SerializeItemIfMethod != null) {
-						var indexName = cw.GetTempName();
-						cw.Put("int {0} = 0;\n", indexName);
-						cw.Put("foreach (var {0} in s) {{\n", itemName);
-						cw.Put("if (s.{0}({1}++, {2}))\n",
-							meta.SerializeItemIfMethod.Name, indexName, itemName);
-						cw.PutInd("result.Add({0});\n", clonerCall);
-						cw.Put("}\n");
-					}
-					else {
-						cw.Put("foreach (var {0} in s)\n", itemName);
-						cw.PutInd("result.Add({0});\n", clonerCall);
-					}
+					GenerateCloneCollection(meta, a[0], "result", "s");
 					return;
 				}
 			}

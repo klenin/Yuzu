@@ -310,25 +310,41 @@ namespace Yuzu.Clone
 					}
 				}
 			}
+			var meta = Meta.Get(t, Options);
 			{
 				var icoll = Utils.GetICollection(t);
 				if (icoll != null) {
 					var a = icoll.GetGenericArguments();
 					if (!IsCopyable(a[0])) {
 						var сe = GetCloner(a[0]);
-						var m = CloneUtils.GetGeneric(nameof(CloneUtils.MergeCollection), t, a[0]);
-						var d = CloneUtils.MakeDelegate<Action<object, object, Func<object, object>>>(m);
-						return (dst, src) => d(dst, src, сe);
+						if (meta.SerializeItemIf != null) {
+							var m = CloneUtils.GetGeneric(nameof(CloneUtils.MergeCollectionIf), t, a[0]);
+							var d = CloneUtils.MakeDelegate<
+								Action<object, object, Func<object, object>, serializeItemIfType>>(m);
+							return (dst, src) => d(dst, src, сe, meta.SerializeItemIf);
+						}
+						else {
+							var m = CloneUtils.GetGeneric(nameof(CloneUtils.MergeCollection), t, a[0]);
+							var d = CloneUtils.MakeDelegate<Action<object, object, Func<object, object>>>(m);
+							return (dst, src) => d(dst, src, сe);
+						}
 					}
 					else {
-						var m = CloneUtils.GetGeneric(
+						if (meta.SerializeItemIf != null) {
+							var m = CloneUtils.GetGeneric(
+								nameof(CloneUtils.MergeCollectionPrimitiveIf), t, a[0]);
+							var d = CloneUtils.MakeDelegate<Action<object, object, serializeItemIfType>>(m);
+							return (dst, src) => d(dst, src, meta.SerializeItemIf);
+						}
+						else {
+							var m = CloneUtils.GetGeneric(
 							nameof(CloneUtils.MergeCollectionPrimitive), t, a[0]);
-						return CloneUtils.MakeDelegate<Action<object, object>>(m);
+							return CloneUtils.MakeDelegate<Action<object, object>>(m);
+						}
 					}
 				}
 			}
 			if (t.IsClass || t.IsInterface || Utils.IsStruct(t)) {
-				var meta = Meta.Get(t, Options);
 				if (meta.Items.Count == 0)
 					return (dst, src) => {};
 				var copyable = meta.Items.Where(yi => IsCopyable(yi) && yi.SerializeCond == null).ToList();

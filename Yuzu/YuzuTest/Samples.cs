@@ -604,6 +604,12 @@ namespace YuzuTest
 		public SampleCollection<int> B = new SampleCollection<int>();
 	}
 
+	public class SampleWithCollectionMerge
+	{
+		[YuzuRequired]
+		public SampleCollection<int> A { get; } = new SampleCollection<int>();
+	}
+
 	public class SampleWithCollectionDefault
 	{
 		[YuzuMember]

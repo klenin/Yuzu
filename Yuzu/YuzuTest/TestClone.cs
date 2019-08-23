@@ -558,6 +558,28 @@ namespace YuzuTest
 				var dst4 = cl.Deep(src);
 				Assert.AreEqual(0, dst4.Count);
 			});
+			TestGen(cl => {
+				var src = new SampleWithCollectionMerge();
+				foreach (var i in new List<int> { 5, 2, 4, 1 })
+					src.A.Add(i);
+
+				var dst1 = cl.Deep(src);
+				Assert.AreNotEqual(src, dst1);
+				Assert.AreEqual(src.A.Count, dst1.A.Count);
+				CollectionAssert.AreEqual(src.A.ToList(), dst1.A.ToList());
+
+				src.A.Filter = 1;
+				var dst2 = cl.Deep(src);
+				CollectionAssert.AreEqual(new List<int> { 5, 4 }, dst2.A.ToList());
+
+				src.A.Filter = 2;
+				var dst3 = cl.Deep(src);
+				CollectionAssert.AreEqual(new List<int> { 2, 4 }, dst3.A.ToList());
+
+				src.A.Filter = 3;
+				var dst4 = cl.Deep(src);
+				Assert.AreEqual(0, dst4.A.Count);
+			});
 		}
 	}
 }

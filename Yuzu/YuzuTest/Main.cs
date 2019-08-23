@@ -257,6 +257,7 @@ namespace YuzuTest
 				cd.Generate<SampleSerializeIf>();
 				cd.Generate<SampleCollection<int>>();
 				cd.Generate<SampleCollection<Sample1>>();
+				cd.Generate<SampleWithCollectionMerge>();
 			});
 		}
 	}
