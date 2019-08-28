@@ -252,6 +252,16 @@ namespace YuzuTest.Binary
 		}
 
 		[TestMethod]
+		public void TestGeneratedDerived()
+		{
+			var bs = new BinarySerializer();
+			var bd = new BinaryDeserializerGenDerived();
+			var v = new SampleMergeNonPrimitive { M = new Sample1 { X = 33 } };
+			var w = bd.FromBytes<SampleMergeNonPrimitive>(bs.ToBytes(v));
+			Assert.AreEqual(v.M.X, w.M.X);
+		}
+
+		[TestMethod]
 		public void TestEnum()
 		{
 			var bs = new BinarySerializer();

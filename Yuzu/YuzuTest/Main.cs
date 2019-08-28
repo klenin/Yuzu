@@ -216,6 +216,11 @@ namespace YuzuTest
 				bd.Generate<YuzuTestAssembly.SampleAssemblyDerivedQ>();
 				bd.Generate<YuzuTest2.SampleNamespace>();
 			});
+			var bdg1 = new BinaryDeserializerGenerator(
+				className: "BinaryDeserializerGenDerived", baseClassName: "BinaryDeserializerGen");
+			Gen(@"..\..\GeneratedBinaryDerived.cs", bdg1, bd => {
+				bd.Generate<SampleMergeNonPrimitive>();
+			});
 			var cg = new ClonerGenerator();
 			bdg.SafetyChecks = true;
 			Gen(@"..\..\GeneratedCloner.cs", cg, cd => {

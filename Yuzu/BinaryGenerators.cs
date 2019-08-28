@@ -33,6 +33,8 @@ namespace Yuzu.Binary
 		private CodeWriter cw = new CodeWriter();
 		private string wrapperNameSpace;
 		private CommonOptions options;
+		private string className;
+		private string baseClassName;
 		private Dictionary<Type, string> generatedReaders = new Dictionary<Type, string>();
 		private Dictionary<Type, string> generatedMakers = new Dictionary<Type, string>();
 		private string classDefName = typeof(ReaderClassDef).Name;
@@ -48,10 +50,16 @@ namespace Yuzu.Binary
 		// Turn off for 5% speedup in exchange for potentially missing broken data.
 		public bool SafetyChecks = true;
 
-		public BinaryDeserializerGenerator(string wrapperNameSpace = "YuzuGenBin", CommonOptions? options = null)
-		{
+		public BinaryDeserializerGenerator(
+			string wrapperNameSpace = "YuzuGenBin",
+			CommonOptions? options = null,
+			string className = "BinaryDeserializerGen",
+			string baseClassName = "BinaryDeserializerGenBase"
+		) {
 			this.wrapperNameSpace = wrapperNameSpace;
 			this.options = options ?? new CommonOptions();
+			this.className = className;
+			this.baseClassName = baseClassName;
 		}
 
 		static BinaryDeserializerGenerator() { InitSimpleValueReader(); }
@@ -64,13 +72,13 @@ namespace Yuzu.Binary
 			cw.Put("\n");
 			cw.Put("namespace {0}\n", wrapperNameSpace);
 			cw.Put("{\n");
-			cw.Put("public class BinaryDeserializerGen: BinaryDeserializerGenBase\n");
+			cw.Put("public class {0}: {1}\n", className, baseClassName);
 			cw.Put("{\n");
 		}
 
 		public void GenerateFooter()
 		{
-			cw.Put("static BinaryDeserializerGen()\n");
+			cw.Put("static {0}()\n", className);
 			cw.Put("{\n");
 			foreach (var r in generatedReaders)
 				cw.Put("readCache[typeof({0})] = {1};\n", Utils.GetTypeSpec(r.Key), r.Value);
@@ -287,7 +295,7 @@ namespace Yuzu.Binary
 			cw.GenerateActionList(meta.BeforeDeserialization);
 			cw.ResetTempNames();
 			if (IsDeserializerGenRequired(meta))
-				cw.Put("var dg = (BinaryDeserializerGen)d;\n", Utils.GetTypeSpec(meta.Type));
+				cw.Put("var dg = ({0})d;\n", className);
 			if (meta.IsCompact) {
 				foreach (var yi in meta.Items)
 					GenerateSetValue(yi.Type, "result." + yi.Name, yi);
