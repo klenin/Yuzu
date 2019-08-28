@@ -59,9 +59,7 @@ namespace Yuzu.Binary
 		public void GenerateHeader()
 		{
 			cw.Put("using System;\n");
-			cw.Put("using System.Reflection;\n");
 			cw.Put("\n");
-			cw.Put("using Yuzu;\n");
 			cw.Put("using Yuzu.Binary;\n");
 			cw.Put("\n");
 			cw.Put("namespace {0}\n", wrapperNameSpace);
