@@ -1305,6 +1305,43 @@ namespace YuzuTest.Binary
 		}
 
 		[TestMethod]
+		public void TestUnknownStorageClear()
+		{
+			var bs = new BinarySerializer();
+			var bd = new BinaryDeserializer();
+			bd.Options.AllowUnknownFields = true;
+
+			var data1 =
+				"20 01 00 " + XS(typeof(SampleUnknown)) + " 02 00 " +
+				XS("X", RoughType.Int) + " " + XS("Y", RoughType.Int) +
+				" 01 00 04 00 00 00 02 00 05 00 00 00 00 00";
+			var w1 = bd.FromBytes<SampleUnknown>(SX(data1));
+			Assert.AreEqual(4, w1.X);
+
+			bd.ClearClassIds();
+			var data2 =
+				"20 01 00 " + XS(typeof(SampleUnknown)) + " 02 00 " +
+				XS("X", RoughType.Int) + " " + XS("Z", RoughType.Int) +
+				" 01 00 07 00 00 00 02 00 08 00 00 00 00 00";
+			var w2 = bd.FromBytes<SampleUnknown>(SX(data2));
+			Assert.AreEqual(7, w2.X);
+
+			var lst = new List<SampleUnknown> { w1, w2 };
+
+			XAssert.Throws<YuzuException>(() => bs.ToBytes(lst), "Conflict");
+
+			bs.ClearClassIds();
+			w1.Storage.Clear(clearMetadata: true);
+			w2.Storage.Clear(clearMetadata: true);
+			var result1 = bs.ToBytes(lst);
+			Assert.AreEqual(
+				"21 20 02 00 00 00 01 00 " + XS(typeof(SampleUnknown)) + " 01 00 " +
+				XS("X", RoughType.Int) +
+				" 01 00 04 00 00 00 00 00 01 00 01 00 07 00 00 00 00 00",
+				XS(result1));
+		}
+
+		[TestMethod]
 		public void TestEscape()
 		{
 			var bs = new BinarySerializer();

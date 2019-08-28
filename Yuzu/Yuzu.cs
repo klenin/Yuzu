@@ -378,10 +378,12 @@ namespace Yuzu
 			Fields.Sort(Item.Comparer);
 			IsOrdered = true;
 		}
-		public void Clear()
+		public void Clear(bool clearMetadata = false)
 		{
 			Fields.Clear();
 			IsOrdered = true;
+			if (clearMetadata)
+				Internal = null;
 		}
 		public virtual void Add(string name, object value)
 		{
