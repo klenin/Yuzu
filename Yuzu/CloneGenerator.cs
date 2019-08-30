@@ -25,6 +25,7 @@ namespace Yuzu.Clone
 		private CommonOptions options;
 		private string className;
 		private string baseClassName;
+		private ClonerGenerator parentGen;
 		private Dictionary<Type, string> generatedCloners = new Dictionary<Type, string>();
 
 		public string LineSeparator { get { return cw.LineSeparator; } set { cw.LineSeparator = value; } }
@@ -39,12 +40,14 @@ namespace Yuzu.Clone
 			string wrapperNameSpace = "YuzuGenClone",
 			CommonOptions? options = null,
 			string className = "ClonerGen",
-			string baseClassName = "ClonerGenBase"
+			string baseClassName = "ClonerGenBase",
+			ClonerGenerator parentGen = null
 		) {
 			this.wrapperNameSpace = wrapperNameSpace;
 			this.options = options ?? new CommonOptions();
 			this.className = className;
 			this.baseClassName = baseClassName;
+			this.parentGen = parentGen;
 		}
 
 		public void GenerateHeader()
@@ -80,16 +83,20 @@ namespace Yuzu.Clone
 				String.Format("new {0}()", Utils.GetTypeSpec(meta.Type)) :
 				String.Format("{0}.{1}()", Utils.GetTypeSpec(meta.Type), meta.FactoryMethod.Name);
 
+		public string GetGeneratedClonerName(Type t, string itemName)
+		{
+			if (generatedCloners.TryGetValue(t, out string itemClonerName))
+				return string.Format("{0}(cl, {1})", itemClonerName, itemName);
+			return parentGen?.GetGeneratedClonerName(t, itemName);
+		}
+
 		private string GenerateClonerSimple(Type t, string itemName)
 		{
 			if (Cloner.IsCopyable(t, options))
 				return itemName;
 			if (t == typeof(object))
 				return string.Format("cl.DeepObject({0})", itemName);
-			string itemClonerName;
-			if (generatedCloners.TryGetValue(t, out itemClonerName))
-				return string.Format("{0}(cl, {1})", itemClonerName, itemName);
-			return null;
+			return GetGeneratedClonerName(t, itemName);
 		}
 
 		private string GenerateClonerInit(Type t, string itemName)
@@ -263,7 +270,7 @@ namespace Yuzu.Clone
 				return;
 			}
 
-			cw.Put("private static {0} {1}(Cloner cl, object src)\n", Utils.GetTypeSpec(t), clonerName);
+			cw.Put("protected static {0} {1}(Cloner cl, object src)\n", Utils.GetTypeSpec(t), clonerName);
 			cw.Put("{\n");
 			if (!Utils.IsStruct(t)) {
 				cw.Put("if (src == null) return null;\n");

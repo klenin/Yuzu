@@ -6,7 +6,7 @@ namespace YuzuGenClone
 {
 	public class ClonerGen: ClonerGenBase
 	{
-		private static global::YuzuTest.Color Clone_YuzuTest__Color(Cloner cl, object src)
+		protected static global::YuzuTest.Color Clone_YuzuTest__Color(Cloner cl, object src)
 		{
 			if (src == null) return null;
 			if (src.GetType() != typeof(global::YuzuTest.Color))
@@ -19,7 +19,7 @@ namespace YuzuGenClone
 			return result;
 		}
 
-		private static global::YuzuTest.Sample1 Clone_YuzuTest__Sample1(Cloner cl, object src)
+		protected static global::YuzuTest.Sample1 Clone_YuzuTest__Sample1(Cloner cl, object src)
 		{
 			if (src == null) return null;
 			if (src.GetType() != typeof(global::YuzuTest.Sample1))
@@ -33,7 +33,7 @@ namespace YuzuGenClone
 			return result;
 		}
 
-		private static global::YuzuTest.Sample2 Clone_YuzuTest__Sample2(Cloner cl, object src)
+		protected static global::YuzuTest.Sample2 Clone_YuzuTest__Sample2(Cloner cl, object src)
 		{
 			if (src == null) return null;
 			if (src.GetType() != typeof(global::YuzuTest.Sample2))
@@ -47,7 +47,7 @@ namespace YuzuGenClone
 			return result;
 		}
 
-		private static global::YuzuTest.Sample3 Clone_YuzuTest__Sample3(Cloner cl, object src)
+		protected static global::YuzuTest.Sample3 Clone_YuzuTest__Sample3(Cloner cl, object src)
 		{
 			if (src == null) return null;
 			if (src.GetType() != typeof(global::YuzuTest.Sample3))
@@ -60,7 +60,7 @@ namespace YuzuGenClone
 			return result;
 		}
 
-		private static global::YuzuTest.SampleAfter2 Clone_YuzuTest__SampleAfter2(Cloner cl, object src)
+		protected static global::YuzuTest.SampleAfter2 Clone_YuzuTest__SampleAfter2(Cloner cl, object src)
 		{
 			if (src == null) return null;
 			if (src.GetType() != typeof(global::YuzuTest.SampleAfter2))
@@ -74,7 +74,7 @@ namespace YuzuGenClone
 			return result;
 		}
 
-		private static global::YuzuTest.SampleAfterDeserialization Clone_YuzuTest__SampleAfterDeserialization(Cloner cl, object src)
+		protected static global::YuzuTest.SampleAfterDeserialization Clone_YuzuTest__SampleAfterDeserialization(Cloner cl, object src)
 		{
 			if (src == null) return null;
 			if (src.GetType() != typeof(global::YuzuTest.SampleAfterDeserialization))
@@ -86,7 +86,7 @@ namespace YuzuGenClone
 			return result;
 		}
 
-		private static global::YuzuTest.SampleAfterSerialization Clone_YuzuTest__SampleAfterSerialization(Cloner cl, object src)
+		protected static global::YuzuTest.SampleAfterSerialization Clone_YuzuTest__SampleAfterSerialization(Cloner cl, object src)
 		{
 			if (src == null) return null;
 			if (src.GetType() != typeof(global::YuzuTest.SampleAfterSerialization))
@@ -98,7 +98,7 @@ namespace YuzuGenClone
 			return result;
 		}
 
-		private static global::YuzuTest.SampleArray Clone_YuzuTest__SampleArray(Cloner cl, object src)
+		protected static global::YuzuTest.SampleArray Clone_YuzuTest__SampleArray(Cloner cl, object src)
 		{
 			if (src == null) return null;
 			if (src.GetType() != typeof(global::YuzuTest.SampleArray))
@@ -112,7 +112,7 @@ namespace YuzuGenClone
 			return result;
 		}
 
-		private static global::YuzuTest.SampleArrayOfClass Clone_YuzuTest__SampleArrayOfClass(Cloner cl, object src)
+		protected static global::YuzuTest.SampleArrayOfClass Clone_YuzuTest__SampleArrayOfClass(Cloner cl, object src)
 		{
 			if (src == null) return null;
 			if (src.GetType() != typeof(global::YuzuTest.SampleArrayOfClass))
@@ -127,7 +127,7 @@ namespace YuzuGenClone
 			return result;
 		}
 
-		private static global::YuzuTest.SampleBase Clone_YuzuTest__SampleBase(Cloner cl, object src)
+		protected static global::YuzuTest.SampleBase Clone_YuzuTest__SampleBase(Cloner cl, object src)
 		{
 			if (src == null) return null;
 			if (src.GetType() != typeof(global::YuzuTest.SampleBase))
@@ -138,7 +138,7 @@ namespace YuzuGenClone
 			return result;
 		}
 
-		private static global::YuzuTest.SampleBefore2 Clone_YuzuTest__SampleBefore2(Cloner cl, object src)
+		protected static global::YuzuTest.SampleBefore2 Clone_YuzuTest__SampleBefore2(Cloner cl, object src)
 		{
 			if (src == null) return null;
 			if (src.GetType() != typeof(global::YuzuTest.SampleBefore2))
@@ -152,7 +152,7 @@ namespace YuzuGenClone
 			return result;
 		}
 
-		private static global::YuzuTest.SampleBeforeDeserialization Clone_YuzuTest__SampleBeforeDeserialization(Cloner cl, object src)
+		protected static global::YuzuTest.SampleBeforeDeserialization Clone_YuzuTest__SampleBeforeDeserialization(Cloner cl, object src)
 		{
 			if (src == null) return null;
 			if (src.GetType() != typeof(global::YuzuTest.SampleBeforeDeserialization))
@@ -164,7 +164,7 @@ namespace YuzuGenClone
 			return result;
 		}
 
-		private static global::YuzuTest.SampleBeforeSerialization Clone_YuzuTest__SampleBeforeSerialization(Cloner cl, object src)
+		protected static global::YuzuTest.SampleBeforeSerialization Clone_YuzuTest__SampleBeforeSerialization(Cloner cl, object src)
 		{
 			if (src == null) return null;
 			if (src.GetType() != typeof(global::YuzuTest.SampleBeforeSerialization))
@@ -176,7 +176,7 @@ namespace YuzuGenClone
 			return result;
 		}
 
-		private static global::YuzuTest.SampleCollection<int> Clone_YuzuTest__SampleCollection_Int32(Cloner cl, object src)
+		protected static global::YuzuTest.SampleCollection<int> Clone_YuzuTest__SampleCollection_Int32(Cloner cl, object src)
 		{
 			if (src == null) return null;
 			if (src.GetType() != typeof(global::YuzuTest.SampleCollection<int>))
@@ -191,7 +191,7 @@ namespace YuzuGenClone
 			return result;
 		}
 
-		private static global::YuzuTest.SampleCollection<global::YuzuTest.Sample1> Clone_YuzuTest__SampleCollection_Sample1(Cloner cl, object src)
+		protected static global::YuzuTest.SampleCollection<global::YuzuTest.Sample1> Clone_YuzuTest__SampleCollection_Sample1(Cloner cl, object src)
 		{
 			if (src == null) return null;
 			if (src.GetType() != typeof(global::YuzuTest.SampleCollection<global::YuzuTest.Sample1>))
@@ -209,7 +209,7 @@ namespace YuzuGenClone
 		private static global::YuzuTest.SampleCopyable Clone_YuzuTest__SampleCopyable(Cloner cl, object src) =>
 			(global::YuzuTest.SampleCopyable)src;
 
-		private static global::YuzuTest.SampleDerivedA Clone_YuzuTest__SampleDerivedA(Cloner cl, object src)
+		protected static global::YuzuTest.SampleDerivedA Clone_YuzuTest__SampleDerivedA(Cloner cl, object src)
 		{
 			if (src == null) return null;
 			if (src.GetType() != typeof(global::YuzuTest.SampleDerivedA))
@@ -221,7 +221,7 @@ namespace YuzuGenClone
 			return result;
 		}
 
-		private static global::YuzuTest.SampleDerivedB Clone_YuzuTest__SampleDerivedB(Cloner cl, object src)
+		protected static global::YuzuTest.SampleDerivedB Clone_YuzuTest__SampleDerivedB(Cloner cl, object src)
 		{
 			if (src == null) return null;
 			if (src.GetType() != typeof(global::YuzuTest.SampleDerivedB))
@@ -233,7 +233,7 @@ namespace YuzuGenClone
 			return result;
 		}
 
-		private static global::YuzuTest.SampleDict Clone_YuzuTest__SampleDict(Cloner cl, object src)
+		protected static global::YuzuTest.SampleDict Clone_YuzuTest__SampleDict(Cloner cl, object src)
 		{
 			if (src == null) return null;
 			if (src.GetType() != typeof(global::YuzuTest.SampleDict))
@@ -249,7 +249,7 @@ namespace YuzuGenClone
 			return result;
 		}
 
-		private static global::YuzuTest.SampleDictKeys Clone_YuzuTest__SampleDictKeys(Cloner cl, object src)
+		protected static global::YuzuTest.SampleDictKeys Clone_YuzuTest__SampleDictKeys(Cloner cl, object src)
 		{
 			if (src == null) return null;
 			if (src.GetType() != typeof(global::YuzuTest.SampleDictKeys))
@@ -275,7 +275,7 @@ namespace YuzuGenClone
 			return result;
 		}
 
-		private static global::YuzuTest.SampleGenNoGen Clone_YuzuTest__SampleGenNoGen(Cloner cl, object src)
+		protected static global::YuzuTest.SampleGenNoGen Clone_YuzuTest__SampleGenNoGen(Cloner cl, object src)
 		{
 			if (src == null) return null;
 			if (src.GetType() != typeof(global::YuzuTest.SampleGenNoGen))
@@ -286,7 +286,7 @@ namespace YuzuGenClone
 			return result;
 		}
 
-		private static global::YuzuTest.SampleItemObj Clone_YuzuTest__SampleItemObj(Cloner cl, object src)
+		protected static global::YuzuTest.SampleItemObj Clone_YuzuTest__SampleItemObj(Cloner cl, object src)
 		{
 			if (src == null) return null;
 			if (src.GetType() != typeof(global::YuzuTest.SampleItemObj))
@@ -306,7 +306,7 @@ namespace YuzuGenClone
 			return result;
 		}
 
-		private static global::YuzuTest.SampleList Clone_YuzuTest__SampleList(Cloner cl, object src)
+		protected static global::YuzuTest.SampleList Clone_YuzuTest__SampleList(Cloner cl, object src)
 		{
 			if (src == null) return null;
 			if (src.GetType() != typeof(global::YuzuTest.SampleList))
@@ -321,7 +321,7 @@ namespace YuzuGenClone
 			return result;
 		}
 
-		private static global::YuzuTest.SampleMatrix Clone_YuzuTest__SampleMatrix(Cloner cl, object src)
+		protected static global::YuzuTest.SampleMatrix Clone_YuzuTest__SampleMatrix(Cloner cl, object src)
 		{
 			if (src == null) return null;
 			if (src.GetType() != typeof(global::YuzuTest.SampleMatrix))
@@ -337,7 +337,7 @@ namespace YuzuGenClone
 			return result;
 		}
 
-		private static global::YuzuTest.SampleMerge Clone_YuzuTest__SampleMerge(Cloner cl, object src)
+		protected static global::YuzuTest.SampleMerge Clone_YuzuTest__SampleMerge(Cloner cl, object src)
 		{
 			if (src == null) return null;
 			if (src.GetType() != typeof(global::YuzuTest.SampleMerge))
@@ -356,7 +356,7 @@ namespace YuzuGenClone
 			return result;
 		}
 
-		private static global::YuzuTest.SampleMergeNonPrimitive Clone_YuzuTest__SampleMergeNonPrimitive(Cloner cl, object src)
+		protected static global::YuzuTest.SampleMergeNonPrimitive Clone_YuzuTest__SampleMergeNonPrimitive(Cloner cl, object src)
 		{
 			if (src == null) return null;
 			if (src.GetType() != typeof(global::YuzuTest.SampleMergeNonPrimitive))
@@ -375,7 +375,7 @@ namespace YuzuGenClone
 			return result;
 		}
 
-		private static global::YuzuTest.SampleNullable Clone_YuzuTest__SampleNullable(Cloner cl, object src)
+		protected static global::YuzuTest.SampleNullable Clone_YuzuTest__SampleNullable(Cloner cl, object src)
 		{
 			if (src == null) return null;
 			if (src.GetType() != typeof(global::YuzuTest.SampleNullable))
@@ -386,7 +386,7 @@ namespace YuzuGenClone
 			return result;
 		}
 
-		private static global::YuzuTest.SampleObj Clone_YuzuTest__SampleObj(Cloner cl, object src)
+		protected static global::YuzuTest.SampleObj Clone_YuzuTest__SampleObj(Cloner cl, object src)
 		{
 			if (src == null) return null;
 			if (src.GetType() != typeof(global::YuzuTest.SampleObj))
@@ -397,7 +397,7 @@ namespace YuzuGenClone
 			return result;
 		}
 
-		private static global::YuzuTest.SamplePerson Clone_YuzuTest__SamplePerson(Cloner cl, object src)
+		protected static global::YuzuTest.SamplePerson Clone_YuzuTest__SamplePerson(Cloner cl, object src)
 		{
 			if (src == null) return null;
 			if (src.GetType() != typeof(global::YuzuTest.SamplePerson))
@@ -418,7 +418,7 @@ namespace YuzuGenClone
 		private static global::YuzuTest.SamplePoint Clone_YuzuTest__SamplePoint(Cloner cl, object src) =>
 			(global::YuzuTest.SamplePoint)src;
 
-		private static global::YuzuTest.SamplePrivateConstructor Clone_YuzuTest__SamplePrivateConstructor(Cloner cl, object src)
+		protected static global::YuzuTest.SamplePrivateConstructor Clone_YuzuTest__SamplePrivateConstructor(Cloner cl, object src)
 		{
 			if (src == null) return null;
 			if (src.GetType() != typeof(global::YuzuTest.SamplePrivateConstructor))
@@ -429,7 +429,7 @@ namespace YuzuGenClone
 			return result;
 		}
 
-		private static global::YuzuTest.SampleRect Clone_YuzuTest__SampleRect(Cloner cl, object src)
+		protected static global::YuzuTest.SampleRect Clone_YuzuTest__SampleRect(Cloner cl, object src)
 		{
 			if (src == null) return null;
 			if (src.GetType() != typeof(global::YuzuTest.SampleRect))
@@ -441,7 +441,7 @@ namespace YuzuGenClone
 			return result;
 		}
 
-		private static global::YuzuTest.SampleSealed Clone_YuzuTest__SampleSealed(Cloner cl, object src)
+		protected static global::YuzuTest.SampleSealed Clone_YuzuTest__SampleSealed(Cloner cl, object src)
 		{
 			if (src == null) return null;
 			var s = (global::YuzuTest.SampleSealed)src;
@@ -450,7 +450,7 @@ namespace YuzuGenClone
 			return result;
 		}
 
-		private static global::YuzuTest.SampleSerializeIf Clone_YuzuTest__SampleSerializeIf(Cloner cl, object src)
+		protected static global::YuzuTest.SampleSerializeIf Clone_YuzuTest__SampleSerializeIf(Cloner cl, object src)
 		{
 			if (src == null) return null;
 			if (src.GetType() != typeof(global::YuzuTest.SampleSerializeIf))
@@ -464,7 +464,7 @@ namespace YuzuGenClone
 			return result;
 		}
 
-		private static global::YuzuTest.SampleStructWithClass Clone_YuzuTest__SampleStructWithClass(Cloner cl, object src)
+		protected static global::YuzuTest.SampleStructWithClass Clone_YuzuTest__SampleStructWithClass(Cloner cl, object src)
 		{
 			var s = (global::YuzuTest.SampleStructWithClass)src;
 			var result = new global::YuzuTest.SampleStructWithClass();
@@ -475,7 +475,7 @@ namespace YuzuGenClone
 		private static object Clone_YuzuTest__SampleStructWithClass_obj(Cloner cl, object src) =>
 			Clone_YuzuTest__SampleStructWithClass(cl, src);
 
-		private static global::YuzuTest.SampleSurrogateColor Clone_YuzuTest__SampleSurrogateColor(Cloner cl, object src)
+		protected static global::YuzuTest.SampleSurrogateColor Clone_YuzuTest__SampleSurrogateColor(Cloner cl, object src)
 		{
 			if (src == null) return null;
 			if (src.GetType() != typeof(global::YuzuTest.SampleSurrogateColor))
@@ -486,7 +486,7 @@ namespace YuzuGenClone
 			return result;
 		}
 
-		private static global::YuzuTest.SampleWithCollectionMerge Clone_YuzuTest__SampleWithCollectionMerge(Cloner cl, object src)
+		protected static global::YuzuTest.SampleWithCollectionMerge Clone_YuzuTest__SampleWithCollectionMerge(Cloner cl, object src)
 		{
 			if (src == null) return null;
 			if (src.GetType() != typeof(global::YuzuTest.SampleWithCollectionMerge))
@@ -503,7 +503,7 @@ namespace YuzuGenClone
 			return result;
 		}
 
-		private static global::YuzuTest.SampleWithCopyable Clone_YuzuTest__SampleWithCopyable(Cloner cl, object src)
+		protected static global::YuzuTest.SampleWithCopyable Clone_YuzuTest__SampleWithCopyable(Cloner cl, object src)
 		{
 			if (src == null) return null;
 			if (src.GetType() != typeof(global::YuzuTest.SampleWithCopyable))
@@ -514,7 +514,7 @@ namespace YuzuGenClone
 			return result;
 		}
 
-		private static global::YuzuTest.SampleWithCopyableItems Clone_YuzuTest__SampleWithCopyableItems(Cloner cl, object src)
+		protected static global::YuzuTest.SampleWithCopyableItems Clone_YuzuTest__SampleWithCopyableItems(Cloner cl, object src)
 		{
 			if (src == null) return null;
 			if (src.GetType() != typeof(global::YuzuTest.SampleWithCopyableItems))
