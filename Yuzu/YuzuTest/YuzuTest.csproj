@@ -66,6 +66,7 @@
     <Compile Include="GeneratedBinary.cs" />
     <Compile Include="GeneratedBinaryDerived.cs" />
     <Compile Include="GeneratedCloner.cs" />
+    <Compile Include="GeneratedClonerDerived.cs" />
     <Compile Include="SampleAlias.cs" />
     <Compile Include="Samples.cs" />
     <Compile Include="Speed.cs" />

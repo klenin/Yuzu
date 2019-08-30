@@ -264,6 +264,10 @@ namespace YuzuTest
 				cd.Generate<SampleCollection<Sample1>>();
 				cd.Generate<SampleWithCollectionMerge>();
 			});
+			var cdg1 = new ClonerGenerator(className: "ClonerGenDerived", baseClassName: "ClonerGen");
+			Gen(@"..\..\GeneratedClonerDerived.cs", cdg1, cd => {
+				cd.Generate<SampleClonerGenDerived>();
+			});
 		}
 	}
 }

@@ -726,6 +726,12 @@ namespace YuzuTest
 		public string R = "R";
 	}
 
+	public class SampleClonerGenDerived
+	{
+		[YuzuMember]
+		public Sample1 S = new Sample1();
+	}
+
 	public class SampleUnknown
 	{
 		[YuzuMember]

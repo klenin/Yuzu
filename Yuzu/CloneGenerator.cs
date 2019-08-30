@@ -23,6 +23,8 @@ namespace Yuzu.Clone
 		private CodeWriter cw = new CodeWriter();
 		private string wrapperNameSpace;
 		private CommonOptions options;
+		private string className;
+		private string baseClassName;
 		private Dictionary<Type, string> generatedCloners = new Dictionary<Type, string>();
 
 		public string LineSeparator { get { return cw.LineSeparator; } set { cw.LineSeparator = value; } }
@@ -33,23 +35,27 @@ namespace Yuzu.Clone
 			set { cw.Output = value; }
 		}
 
-		public ClonerGenerator(string wrapperNameSpace = "YuzuGenClone", CommonOptions? options = null)
-		{
+		public ClonerGenerator(
+			string wrapperNameSpace = "YuzuGenClone",
+			CommonOptions? options = null,
+			string className = "ClonerGen",
+			string baseClassName = "ClonerGenBase"
+		) {
 			this.wrapperNameSpace = wrapperNameSpace;
 			this.options = options ?? new CommonOptions();
+			this.className = className;
+			this.baseClassName = baseClassName;
 		}
 
 		public void GenerateHeader()
 		{
 			cw.Put("using System;\n");
-			cw.Put("using System.Reflection;\n");
 			cw.Put("\n");
-			cw.Put("using Yuzu;\n");
 			cw.Put("using Yuzu.Clone;\n");
 			cw.Put("\n");
 			cw.Put("namespace {0}\n", wrapperNameSpace);
 			cw.Put("{\n");
-			cw.Put("public class ClonerGen: ClonerGenBase\n");
+			cw.Put("public class {0}: {1}\n", className, baseClassName);
 			cw.Put("{\n");
 		}
 
@@ -57,7 +63,7 @@ namespace Yuzu.Clone
 		{
 			foreach (var kv in generatedCloners.OrderBy(kv => kv.Key.Name))
 				ActuallyGenerate(kv.Key, kv.Value);
-			cw.Put("static ClonerGen()\n");
+			cw.Put("static {0}()\n", className);
 			cw.Put("{\n");
 			foreach (var r in generatedCloners.OrderBy(kv => kv.Key.Name))
 				cw.Put("clonerCache[typeof({0})] = {1};\n",
@@ -178,17 +184,28 @@ namespace Yuzu.Clone
 				cw.Put("cl.GetMerger<{1}>()(result.{0}, s.{0});\n", yi.Name, Utils.GetTypeSpec(yi.Type));
 		}
 
+		private string GetSerializeCond(Meta.Item yi)
+		{
+			if (yi.SerializeCond == null)
+				return null;
+			var result =
+				yi.SerializeIfMethod != null ?
+					string.Format("s.{0}()", yi.SerializeIfMethod.Name) :
+				!yi.DefaultValue.Equals(YuzuNoDefault.NoDefault) ?
+					string.Format("s.{0} != {1}", yi.Name, Utils.CodeValueFormat(yi.DefaultValue)) :
+					null;
+			if (result == null && !yi.IsMember)
+				throw new NotImplementedException("Custom SerializeCondition is not supported");
+			return result;
+		}
+
 		private void GenerateClonerBody(Meta meta)
 		{
 			cw.ResetTempNames();
 			foreach (var yi in meta.Items) {
-				if (yi.SerializeCond != null) {
-					if (yi.SerializeIfMethod != null)
-						cw.Put("if (s.{0}()) {{\n", yi.SerializeIfMethod.Name);
-					else if (!yi.DefaultValue.Equals(YuzuNoDefault.NoDefault))
-						cw.Put("if (s.{0} != {1}) {{\n", yi.Name, Utils.CodeValueFormat(yi.DefaultValue));
-					else if (!yi.IsMember)
-						throw new NotImplementedException("Custom SerializeCondition is not supported");
+				var cond = GetSerializeCond(yi);
+				if (cond != null) {
+					cw.Put("if ({0}) {{\n", cond);
 					GenerateCloneItem(meta, yi);
 					cw.Put("}\n");
 				}

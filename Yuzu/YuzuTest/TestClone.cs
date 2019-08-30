@@ -514,6 +514,7 @@ namespace YuzuTest
 				Assert.AreEqual("zzz", dst.Y);
 			});
 		}
+
 		[TestMethod]
 		public void TestSerializeItemIf()
 		{
@@ -580,6 +581,16 @@ namespace YuzuTest
 				var dst4 = cl.Deep(src);
 				Assert.AreEqual(0, dst4.A.Count);
 			});
+		}
+
+		[TestMethod]
+		public void TestGeneratedDerived()
+		{
+			var cl = new ClonerGenDerived();
+			var src = new SampleClonerGenDerived { S = new Sample1 { X = 73 } };
+			var dst = cl.Deep(src);
+			Assert.AreNotEqual(src, dst);
+			Assert.AreEqual(src.S.X, dst.S.X);
 		}
 	}
 }
