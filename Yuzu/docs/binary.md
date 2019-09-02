@@ -69,9 +69,11 @@ If the length is zero, it is followed by either a zero byte indicating empty str
 `Nullable` is followed by item type, then a zero byte to represent `null` or a byte with value 1 followed by item value.
 
 *Sequence* (denoting arrays and collections) is followed by item type, then by 4-byte item count and item representations.
+Null sequence is designated by item count −1 (`FF FF FF FF`).
 
 *Mapping* (denoting dictionaries) is followed by key type, then by item type, then by 4-byte entry count and entry representations.
 Each entry consists of key followed by value.
+Null mapping is designated by item count −1 (`FF FF FF FF`).
 
 *Record* denotes structured types (`class` and `struct`). It is followed by:
 1. 2-byte type index. Indexes are counting from 1 upwards without gaps in order of type appearance in serialized stream.
