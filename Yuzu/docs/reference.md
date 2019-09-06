@@ -483,6 +483,8 @@ In particular, it calls serialization and deserialization events, honors `[YuzuS
 
 Note: Cloning of recursive objects graphs is currently not supported.
 
+Use `Cloner.Merge(destination, source)` to copy/add fields and collections into an existing object.
+
 ## Type serialization
 
 Types are serialized as strings.

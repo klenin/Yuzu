@@ -27,6 +27,16 @@ namespace YuzuTest
 			bd.Options = Options;
 			return bd.FromBytes<T>(bs.ToBytes(src));
 		}
+		public override void MergeObject(object dst, object src)
+		{
+			bd.Options = Options;
+			bd.FromBytes(dst, bs.ToBytes(src));
+		}
+		public override void Merge<T>(T dst, T src)
+		{
+			bd.Options = Options;
+			bd.FromBytes(dst, bs.ToBytes(src));
+		}
 	}
 
 	[TestClass]
@@ -439,6 +449,17 @@ namespace YuzuTest
 				Assert.AreEqual(src.LI[0].X, dst.LI[0].X);
 				Assert.AreNotEqual(src.M, dst.M);
 				Assert.AreEqual(src.M.X, dst.M.X);
+			});
+			TestGen(cl => {
+				var src = new SampleCollection<int>();
+				src.Add(3);
+				src.Add(4);
+				src.Filter = 1;
+				var dst = new SampleCollection<int>();
+				dst.Add(5);
+				cl.Merge(dst, src);
+				Assert.AreNotEqual(src, dst);
+				CollectionAssert.AreEqual(new List<int>{ 5, 3 }, dst.ToList());
 			});
 		}
 

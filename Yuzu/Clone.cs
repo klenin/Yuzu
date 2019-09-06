@@ -18,6 +18,9 @@ namespace Yuzu.Clone
 
 		public abstract object DeepObject(object src);
 		public virtual T Deep<T>(T obj) => (T)DeepObject(obj);
+
+		public abstract void MergeObject(object dst, object src);
+		public virtual void Merge<T>(T dst, T src) => MergeObject(dst, src);
 	}
 
 	public class Cloner : AbstractCloner
@@ -258,5 +261,6 @@ namespace Yuzu.Clone
 		}
 
 		public override object DeepObject(object src) => GetCloner(src.GetType())(src);
+		public override void MergeObject(object dst, object src) => GetMerger(src.GetType())(dst, src);
 	}
 }
