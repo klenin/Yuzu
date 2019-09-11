@@ -1129,6 +1129,22 @@ namespace YuzuGenBin
 			return result;
 		}
 
+		private static void Read_YuzuTest__SampleExplicitCollection_Int32(BinaryDeserializer d, ReaderClassDef def, object obj)
+		{
+			var result = (global::YuzuTest.SampleExplicitCollection<int>)obj;
+			var dg = (BinaryDeserializerGen)d;
+			ReaderClassDef.FieldDef fd;
+			fd = def.Fields[d.Reader.ReadInt16()];
+			if (fd.OurIndex != ReaderClassDef.EOF) throw dg.Error("Unfinished object");
+		}
+
+		private static object Make_YuzuTest__SampleExplicitCollection_Int32(BinaryDeserializer d, ReaderClassDef def)
+		{
+			var result = new global::YuzuTest.SampleExplicitCollection<int>();
+			Read_YuzuTest__SampleExplicitCollection_Int32(d, def, result);
+			return result;
+		}
+
 		static BinaryDeserializerGen()
 		{
 			readCache[typeof(global::YuzuTest.Sample1)] = Read_YuzuTest__Sample1;
@@ -1174,6 +1190,7 @@ namespace YuzuGenBin
 			readCache[typeof(global::YuzuTestAssembly.SampleAssemblyBase)] = Read_YuzuTestAssembly__SampleAssemblyBase;
 			readCache[typeof(global::YuzuTestAssembly.SampleAssemblyDerivedQ)] = Read_YuzuTestAssembly__SampleAssemblyDerivedQ;
 			readCache[typeof(global::YuzuTest2.SampleNamespace)] = Read_YuzuTest2__SampleNamespace;
+			readCache[typeof(global::YuzuTest.SampleExplicitCollection<int>)] = Read_YuzuTest__SampleExplicitCollection_Int32;
 			makeCache[typeof(global::YuzuTest.Sample1)] = Make_YuzuTest__Sample1;
 			makeCache[typeof(global::YuzuTest.Sample2)] = Make_YuzuTest__Sample2;
 			makeCache[typeof(global::YuzuTest.Sample3)] = Make_YuzuTest__Sample3;
@@ -1221,6 +1238,7 @@ namespace YuzuGenBin
 			makeCache[typeof(global::YuzuTestAssembly.SampleAssemblyBase)] = Make_YuzuTestAssembly__SampleAssemblyBase;
 			makeCache[typeof(global::YuzuTestAssembly.SampleAssemblyDerivedQ)] = Make_YuzuTestAssembly__SampleAssemblyDerivedQ;
 			makeCache[typeof(global::YuzuTest2.SampleNamespace)] = Make_YuzuTest2__SampleNamespace;
+			makeCache[typeof(global::YuzuTest.SampleExplicitCollection<int>)] = Make_YuzuTest__SampleExplicitCollection_Int32;
 		}
 	}
 }

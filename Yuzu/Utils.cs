@@ -266,15 +266,17 @@ namespace Yuzu.Util
 		}
 
 		// Check for explicit vs implicit interface implementation.
-		public void PutAddToCollection(Type t, Type icoll, string collName, string elementName)
+		public string GenAddToCollection(Type t, Type icoll, string collName, string elementName)
 		{
 			var imap = t.GetInterfaceMap(icoll);
 			var addIndex = Array.FindIndex(imap.InterfaceMethods, m => m.Name == "Add");
-			if (imap.TargetMethods[addIndex].Name == "Add")
-				Put("{0}.Add({1});\n", collName, elementName);
-			else
-				Put("(({2}){0}).Add({1});\n", collName, elementName, Utils.GetTypeSpec(icoll));
+			return string.Format(
+				imap.TargetMethods[addIndex].Name == "Add" ? "{0}.Add({1});\n" : "(({2}){0}).Add({1});\n", 
+				collName, elementName, Utils.GetTypeSpec(icoll));
 		}
+
+		public void PutAddToCollection(Type t, Type icoll, string collName, string elementName) =>
+			Put(GenAddToCollection(t, icoll, collName, elementName));
 
 		public void ResetTempNames() { tempCount = 0; }
 

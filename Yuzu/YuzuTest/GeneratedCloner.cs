@@ -275,6 +275,18 @@ namespace YuzuGenClone
 			return result;
 		}
 
+		protected static global::YuzuTest.SampleExplicitCollection<int> Clone_YuzuTest__SampleExplicitCollection_Int32(Cloner cl, object src)
+		{
+			if (src == null) return null;
+			if (src.GetType() != typeof(global::YuzuTest.SampleExplicitCollection<int>))
+				return (global::YuzuTest.SampleExplicitCollection<int>)cl.DeepObject(src);
+			var s = (global::YuzuTest.SampleExplicitCollection<int>)src;
+			var result = new global::YuzuTest.SampleExplicitCollection<int>();
+			foreach (var tmp1 in s)
+				((global::System.Collections.Generic.ICollection<int>)result).Add(tmp1);
+			return result;
+		}
+
 		protected static global::YuzuTest.SampleGenNoGen Clone_YuzuTest__SampleGenNoGen(Cloner cl, object src)
 		{
 			if (src == null) return null;
@@ -548,6 +560,7 @@ namespace YuzuGenClone
 			clonerCache[typeof(global::YuzuTest.SampleDerivedB)] = Clone_YuzuTest__SampleDerivedB;
 			clonerCache[typeof(global::YuzuTest.SampleDict)] = Clone_YuzuTest__SampleDict;
 			clonerCache[typeof(global::YuzuTest.SampleDictKeys)] = Clone_YuzuTest__SampleDictKeys;
+			clonerCache[typeof(global::YuzuTest.SampleExplicitCollection<int>)] = Clone_YuzuTest__SampleExplicitCollection_Int32;
 			clonerCache[typeof(global::YuzuTest.SampleGenNoGen)] = Clone_YuzuTest__SampleGenNoGen;
 			clonerCache[typeof(global::YuzuTest.SampleItemObj)] = Clone_YuzuTest__SampleItemObj;
 			clonerCache[typeof(global::YuzuTest.SampleList)] = Clone_YuzuTest__SampleList;

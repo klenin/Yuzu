@@ -149,7 +149,6 @@ namespace YuzuTest
 		[TestMethod]
 		public void TestCollection()
 		{
-
 			TestGen(cl => {
 				var src = new List<string> { "s1", "s2" };
 				var dst = cl.Deep(src);
@@ -194,6 +193,14 @@ namespace YuzuTest
 				src.CopyTo(srcA, 0);
 				dst.CopyTo(dstA, 0);
 				CollectionAssert.AreEqual(srcA, dstA);
+			});
+			TestGen(cl => {
+				var src = new SampleExplicitCollection<int>();
+				((ICollection<int>)src).Add(1);
+				((ICollection<int>)src).Add(5);
+				var dst = cl.Deep(src);
+				Assert.AreNotEqual(src, dst);
+				CollectionAssert.AreEqual(src.ToList(), dst.ToList());
 			});
 		}
 

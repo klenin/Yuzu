@@ -109,22 +109,24 @@ namespace Yuzu.Clone
 			return string.Format("({0}){1}({2})", Utils.GetTypeSpec(t), clonerName, itemName);
 		}
 
-		private void GenerateCloneCollection(Meta meta, Type itemType, string dstName, string srcName)
+		private void GenerateCloneCollection(
+			Meta meta, Type icoll, Type itemType, string dstName, string srcName)
 		{
 			var itemName = cw.GetTempName();
 			var clonerCall = GenerateClonerInit(itemType, itemName);
+			var add = cw.GenAddToCollection(meta.Type, icoll, dstName, clonerCall);
 			if (meta.SerializeItemIfMethod != null) {
 				var indexName = cw.GetTempName();
 				cw.Put("int {0} = 0;\n", indexName);
 				cw.Put("foreach (var {0} in {1}) {{\n", itemName, srcName);
 				cw.Put("if ({0}.{1}({2}++, {3}))\n",
 					srcName, meta.SerializeItemIfMethod.Name, indexName, itemName);
-				cw.PutInd("{0}.Add({1});\n", dstName, clonerCall);
+				cw.PutInd(add);
 				cw.Put("}\n");
 			}
 			else {
 				cw.Put("foreach (var {0} in {1})\n", itemName, srcName);
-				cw.PutInd("{0}.Add({1});\n", dstName, clonerCall);
+				cw.PutInd(add);
 			}
 		}
 
@@ -180,7 +182,7 @@ namespace Yuzu.Clone
 						cw.Put("if (s.{0} != null && result.{0} != null) {{\n", yi.Name);
 					var a = icoll.GetGenericArguments();
 					GenerateCloneCollection(
-						Meta.Get(yi.Type, options), a[0], "result." + yi.Name, "s." + yi.Name);
+						Meta.Get(yi.Type, options), icoll, a[0], "result." + yi.Name, "s." + yi.Name);
 					cw.Put("}\n");
 					return;
 				}
@@ -223,7 +225,7 @@ namespace Yuzu.Clone
 				var icoll = Utils.GetICollection(meta.Type);
 				if (icoll != null) {
 					var a = icoll.GetGenericArguments();
-					GenerateCloneCollection(meta, a[0], "result", "s");
+					GenerateCloneCollection(meta, icoll, a[0], "result", "s");
 					return;
 				}
 			}
