@@ -9,12 +9,14 @@ using Yuzu.Util;
 
 namespace Yuzu.Metadata
 {
+	using AliasCacheType = ConcurrentDictionary<string, Type>;
+
 	public class Meta
 	{
 		private static ConcurrentDictionary<Tuple<Type, CommonOptions>, Meta> cache =
 			new ConcurrentDictionary<Tuple<Type, CommonOptions>, Meta>();
-		private static ConcurrentDictionary<CommonOptions, Dictionary<string, Type>> readAliasCache =
-			new ConcurrentDictionary<CommonOptions, Dictionary<string, Type>>();
+		private static ConcurrentDictionary<CommonOptions, AliasCacheType> readAliasCache =
+			new ConcurrentDictionary<CommonOptions, AliasCacheType>();
 
 		public class Item : IComparable<Item>
 		{
@@ -380,8 +382,8 @@ namespace Yuzu.Metadata
 			Options = MetaOptions.Default;
 		}
 
-		private static Func<CommonOptions, Dictionary<string, Type>> MakeReadAliases =
-			CommonOptions => new Dictionary<string, Type>();
+		private static Func<CommonOptions, AliasCacheType> MakeReadAliases =
+			CommonOptions => new AliasCacheType();
 
 		private void CheckForNoFields(CommonOptions options)
 		{
@@ -460,14 +462,14 @@ namespace Yuzu.Metadata
 			if (alias != null) {
 				var aliases = Options.GetReadAliases(alias);
 				if (aliases != null) {
-					Dictionary<string, Type> readAliases = readAliasCache.GetOrAdd(options, MakeReadAliases);
+					AliasCacheType readAliases = readAliasCache.GetOrAdd(options, MakeReadAliases);
 					foreach (var a in aliases) {
 						if (String.IsNullOrWhiteSpace(a))
 							throw Error("Empty read alias");
 						Type duplicate;
 						if (readAliases.TryGetValue(a, out duplicate))
 							throw Error("Read alias '{0}' was already defined for '{1}'", a, duplicate.Name);
-						readAliases.Add(a, t);
+						readAliases.TryAdd(a, t);
 					}
 				}
 				WriteAlias = Options.GetWriteAlias(alias);
@@ -487,7 +489,7 @@ namespace Yuzu.Metadata
 
 		public static Type GetTypeByReadAlias(string alias, CommonOptions options)
 		{
-			Dictionary<string, Type> readAliases;
+			AliasCacheType readAliases;
 			if (!readAliasCache.TryGetValue(options, out readAliases))
 				return null;
 			Type result;
