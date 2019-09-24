@@ -260,7 +260,8 @@ namespace Yuzu.Clone
 			throw new NotImplementedException("Unable to merge type: " + t.FullName);
 		}
 
-		public override object DeepObject(object src) => GetCloner(src.GetType())(src);
+		public override object DeepObject(object src) =>
+			src == null ? null : GetCloner(src.GetType())(src);
 		public override void MergeObject(object dst, object src) => GetMerger(src.GetType())(dst, src);
 	}
 }

@@ -118,6 +118,21 @@ namespace YuzuTest
 		}
 
 		[TestMethod]
+		public void TestNull()
+		{
+			TestGen(cl => {
+				var dst = cl.DeepObject(null);
+				Assert.IsNull(dst);
+			});
+			TestGen(cl => {
+				var src = new SampleObj();
+				var dst = cl.Deep(src);
+				Assert.AreNotEqual(src, dst);
+				Assert.IsNull(dst.F);
+			});
+		}
+
+		[TestMethod]
 		public void TestArray()
 		{
 			TestGen(cl => {
