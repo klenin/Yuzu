@@ -110,9 +110,7 @@ namespace Yuzu.Binary
 		protected object ReadAny()
 		{
 			var t = ReadType();
-			if (t == typeof(object))
-				throw Error("Unable to read pure object");
-			return ReadValueFunc(t)();
+			return t == typeof(object) ? null : ReadValueFunc(t)();
 		}
 
 		private void InitReaders()

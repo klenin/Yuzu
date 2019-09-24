@@ -1500,6 +1500,18 @@ namespace YuzuTest.Binary
 				"20 01 00 " + XS(typeof(SampleWithNullFieldCompact)) + " 01 00 " + XS("N", RoughType.Record) +
 				" 00 00 00 00"));
 			Assert.AreEqual(null, wg.N);
+
+			var v2 = new SampleObj();
+			var result2 = bs.ToBytes(v2);
+			Assert.AreEqual(
+				"20 02 00 " + XS(typeof(SampleObj)) + " 01 00 " + XS("F", RoughType.Any) +
+				" 01 00 11 00 00",
+				XS(result2));
+			var w2 = bd.FromBytes<SampleObj>(result2);
+			Assert.IsNull(w2.F);
+
+			Assert.AreEqual("11", XS(bs.ToBytes(null)));
+			Assert.IsNull(bd.FromBytes(new byte[] { 0x11 }));
 		}
 
 		[TestMethod]
@@ -2181,8 +2193,6 @@ namespace YuzuTest.Binary
 			XAssert.Throws<YuzuException>(() => bd.FromBytes(new byte[] { 0xFF }), "255");
 			XAssert.Throws<YuzuException>(() => bd.FromBytes<int>(new byte[] { 0xFF }), "255");
 			XAssert.Throws<YuzuException>(() => bd.FromBytes<int>(new byte[] { 07 }), "Int32");
-
-			XAssert.Throws<YuzuException>(() => bd.FromBytes(new byte[] { (byte)RoughType.Any }), "pure");
 
 			XAssert.Throws<YuzuException>(() => bd.FromBytes<Sample1>(SX(
 				"20 01 00 " + XS("notype") + " 00 00 00 00"
