@@ -10,6 +10,7 @@ using System.Text;
 
 namespace Yuzu
 {
+	[AttributeUsage(AttributeTargets.Field | AttributeTargets.Property)]
 	public class YuzuField : Attribute
 	{
 		public readonly string Alias;
@@ -36,6 +37,9 @@ namespace Yuzu
 		public YuzuMember(string alias) : base(alias) { }
 	}
 
+	[AttributeUsage(
+		AttributeTargets.Field | AttributeTargets.Property |
+		AttributeTargets.Class | AttributeTargets.Struct)]
 	public class YuzuAlias : Attribute
 	{
 		public readonly string[] ReadAliases;
@@ -54,6 +58,7 @@ namespace Yuzu
 
 	public enum YuzuNoDefault { NoDefault };
 
+	[AttributeUsage(AttributeTargets.Field | AttributeTargets.Property)]
 	public abstract class YuzuSerializeCondition : Attribute
 	{
 		public abstract Func<object, object, bool> MakeChecker(Type tObj);
@@ -79,6 +84,7 @@ namespace Yuzu
 		public override MethodInfo GetMethod(Type t) => t.GetMethod(Method);
 	}
 
+	[AttributeUsage(AttributeTargets.Method)]
 	public class YuzuSerializeItemIf : Attribute
 	{
 		internal static Func<object, int, object, bool> MakeChecker(MethodInfo m)
@@ -105,13 +111,19 @@ namespace Yuzu
 		public override object GetDefault() => Value;
 	}
 
+	[AttributeUsage(
+		AttributeTargets.Field | AttributeTargets.Property |
+		AttributeTargets.Class | AttributeTargets.Struct)]
 	public class YuzuCompact : Attribute { }
 
-	public class YuzuBeforeSerialization : Attribute { }
-	public class YuzuAfterSerialization : Attribute { }
-	public class YuzuBeforeDeserialization : Attribute { }
-	public class YuzuAfterDeserialization : Attribute { }
+	[AttributeUsage(AttributeTargets.Method)]
+	public class YuzuEventAttribute : Attribute { }
+	public class YuzuBeforeSerialization : YuzuEventAttribute { }
+	public class YuzuAfterSerialization : YuzuEventAttribute { }
+	public class YuzuBeforeDeserialization : YuzuEventAttribute { }
+	public class YuzuAfterDeserialization : YuzuEventAttribute { }
 
+	[AttributeUsage(AttributeTargets.Field | AttributeTargets.Property)]
 	public class YuzuMerge : Attribute { }
 
 	[Flags]
@@ -131,12 +143,14 @@ namespace Yuzu
 		Member = 3,
 	}
 
+	[AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct)]
 	public class YuzuMust : Attribute
 	{
 		public readonly YuzuItemKind Kind;
 		public YuzuMust(YuzuItemKind kind = YuzuItemKind.Any) { Kind = kind; }
 	}
 
+	[AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct)]
 	public class YuzuAll : Attribute
 	{
 		public readonly YuzuItemOptionality Optionality = YuzuItemOptionality.Member;
@@ -149,14 +163,23 @@ namespace Yuzu
 		public YuzuAll(YuzuItemKind kind = YuzuItemKind.Any) { Kind = kind; }
 	}
 
+	[AttributeUsage(AttributeTargets.Field | AttributeTargets.Property)]
 	public class YuzuExclude : Attribute { }
 
+	[AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct)]
 	public class YuzuAllowReadingFromAncestor : Attribute { }
+	[AttributeUsage(AttributeTargets.Method)]
 	public class YuzuFactory : Attribute { }
+	[AttributeUsage(
+		AttributeTargets.Field | AttributeTargets.Property |
+		AttributeTargets.Class | AttributeTargets.Struct)]
 	public class YuzuCopyable : Attribute { }
 
+	[AttributeUsage(AttributeTargets.Method)]
 	public class YuzuSurrogateIf : Attribute { }
+	[AttributeUsage(AttributeTargets.Method)]
 	public class YuzuToSurrogate : Attribute { }
+	[AttributeUsage(AttributeTargets.Method)]
 	public class YuzuFromSurrogate : Attribute { }
 
 	public enum TagMode
