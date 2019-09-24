@@ -1388,6 +1388,15 @@ namespace YuzuTest.Json
 			var wg = (SampleWithNullFieldCompact)
 				SampleWithNullFieldCompact_JsonDeserializer.Instance.FromString("[null]");
 			Assert.AreEqual(null, wg.N);
+
+			var v2 = new SampleObj();
+			var result2 = js.ToString(v2);
+			Assert.AreEqual("{\n\t\"F\":null\n}", result2);
+			var w2 = jd.FromString<SampleObj>(result2);
+			Assert.IsNull(w2.F);
+
+			Assert.AreEqual("null", js.ToString(null));
+			Assert.IsNull(jd.FromString("null"));
 		}
 
 		[TestMethod]

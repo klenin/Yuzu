@@ -335,6 +335,10 @@ namespace Yuzu.Json
 		// List<object>
 		private void WriteAny(object obj)
 		{
+			if (obj == null) {
+				writer.Write(nullBytes);
+				return;
+			}
 			var t = obj.GetType();
 			if (t == typeof(object))
 				throw new YuzuException("WriteAny of unknown type");
@@ -744,7 +748,13 @@ namespace Yuzu.Json
 			meta.AfterSerialization.Run(obj);
 		}
 
-		protected override void ToWriter(object obj) => GetWriteFunc(obj.GetType())(obj);
+		protected override void ToWriter(object obj)
+		{
+			if (obj == null)
+				writer.Write(nullBytes);
+			else
+				GetWriteFunc(obj.GetType())(obj);
+		}
 	}
 
 }
