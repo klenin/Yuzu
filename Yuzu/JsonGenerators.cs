@@ -31,8 +31,7 @@ namespace Yuzu.Json
 
 		private JsonDeserializerGenBase MakeDeserializer(string className)
 		{
-			JsonDeserializerGenBase result;
-			if (!deserializerCache.TryGetValue(className, out result)) {
+			if (!deserializerCache.TryGetValue(className, out JsonDeserializerGenBase result)) {
 				var t = FindType(className);
 				var dt = TypeSerializer.Deserialize(GetDeserializerName(t) + ", " + (Assembly ?? GetType().Assembly).FullName);
 				if (dt == null)
@@ -256,8 +255,7 @@ namespace Yuzu.Json
 
 		private void GenerateValue(Type t, string name)
 		{
-			string sr;
-			if (simpleValueReader.TryGetValue(t, out sr)) {
+			if (simpleValueReader.TryGetValue(t, out string sr)) {
 				cw.PutPart(sr + ";\n");
 				return;
 			}

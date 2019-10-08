@@ -69,8 +69,7 @@ namespace Yuzu.Json
 		private Dictionary<string, byte[]> strCache = new Dictionary<string, byte[]>();
 		private byte[] StrToBytesCached(string s)
 		{
-			byte[] b;
-			if (!strCache.TryGetValue(s, out b)) {
+			if (!strCache.TryGetValue(s, out byte[] b)) {
 				b = Encoding.UTF8.GetBytes(s);
 				strCache[s] = b;
 			}
@@ -464,8 +463,7 @@ namespace Yuzu.Json
 				jsonOptionsGeneration = JsonOptions.Generation;
 			}
 
-			Action<object> result;
-			if (writerCache.TryGetValue(t, out result))
+			if (writerCache.TryGetValue(t, out Action<object> result))
 				return result;
 			result = MakeWriteFunc(t);
 			writerCache[t] = result;

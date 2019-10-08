@@ -63,8 +63,7 @@ namespace Yuzu.Clone
 
 		public Func<object, object> GetCloner(Type t)
 		{
-			Func<object, object> cloner;
-			if (!clonerCache.TryGetValue(t, out cloner)) {
+			if (!clonerCache.TryGetValue(t, out Func<object, object> cloner)) {
 				cloner = MakeCloner(t);
 				clonerCache.Add(t, cloner);
 			}
@@ -74,8 +73,7 @@ namespace Yuzu.Clone
 
 		public Action<object, object> GetMerger(Type t)
 		{
-			Action<object, object> merger;
-			if (!mergerCache.TryGetValue(t, out merger)) {
+			if (!mergerCache.TryGetValue(t, out Action<object, object> merger)) {
 				merger = MakeMerger(t);
 				mergerCache.Add(t, merger);
 			}

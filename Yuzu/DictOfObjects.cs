@@ -17,8 +17,7 @@ namespace Yuzu.DictOfObjects
 			var meta = Meta.Get(typeof(T), Options);
 			var result = meta.Factory();
 			foreach (var yi in meta.Items) {
-				object itemValue;
-				if (d.TryGetValue(yi.Name, out itemValue))
+				if (d.TryGetValue(yi.Name, out object itemValue))
 					yi.SetValue(result, itemValue);
 			}
 			return (T)result;

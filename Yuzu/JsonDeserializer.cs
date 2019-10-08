@@ -609,8 +609,7 @@ namespace Yuzu.Json
 				readerCache.Clear();
 				jsonOptionsGeneration = JsonOptions.Generation;
 			}
-			Func<object> f;
-			if (readerCache.TryGetValue(t, out f))
+			if (readerCache.TryGetValue(t, out Func<object> f))
 				return f;
 			return readerCache[t] = MakeReaderFunc(t);
 		}
@@ -621,8 +620,7 @@ namespace Yuzu.Json
 				mergerCache.Clear();
 				jsonOptionsGeneration = JsonOptions.Generation;
 			}
-			Action<object> f;
-			if (mergerCache.TryGetValue(t, out f))
+			if (mergerCache.TryGetValue(t, out Action<object> f))
 				return f;
 			return mergerCache[t] = MakeMergerFunc(t);
 		}
@@ -777,8 +775,7 @@ namespace Yuzu.Json
 					storage.Clear();
 					int requiredCountActiual = 0;
 					while (name != "") {
-						Meta.Item yi;
-						if (!meta.TagToItem.TryGetValue(name, out yi)) {
+						if (!meta.TagToItem.TryGetValue(name, out Meta.Item yi)) {
 							if (!Options.AllowUnknownFields)
 								throw Error("Unknown field '{0}'", name);
 							storage.Add(name, ReadAnyObject());

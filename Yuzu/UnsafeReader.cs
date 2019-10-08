@@ -77,10 +77,9 @@ namespace Yuzu.Unsafe
 		public override char ReadChar() {
 			char result;
 			fixed (byte* b = buf) {
-				int bytesUsed, charsUsed;
-				bool completed;
 				decoder.Convert(
-					b + pos, buf.Length - pos, &result, 1, true, out bytesUsed, out charsUsed, out completed);
+					b + pos, buf.Length - pos, &result, 1, true,
+					out int bytesUsed, out int charsUsed, out bool completed);
 				pos += bytesUsed;
 			}
 			return result;
@@ -91,10 +90,9 @@ namespace Yuzu.Unsafe
 			var result = new char[count];
 			fixed (byte* b = buf)
 			fixed (char* r = result) {
-				int bytesUsed, charsUsed;
-				bool completed;
 				decoder.Convert(
-					b + pos, buf.Length - pos, r, count, true, out bytesUsed, out charsUsed, out completed);
+					b + pos, buf.Length - pos, r, count, true,
+					out int bytesUsed, out int charsUsed, out bool completed);
 				pos += bytesUsed;
 			}
 			return result;

@@ -69,8 +69,7 @@ namespace Yuzu.Binary
 
 		private Action<object> GetWriteFunc(Type t)
 		{
-			Action<object> result;
-			if (writerCache.TryGetValue(t, out result))
+			if (writerCache.TryGetValue(t, out Action<object> result))
 				return result;
 			result = MakeWriteFunc(t);
 			writerCache[t] = result;
@@ -385,8 +384,7 @@ namespace Yuzu.Binary
 		private ClassDef WriteClassId(object obj)
 		{
 			var t = obj.GetType();
-			ClassDef result;
-			if (classIdCache.TryGetValue(t, out result)) {
+			if (classIdCache.TryGetValue(t, out ClassDef result)) {
 				writer.Write(result.Id);
 				var g = result.Meta.GetUnknownStorage;
 				if (g == null)
@@ -423,8 +421,7 @@ namespace Yuzu.Binary
 				return;
 			}
 			var u = (YuzuUnknown)obj;
-			ClassDef def;
-			if (unknownClassIdCache.TryGetValue(u.ClassTag, out def)) {
+			if (unknownClassIdCache.TryGetValue(u.ClassTag, out ClassDef def)) {
 				writer.Write(def.Id);
 			}
 			else {
@@ -438,10 +435,10 @@ namespace Yuzu.Binary
 					var wf = GetWriteFunc(t);
 					var name = f.Key; // Capture.
 					def.Fields.Add(new ClassDef.FieldDef {
-						Name = name, Type = t,
+						Name = name,
+						Type = t,
 						WriteFunc = obj1 => {
-							object value;
-							if ((obj1 as YuzuUnknown).Fields.TryGetValue(name, out value)) {
+							if ((obj1 as YuzuUnknown).Fields.TryGetValue(name, out object value)) {
 								writer.Write(j);
 								wf(value);
 							}
@@ -461,8 +458,7 @@ namespace Yuzu.Binary
 				return;
 			}
 			var u = (YuzuUnknownBinary)obj;
-			ClassDef def;
-			if (unknownClassIdCache.TryGetValue(u.ClassTag, out def)) {
+			if (unknownClassIdCache.TryGetValue(u.ClassTag, out ClassDef def)) {
 				writer.Write(def.Id);
 			}
 			else {
@@ -474,10 +470,10 @@ namespace Yuzu.Binary
 					short j = (short)i; // Capture.
 					var wf = GetWriteFunc(f.Type);
 					def.Fields.Add(new ClassDef.FieldDef {
-						Name = f.Name, Type = f.Type,
+						Name = f.Name,
+						Type = f.Type,
 						WriteFunc = obj1 => {
-							object value;
-							if ((obj1 as YuzuUnknown).Fields.TryGetValue(f.Name, out value)) {
+							if ((obj1 as YuzuUnknown).Fields.TryGetValue(f.Name, out object value)) {
 								writer.Write(j);
 								wf(value);
 							}

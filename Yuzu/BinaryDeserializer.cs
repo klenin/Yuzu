@@ -566,16 +566,14 @@ namespace Yuzu.Binary
 
 		private Func<object> ReadValueFunc(Type t)
 		{
-			Func<object> f;
-			if (readerCache.TryGetValue(t, out f))
+			if (readerCache.TryGetValue(t, out Func<object> f))
 				return f;
 			return readerCache[t] = MakeReaderFunc(t);
 		}
 
 		private Action<object> MergeValueFunc(Type t)
 		{
-			Action<object> f;
-			if (mergerCache.TryGetValue(t, out f))
+			if (mergerCache.TryGetValue(t, out Action<object> f))
 				return f;
 			return mergerCache[t] = MakeMergerFunc(t);
 		}

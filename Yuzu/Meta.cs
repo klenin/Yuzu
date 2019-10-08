@@ -466,8 +466,7 @@ namespace Yuzu.Metadata
 					foreach (var a in aliases) {
 						if (String.IsNullOrWhiteSpace(a))
 							throw Error("Empty read alias");
-						Type duplicate;
-						if (readAliases.TryGetValue(a, out duplicate))
+						if (readAliases.TryGetValue(a, out Type duplicate))
 							throw Error("Read alias '{0}' was already defined for '{1}'", a, duplicate.Name);
 						readAliases.TryAdd(a, t);
 					}
@@ -489,11 +488,9 @@ namespace Yuzu.Metadata
 
 		public static Type GetTypeByReadAlias(string alias, CommonOptions options)
 		{
-			AliasCacheType readAliases;
-			if (!readAliasCache.TryGetValue(options, out readAliases))
+			if (!readAliasCache.TryGetValue(options, out AliasCacheType readAliases))
 				return null;
-			Type result;
-			return readAliases.TryGetValue(alias, out result) ? result : null;
+			return readAliases.TryGetValue(alias, out Type result) ? result : null;
 		}
 
 		internal static Meta Unknown = new Meta(typeof(YuzuUnknown));

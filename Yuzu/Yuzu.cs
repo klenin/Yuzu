@@ -246,8 +246,7 @@ namespace Yuzu
 
 		public MetaItemOverride Item(MemberInfo m)
 		{
-			MetaItemOverride item;
-			if (Items.TryGetValue(m.Name, out item))
+			if (Items.TryGetValue(m.Name, out MetaItemOverride item))
 				return item;
 			return new MetaItemOverride { Info = m };
 		}
@@ -315,8 +314,7 @@ namespace Yuzu
 		}
 		public MetaItemOverride GetItem(MemberInfo m)
 		{
-			MetaOverride over;
-			if (overrides.TryGetValue(m.DeclaringType, out over))
+			if (overrides.TryGetValue(m.DeclaringType, out MetaOverride over))
 				return over.Item(m);
 			return new MetaItemOverride { Info = m };
 		}

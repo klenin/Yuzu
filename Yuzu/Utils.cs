@@ -129,8 +129,7 @@ namespace Yuzu.Util
 		};
 		public static string GetTypeSpec(Type t, string arraySize = "")
 		{
-			string result;
-			if (knownTypes.TryGetValue(t, out result))
+			if (knownTypes.TryGetValue(t, out string result))
 				return result;
 			if (t.IsArray) {
 				var suffix = String.Format("[{0}]", arraySize);
@@ -207,8 +206,7 @@ namespace Yuzu.Util
 
 		public static Type Deserialize(string typeName)
 		{
-			Type t = null;
-			if (cache.TryGetValue(typeName, out t))
+			if (cache.TryGetValue(typeName, out Type t))
 				return t;
 			t = Type.GetType(typeName);
 			if (t != null) {

@@ -7,22 +7,22 @@ using Yuzu.Util;
 
 namespace Yuzu.Binary
 {
+	using ReadCacheAction = Action<BinaryDeserializer, ReaderClassDef, object>;
+	using MakeCacheAction = Func<BinaryDeserializer, ReaderClassDef, object>;
 
 	public class BinaryDeserializerGenBase: BinaryDeserializer
 	{
-		protected static Dictionary<Type, Action<BinaryDeserializer, ReaderClassDef, object>> readCache =
-			new Dictionary<Type, Action<BinaryDeserializer, ReaderClassDef, object>>();
-		protected static Dictionary<Type, Func<BinaryDeserializer, ReaderClassDef, object>> makeCache =
-			new Dictionary<Type, Func<BinaryDeserializer, ReaderClassDef, object>>();
+		protected static Dictionary<Type, ReadCacheAction> readCache =
+			new Dictionary<Type, ReadCacheAction>();
+		protected static Dictionary<Type, MakeCacheAction> makeCache =
+			new Dictionary<Type, MakeCacheAction>();
 
 		protected override void PrepareReaders(ReaderClassDef def)
 		{
 			base.PrepareReaders(def);
-			Action<BinaryDeserializer, ReaderClassDef, object> r;
-			if (readCache.TryGetValue(def.Meta.Type, out r))
+			if (readCache.TryGetValue(def.Meta.Type, out ReadCacheAction r))
 				def.ReadFields = r;
-			Func<BinaryDeserializer, ReaderClassDef, object> m;
-			if (makeCache.TryGetValue(def.Meta.Type, out m))
+			if (makeCache.TryGetValue(def.Meta.Type, out MakeCacheAction m))
 				def.Make = m;
 		}
 
@@ -152,8 +152,7 @@ namespace Yuzu.Binary
 
 		private void GenerateValue(Type t, string name)
 		{
-			string sr;
-			if (simpleValueReader.TryGetValue(t, out sr)) {
+			if (simpleValueReader.TryGetValue(t, out string sr)) {
 				cw.PutPart(sr + ";\n");
 				return;
 			}
