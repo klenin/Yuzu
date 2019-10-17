@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -311,10 +311,10 @@ namespace Yuzu.Metadata
 				SerializeItemIf = Options.GetSerializeItemCondition(m);
 				SerializeItemIfMethod = m;
 			}
-			BeforeSerialization.MaybeAdd(m, Options.BeforeSerializationAttribute);
-			AfterSerialization.MaybeAdd(m, Options.AfterSerializationAttribute);
-			BeforeDeserialization.MaybeAdd(m, Options.BeforeDeserializationAttribute);
-			AfterDeserialization.MaybeAdd(m, Options.AfterDeserializationAttribute);
+			BeforeSerialization.MaybeAdd(m, Options.BeforeSerializationAttribute, inherit: true);
+			AfterSerialization.MaybeAdd(m, Options.AfterSerializationAttribute, inherit: true);
+			BeforeDeserialization.MaybeAdd(m, Options.BeforeDeserializationAttribute, inherit: true);
+			AfterDeserialization.MaybeAdd(m, Options.AfterDeserializationAttribute, inherit: true);
 
 			if (attrs.HasAttr(Options.FactoryAttribute)) {
 				if (FactoryMethod != null)

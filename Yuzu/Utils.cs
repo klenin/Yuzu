@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
@@ -315,9 +315,9 @@ namespace Yuzu.Util
 
 		internal List<MethodAction> Actions = new List<MethodAction>();
 
-		public void MaybeAdd(MethodInfo m, Type attr)
+		public void MaybeAdd(MethodInfo m, Type attr, bool inherit = false)
 		{
-			if (m.IsDefined(attr, false))
+			if (m.IsDefined(attr, inherit))
 				Actions.Add(new MethodAction { Info = m, Run = obj => m.Invoke(obj, null) });
 		}
 
