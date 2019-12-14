@@ -21,10 +21,9 @@ namespace Yuzu.Json
 			return i < 0 ? ns : ns.Remove(i);
 		}
 
-		protected string GetDeserializerName(Type t)
-		{
-			return GetWrapperNamespace() + "." + t.Namespace + "." + Utils.GetMangledTypeName(t) + "_JsonDeserializer";
-		}
+		protected string GetDeserializerName(Type t) =>
+			GetWrapperNamespace() + "." + t.Namespace + "." +
+			Utils.GetMangledTypeName(t) + "_JsonDeserializer";
 
 		private static Dictionary<string, JsonDeserializerGenBase> deserializerCache =
 			new Dictionary<string, JsonDeserializerGenBase>();
@@ -33,7 +32,8 @@ namespace Yuzu.Json
 		{
 			if (!deserializerCache.TryGetValue(className, out JsonDeserializerGenBase result)) {
 				var t = FindType(className);
-				var dt = TypeSerializer.Deserialize(GetDeserializerName(t) + ", " + (Assembly ?? GetType().Assembly).FullName);
+				var dt = TypeSerializer.Deserialize(
+					GetDeserializerName(t) + ", " + (Assembly ?? GetType().Assembly).FullName);
 				if (dt == null)
 					throw Error("Generated deserializer not found for type '{0}'", className);
 				result = (JsonDeserializerGenBase)Activator.CreateInstance(dt);
@@ -435,7 +435,8 @@ namespace Yuzu.Json
 							cw.Put("result.{0} = ", yi.Name);
 					}
 					else {
-						cw.Put("if (\"{0}\" != name) throw new YuzuException(\"{0}!=\" + name);\n", yi.Tag(Options));
+						cw.Put("if (\"{0}\" != name) throw new YuzuException(\"{0}!=\" + name);\n",
+							yi.Tag(Options));
 						if (yi.SetValue != null)
 							cw.Put("result.{0} = ", yi.Name);
 					}
