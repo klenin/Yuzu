@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 
 using Yuzu.Metadata;
@@ -343,27 +344,31 @@ namespace Yuzu.Json
 		private void GenAssigns(string name, object obj)
 		{
 			var def = Activator.CreateInstance(obj.GetType());
-			foreach (var m in obj.GetType().GetMembers()) {
-				if (m.IsDefined(typeof(ObsoleteAttribute))) continue;
-				if (m.MemberType == MemberTypes.Field) {
-					var f = (FieldInfo)m;
-					var v = f.GetValue(obj);
-					var defv = f.GetValue(def);
-					if (v?.Equals(defv) ?? defv == null) continue;
-					var vcode = Utils.CodeValueFormat(v);
-					if (vcode != "") // TODO
-						cw.Put("{0}.{1} = {2};\n", name, f.Name, vcode);
-				}
-				else if (m.MemberType == MemberTypes.Property) {
-					var p = (PropertyInfo)m;
-					if (!p.CanWrite) continue;
-					var v = p.GetValue(obj, Utils.ZeroObjects);
-					var defv = p.GetValue(def, Utils.ZeroObjects);
-					if (v?.Equals(defv) ?? defv == null) continue;
-					var vcode = Utils.CodeValueFormat(v);
-					if (vcode != "") // TODO
-						cw.Put("{0}.{1} = {2};\n", name, p.Name, vcode);
-				}
+			var assigns = obj.GetType().GetMembers().
+				Where(m => !m.IsDefined(typeof(ObsoleteAttribute))).
+				Select(m => {
+					if (m.MemberType == MemberTypes.Field) {
+						var f = (FieldInfo)m;
+						var v = f.GetValue(obj);
+						var defv = f.GetValue(def);
+						return (f.Name, v, defv);
+					}
+					else if (m.MemberType == MemberTypes.Property) {
+						var p = (PropertyInfo)m;
+						if (!p.CanWrite) return (null, null, null);
+						var v = p.GetValue(obj, Utils.ZeroObjects);
+						var defv = p.GetValue(def, Utils.ZeroObjects);
+						return (p.Name, v, defv);
+					}
+					else
+						return (null, null, null);
+				}).
+				Where(line => line.Name != null);
+			foreach (var (Name, v, defv) in assigns) {
+				if (v?.Equals(defv) ?? defv == null) continue;
+				var vcode = Utils.CodeValueFormat(v);
+				if (vcode != "") // TODO
+					cw.Put("{0}.{1} = {2};\n", name, Name, vcode);
 			}
 		}
 
