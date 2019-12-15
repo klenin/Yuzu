@@ -343,6 +343,7 @@ namespace Yuzu.Json
 		private void GenAssigns(string name, object obj)
 		{
 			foreach (var m in obj.GetType().GetMembers()) {
+				if (m.IsDefined(typeof(ObsoleteAttribute))) continue;
 				if (m.MemberType == MemberTypes.Field) {
 					var f = (FieldInfo)m;
 					var v = Utils.CodeValueFormat(f.GetValue(obj));

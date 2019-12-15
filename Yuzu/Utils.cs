@@ -28,6 +28,8 @@ namespace Yuzu.Util
 				return value.ToString().ToLower();
 			if (t == typeof(string))
 				return '"' + QuoteCSharpStringLiteral(value.ToString()) + '"';
+			if (t.IsEnum)
+				return t.Name + "." + value.ToString();
 			return "";
 			//throw new NotImplementedException();
 		}
