@@ -342,21 +342,27 @@ namespace Yuzu.Json
 
 		private void GenAssigns(string name, object obj)
 		{
+			var def = Activator.CreateInstance(obj.GetType());
 			foreach (var m in obj.GetType().GetMembers()) {
 				if (m.IsDefined(typeof(ObsoleteAttribute))) continue;
 				if (m.MemberType == MemberTypes.Field) {
 					var f = (FieldInfo)m;
-					var v = Utils.CodeValueFormat(f.GetValue(obj));
-					if (v != "") // TODO
-						cw.Put("{0}.{1} = {2};\n", name, f.Name, v);
+					var v = f.GetValue(obj);
+					var defv = f.GetValue(def);
+					if (v?.Equals(defv) ?? defv == null) continue;
+					var vcode = Utils.CodeValueFormat(v);
+					if (vcode != "") // TODO
+						cw.Put("{0}.{1} = {2};\n", name, f.Name, vcode);
 				}
 				else if (m.MemberType == MemberTypes.Property) {
 					var p = (PropertyInfo)m;
-					if (p.CanWrite) {
-						var v = Utils.CodeValueFormat(p.GetValue(obj, Utils.ZeroObjects));
-						if (v != "") // TODO
-							cw.Put("{0}.{1} = {2};\n", name, p.Name, v);
-					}
+					if (!p.CanWrite) continue;
+					var v = p.GetValue(obj, Utils.ZeroObjects);
+					var defv = p.GetValue(def, Utils.ZeroObjects);
+					if (v?.Equals(defv) ?? defv == null) continue;
+					var vcode = Utils.CodeValueFormat(v);
+					if (vcode != "") // TODO
+						cw.Put("{0}.{1} = {2};\n", name, p.Name, vcode);
 				}
 			}
 		}

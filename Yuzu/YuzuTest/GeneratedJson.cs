@@ -13,27 +13,6 @@ namespace YuzuGen.YuzuTest
 		public Sample1_JsonDeserializer()
 		{
 			Options.TagMode = TagMode.Names;
-			Options.AllowUnknownFields = false;
-			Options.AllowEmptyTypes = false;
-			Options.ReportErrorPosition = false;
-			Options.CheckForEmptyCollections = false;
-			JsonOptions.MaxOnelineFields = 0;
-			JsonOptions.EnumAsString = false;
-			JsonOptions.SaveClass = JsonSaveClass.Unknown;
-			JsonOptions.IgnoreCompact = false;
-			JsonOptions.Int64AsString = false;
-			JsonOptions.DecimalAsString = false;
-			JsonOptions.Comments = false;
-			JsonOptions.FloatingPointFormat = "";
-			JsonOptions.FieldSeparator = "\n";
-			JsonOptions.Indent = "\t";
-			JsonOptions.ClassTag = "class";
-			JsonOptions.ArrayLengthPrefix = false;
-			JsonOptions.DateFormat = "O";
-			JsonOptions.DateTimeOffsetFormat = "O";
-			JsonOptions.TimeSpanFormat = "c";
-			JsonOptions.Unordered = false;
-			JsonOptions.BOM = false;
 		}
 
 		public override object FromReaderInt()
@@ -67,27 +46,6 @@ namespace YuzuGen.YuzuTest
 		public Sample2_JsonDeserializer()
 		{
 			Options.TagMode = TagMode.Names;
-			Options.AllowUnknownFields = false;
-			Options.AllowEmptyTypes = false;
-			Options.ReportErrorPosition = false;
-			Options.CheckForEmptyCollections = false;
-			JsonOptions.MaxOnelineFields = 0;
-			JsonOptions.EnumAsString = false;
-			JsonOptions.SaveClass = JsonSaveClass.Unknown;
-			JsonOptions.IgnoreCompact = false;
-			JsonOptions.Int64AsString = false;
-			JsonOptions.DecimalAsString = false;
-			JsonOptions.Comments = false;
-			JsonOptions.FloatingPointFormat = "";
-			JsonOptions.FieldSeparator = "\n";
-			JsonOptions.Indent = "\t";
-			JsonOptions.ClassTag = "class";
-			JsonOptions.ArrayLengthPrefix = false;
-			JsonOptions.DateFormat = "O";
-			JsonOptions.DateTimeOffsetFormat = "O";
-			JsonOptions.TimeSpanFormat = "c";
-			JsonOptions.Unordered = false;
-			JsonOptions.BOM = false;
 		}
 
 		public override object FromReaderInt()
@@ -121,27 +79,6 @@ namespace YuzuGen.YuzuTest
 		public Sample3_JsonDeserializer()
 		{
 			Options.TagMode = TagMode.Names;
-			Options.AllowUnknownFields = false;
-			Options.AllowEmptyTypes = false;
-			Options.ReportErrorPosition = false;
-			Options.CheckForEmptyCollections = false;
-			JsonOptions.MaxOnelineFields = 0;
-			JsonOptions.EnumAsString = false;
-			JsonOptions.SaveClass = JsonSaveClass.Unknown;
-			JsonOptions.IgnoreCompact = false;
-			JsonOptions.Int64AsString = false;
-			JsonOptions.DecimalAsString = false;
-			JsonOptions.Comments = false;
-			JsonOptions.FloatingPointFormat = "";
-			JsonOptions.FieldSeparator = "\n";
-			JsonOptions.Indent = "\t";
-			JsonOptions.ClassTag = "class";
-			JsonOptions.ArrayLengthPrefix = false;
-			JsonOptions.DateFormat = "O";
-			JsonOptions.DateTimeOffsetFormat = "O";
-			JsonOptions.TimeSpanFormat = "c";
-			JsonOptions.Unordered = false;
-			JsonOptions.BOM = false;
 		}
 
 		public override object FromReaderInt()
@@ -179,27 +116,6 @@ namespace YuzuGen.YuzuTest
 		public SampleEnumMemberTyped_JsonDeserializer()
 		{
 			Options.TagMode = TagMode.Names;
-			Options.AllowUnknownFields = false;
-			Options.AllowEmptyTypes = false;
-			Options.ReportErrorPosition = false;
-			Options.CheckForEmptyCollections = false;
-			JsonOptions.MaxOnelineFields = 0;
-			JsonOptions.EnumAsString = false;
-			JsonOptions.SaveClass = JsonSaveClass.Unknown;
-			JsonOptions.IgnoreCompact = false;
-			JsonOptions.Int64AsString = false;
-			JsonOptions.DecimalAsString = false;
-			JsonOptions.Comments = false;
-			JsonOptions.FloatingPointFormat = "";
-			JsonOptions.FieldSeparator = "\n";
-			JsonOptions.Indent = "\t";
-			JsonOptions.ClassTag = "class";
-			JsonOptions.ArrayLengthPrefix = false;
-			JsonOptions.DateFormat = "O";
-			JsonOptions.DateTimeOffsetFormat = "O";
-			JsonOptions.TimeSpanFormat = "c";
-			JsonOptions.Unordered = false;
-			JsonOptions.BOM = false;
 		}
 
 		public override object FromReaderInt()
@@ -234,27 +150,7 @@ namespace YuzuGen.YuzuTest
 		public Sample4_JsonDeserializer()
 		{
 			Options.TagMode = TagMode.Names;
-			Options.AllowUnknownFields = false;
-			Options.AllowEmptyTypes = false;
-			Options.ReportErrorPosition = false;
-			Options.CheckForEmptyCollections = false;
-			JsonOptions.MaxOnelineFields = 0;
 			JsonOptions.EnumAsString = true;
-			JsonOptions.SaveClass = JsonSaveClass.Unknown;
-			JsonOptions.IgnoreCompact = false;
-			JsonOptions.Int64AsString = false;
-			JsonOptions.DecimalAsString = false;
-			JsonOptions.Comments = false;
-			JsonOptions.FloatingPointFormat = "";
-			JsonOptions.FieldSeparator = "\n";
-			JsonOptions.Indent = "\t";
-			JsonOptions.ClassTag = "class";
-			JsonOptions.ArrayLengthPrefix = false;
-			JsonOptions.DateFormat = "O";
-			JsonOptions.DateTimeOffsetFormat = "O";
-			JsonOptions.TimeSpanFormat = "c";
-			JsonOptions.Unordered = false;
-			JsonOptions.BOM = false;
 		}
 
 		public override object FromReaderInt()
@@ -285,27 +181,7 @@ namespace YuzuGen.YuzuTest
 		public SampleDecimal_JsonDeserializer()
 		{
 			Options.TagMode = TagMode.Names;
-			Options.AllowUnknownFields = false;
-			Options.AllowEmptyTypes = false;
-			Options.ReportErrorPosition = false;
-			Options.CheckForEmptyCollections = false;
-			JsonOptions.MaxOnelineFields = 0;
 			JsonOptions.EnumAsString = true;
-			JsonOptions.SaveClass = JsonSaveClass.Unknown;
-			JsonOptions.IgnoreCompact = false;
-			JsonOptions.Int64AsString = false;
-			JsonOptions.DecimalAsString = false;
-			JsonOptions.Comments = false;
-			JsonOptions.FloatingPointFormat = "";
-			JsonOptions.FieldSeparator = "\n";
-			JsonOptions.Indent = "\t";
-			JsonOptions.ClassTag = "class";
-			JsonOptions.ArrayLengthPrefix = false;
-			JsonOptions.DateFormat = "O";
-			JsonOptions.DateTimeOffsetFormat = "O";
-			JsonOptions.TimeSpanFormat = "c";
-			JsonOptions.Unordered = false;
-			JsonOptions.BOM = false;
 		}
 
 		public override object FromReaderInt()
@@ -335,27 +211,7 @@ namespace YuzuGen.YuzuTest
 		public SampleNullable_JsonDeserializer()
 		{
 			Options.TagMode = TagMode.Names;
-			Options.AllowUnknownFields = false;
-			Options.AllowEmptyTypes = false;
-			Options.ReportErrorPosition = false;
-			Options.CheckForEmptyCollections = false;
-			JsonOptions.MaxOnelineFields = 0;
 			JsonOptions.EnumAsString = true;
-			JsonOptions.SaveClass = JsonSaveClass.Unknown;
-			JsonOptions.IgnoreCompact = false;
-			JsonOptions.Int64AsString = false;
-			JsonOptions.DecimalAsString = false;
-			JsonOptions.Comments = false;
-			JsonOptions.FloatingPointFormat = "";
-			JsonOptions.FieldSeparator = "\n";
-			JsonOptions.Indent = "\t";
-			JsonOptions.ClassTag = "class";
-			JsonOptions.ArrayLengthPrefix = false;
-			JsonOptions.DateFormat = "O";
-			JsonOptions.DateTimeOffsetFormat = "O";
-			JsonOptions.TimeSpanFormat = "c";
-			JsonOptions.Unordered = false;
-			JsonOptions.BOM = false;
 		}
 
 		public override object FromReaderInt()
@@ -391,27 +247,7 @@ namespace YuzuGen.YuzuTest
 		public SampleBool_JsonDeserializer()
 		{
 			Options.TagMode = TagMode.Names;
-			Options.AllowUnknownFields = false;
-			Options.AllowEmptyTypes = false;
-			Options.ReportErrorPosition = false;
-			Options.CheckForEmptyCollections = false;
-			JsonOptions.MaxOnelineFields = 0;
 			JsonOptions.EnumAsString = true;
-			JsonOptions.SaveClass = JsonSaveClass.Unknown;
-			JsonOptions.IgnoreCompact = false;
-			JsonOptions.Int64AsString = false;
-			JsonOptions.DecimalAsString = false;
-			JsonOptions.Comments = false;
-			JsonOptions.FloatingPointFormat = "";
-			JsonOptions.FieldSeparator = "\n";
-			JsonOptions.Indent = "\t";
-			JsonOptions.ClassTag = "class";
-			JsonOptions.ArrayLengthPrefix = false;
-			JsonOptions.DateFormat = "O";
-			JsonOptions.DateTimeOffsetFormat = "O";
-			JsonOptions.TimeSpanFormat = "c";
-			JsonOptions.Unordered = false;
-			JsonOptions.BOM = false;
 		}
 
 		public override object FromReaderInt()
@@ -441,27 +277,8 @@ namespace YuzuGen.YuzuTest
 		public SampleList_JsonDeserializer()
 		{
 			Options.TagMode = TagMode.Names;
-			Options.AllowUnknownFields = false;
-			Options.AllowEmptyTypes = false;
-			Options.ReportErrorPosition = false;
-			Options.CheckForEmptyCollections = false;
-			JsonOptions.MaxOnelineFields = 0;
 			JsonOptions.EnumAsString = true;
-			JsonOptions.SaveClass = JsonSaveClass.Unknown;
-			JsonOptions.IgnoreCompact = false;
-			JsonOptions.Int64AsString = false;
-			JsonOptions.DecimalAsString = false;
 			JsonOptions.Comments = true;
-			JsonOptions.FloatingPointFormat = "";
-			JsonOptions.FieldSeparator = "\n";
-			JsonOptions.Indent = "\t";
-			JsonOptions.ClassTag = "class";
-			JsonOptions.ArrayLengthPrefix = false;
-			JsonOptions.DateFormat = "O";
-			JsonOptions.DateTimeOffsetFormat = "O";
-			JsonOptions.TimeSpanFormat = "c";
-			JsonOptions.Unordered = false;
-			JsonOptions.BOM = false;
 		}
 
 		public override object FromReaderInt()
@@ -502,27 +319,7 @@ namespace YuzuGen.YuzuTest
 		public SampleObj_JsonDeserializer()
 		{
 			Options.TagMode = TagMode.Names;
-			Options.AllowUnknownFields = false;
-			Options.AllowEmptyTypes = false;
-			Options.ReportErrorPosition = false;
-			Options.CheckForEmptyCollections = false;
-			JsonOptions.MaxOnelineFields = 0;
 			JsonOptions.EnumAsString = true;
-			JsonOptions.SaveClass = JsonSaveClass.Unknown;
-			JsonOptions.IgnoreCompact = false;
-			JsonOptions.Int64AsString = false;
-			JsonOptions.DecimalAsString = false;
-			JsonOptions.Comments = false;
-			JsonOptions.FloatingPointFormat = "";
-			JsonOptions.FieldSeparator = "\n";
-			JsonOptions.Indent = "\t";
-			JsonOptions.ClassTag = "class";
-			JsonOptions.ArrayLengthPrefix = false;
-			JsonOptions.DateFormat = "O";
-			JsonOptions.DateTimeOffsetFormat = "O";
-			JsonOptions.TimeSpanFormat = "c";
-			JsonOptions.Unordered = false;
-			JsonOptions.BOM = false;
 		}
 
 		public override object FromReaderInt()
@@ -552,27 +349,7 @@ namespace YuzuGen.YuzuTest
 		public SampleDict_JsonDeserializer()
 		{
 			Options.TagMode = TagMode.Names;
-			Options.AllowUnknownFields = false;
-			Options.AllowEmptyTypes = false;
-			Options.ReportErrorPosition = false;
-			Options.CheckForEmptyCollections = false;
-			JsonOptions.MaxOnelineFields = 0;
 			JsonOptions.EnumAsString = true;
-			JsonOptions.SaveClass = JsonSaveClass.Unknown;
-			JsonOptions.IgnoreCompact = false;
-			JsonOptions.Int64AsString = false;
-			JsonOptions.DecimalAsString = false;
-			JsonOptions.Comments = false;
-			JsonOptions.FloatingPointFormat = "";
-			JsonOptions.FieldSeparator = "\n";
-			JsonOptions.Indent = "\t";
-			JsonOptions.ClassTag = "class";
-			JsonOptions.ArrayLengthPrefix = false;
-			JsonOptions.DateFormat = "O";
-			JsonOptions.DateTimeOffsetFormat = "O";
-			JsonOptions.TimeSpanFormat = "c";
-			JsonOptions.Unordered = false;
-			JsonOptions.BOM = false;
 		}
 
 		public override object FromReaderInt()
@@ -619,27 +396,7 @@ namespace YuzuGen.YuzuTest
 		public SampleSortedDict_JsonDeserializer()
 		{
 			Options.TagMode = TagMode.Names;
-			Options.AllowUnknownFields = false;
-			Options.AllowEmptyTypes = false;
-			Options.ReportErrorPosition = false;
-			Options.CheckForEmptyCollections = false;
-			JsonOptions.MaxOnelineFields = 0;
 			JsonOptions.EnumAsString = true;
-			JsonOptions.SaveClass = JsonSaveClass.Unknown;
-			JsonOptions.IgnoreCompact = false;
-			JsonOptions.Int64AsString = false;
-			JsonOptions.DecimalAsString = false;
-			JsonOptions.Comments = false;
-			JsonOptions.FloatingPointFormat = "";
-			JsonOptions.FieldSeparator = "\n";
-			JsonOptions.Indent = "\t";
-			JsonOptions.ClassTag = "class";
-			JsonOptions.ArrayLengthPrefix = false;
-			JsonOptions.DateFormat = "O";
-			JsonOptions.DateTimeOffsetFormat = "O";
-			JsonOptions.TimeSpanFormat = "c";
-			JsonOptions.Unordered = false;
-			JsonOptions.BOM = false;
 		}
 
 		public override object FromReaderInt()
@@ -683,27 +440,7 @@ namespace YuzuGen.YuzuTest
 		public SampleDictKeys_JsonDeserializer()
 		{
 			Options.TagMode = TagMode.Names;
-			Options.AllowUnknownFields = false;
-			Options.AllowEmptyTypes = false;
-			Options.ReportErrorPosition = false;
-			Options.CheckForEmptyCollections = false;
-			JsonOptions.MaxOnelineFields = 0;
 			JsonOptions.EnumAsString = true;
-			JsonOptions.SaveClass = JsonSaveClass.Unknown;
-			JsonOptions.IgnoreCompact = false;
-			JsonOptions.Int64AsString = false;
-			JsonOptions.DecimalAsString = false;
-			JsonOptions.Comments = false;
-			JsonOptions.FloatingPointFormat = "";
-			JsonOptions.FieldSeparator = "\n";
-			JsonOptions.Indent = "\t";
-			JsonOptions.ClassTag = "class";
-			JsonOptions.ArrayLengthPrefix = false;
-			JsonOptions.DateFormat = "O";
-			JsonOptions.DateTimeOffsetFormat = "O";
-			JsonOptions.TimeSpanFormat = "c";
-			JsonOptions.Unordered = false;
-			JsonOptions.BOM = false;
 		}
 
 		public override object FromReaderInt()
@@ -778,27 +515,7 @@ namespace YuzuGen.YuzuTest
 		public ISampleMember_JsonDeserializer()
 		{
 			Options.TagMode = TagMode.Names;
-			Options.AllowUnknownFields = false;
-			Options.AllowEmptyTypes = false;
-			Options.ReportErrorPosition = false;
-			Options.CheckForEmptyCollections = false;
-			JsonOptions.MaxOnelineFields = 0;
 			JsonOptions.EnumAsString = true;
-			JsonOptions.SaveClass = JsonSaveClass.Unknown;
-			JsonOptions.IgnoreCompact = false;
-			JsonOptions.Int64AsString = false;
-			JsonOptions.DecimalAsString = false;
-			JsonOptions.Comments = false;
-			JsonOptions.FloatingPointFormat = "";
-			JsonOptions.FieldSeparator = "\n";
-			JsonOptions.Indent = "\t";
-			JsonOptions.ClassTag = "class";
-			JsonOptions.ArrayLengthPrefix = false;
-			JsonOptions.DateFormat = "O";
-			JsonOptions.DateTimeOffsetFormat = "O";
-			JsonOptions.TimeSpanFormat = "c";
-			JsonOptions.Unordered = false;
-			JsonOptions.BOM = false;
 		}
 
 		public override object FromReaderInt()
@@ -829,27 +546,7 @@ namespace YuzuGen.YuzuTest
 		public SampleMemberI_JsonDeserializer()
 		{
 			Options.TagMode = TagMode.Names;
-			Options.AllowUnknownFields = false;
-			Options.AllowEmptyTypes = false;
-			Options.ReportErrorPosition = false;
-			Options.CheckForEmptyCollections = false;
-			JsonOptions.MaxOnelineFields = 0;
 			JsonOptions.EnumAsString = true;
-			JsonOptions.SaveClass = JsonSaveClass.Unknown;
-			JsonOptions.IgnoreCompact = false;
-			JsonOptions.Int64AsString = false;
-			JsonOptions.DecimalAsString = false;
-			JsonOptions.Comments = false;
-			JsonOptions.FloatingPointFormat = "";
-			JsonOptions.FieldSeparator = "\n";
-			JsonOptions.Indent = "\t";
-			JsonOptions.ClassTag = "class";
-			JsonOptions.ArrayLengthPrefix = false;
-			JsonOptions.DateFormat = "O";
-			JsonOptions.DateTimeOffsetFormat = "O";
-			JsonOptions.TimeSpanFormat = "c";
-			JsonOptions.Unordered = false;
-			JsonOptions.BOM = false;
 		}
 
 		public override object FromReaderInt()
@@ -884,27 +581,7 @@ namespace YuzuGen.System.Collections.Generic
 		public List_ISampleMember_JsonDeserializer()
 		{
 			Options.TagMode = TagMode.Names;
-			Options.AllowUnknownFields = false;
-			Options.AllowEmptyTypes = false;
-			Options.ReportErrorPosition = false;
-			Options.CheckForEmptyCollections = false;
-			JsonOptions.MaxOnelineFields = 0;
 			JsonOptions.EnumAsString = true;
-			JsonOptions.SaveClass = JsonSaveClass.Unknown;
-			JsonOptions.IgnoreCompact = false;
-			JsonOptions.Int64AsString = false;
-			JsonOptions.DecimalAsString = false;
-			JsonOptions.Comments = false;
-			JsonOptions.FloatingPointFormat = "";
-			JsonOptions.FieldSeparator = "\n";
-			JsonOptions.Indent = "\t";
-			JsonOptions.ClassTag = "class";
-			JsonOptions.ArrayLengthPrefix = false;
-			JsonOptions.DateFormat = "O";
-			JsonOptions.DateTimeOffsetFormat = "O";
-			JsonOptions.TimeSpanFormat = "c";
-			JsonOptions.Unordered = false;
-			JsonOptions.BOM = false;
 		}
 
 		public override object FromReaderInt()
@@ -951,27 +628,8 @@ namespace YuzuGen.YuzuTest
 		public SampleArray_JsonDeserializer()
 		{
 			Options.TagMode = TagMode.Names;
-			Options.AllowUnknownFields = false;
-			Options.AllowEmptyTypes = false;
-			Options.ReportErrorPosition = false;
-			Options.CheckForEmptyCollections = false;
-			JsonOptions.MaxOnelineFields = 0;
 			JsonOptions.EnumAsString = true;
-			JsonOptions.SaveClass = JsonSaveClass.Unknown;
-			JsonOptions.IgnoreCompact = false;
-			JsonOptions.Int64AsString = false;
-			JsonOptions.DecimalAsString = false;
-			JsonOptions.Comments = false;
-			JsonOptions.FloatingPointFormat = "";
-			JsonOptions.FieldSeparator = "\n";
-			JsonOptions.Indent = "\t";
-			JsonOptions.ClassTag = "class";
 			JsonOptions.ArrayLengthPrefix = true;
-			JsonOptions.DateFormat = "O";
-			JsonOptions.DateTimeOffsetFormat = "O";
-			JsonOptions.TimeSpanFormat = "c";
-			JsonOptions.Unordered = false;
-			JsonOptions.BOM = false;
 		}
 
 		public override object FromReaderInt()
@@ -1012,27 +670,7 @@ namespace YuzuGen.YuzuTest
 		public SampleArray2D_JsonDeserializer()
 		{
 			Options.TagMode = TagMode.Names;
-			Options.AllowUnknownFields = false;
-			Options.AllowEmptyTypes = false;
-			Options.ReportErrorPosition = false;
-			Options.CheckForEmptyCollections = false;
-			JsonOptions.MaxOnelineFields = 0;
 			JsonOptions.EnumAsString = true;
-			JsonOptions.SaveClass = JsonSaveClass.Unknown;
-			JsonOptions.IgnoreCompact = false;
-			JsonOptions.Int64AsString = false;
-			JsonOptions.DecimalAsString = false;
-			JsonOptions.Comments = false;
-			JsonOptions.FloatingPointFormat = "";
-			JsonOptions.FieldSeparator = "\n";
-			JsonOptions.Indent = "\t";
-			JsonOptions.ClassTag = "class";
-			JsonOptions.ArrayLengthPrefix = false;
-			JsonOptions.DateFormat = "O";
-			JsonOptions.DateTimeOffsetFormat = "O";
-			JsonOptions.TimeSpanFormat = "c";
-			JsonOptions.Unordered = false;
-			JsonOptions.BOM = false;
 		}
 
 		public override object FromReaderInt()
@@ -1088,27 +726,7 @@ namespace YuzuGen.YuzuTest
 		public SampleBase_JsonDeserializer()
 		{
 			Options.TagMode = TagMode.Names;
-			Options.AllowUnknownFields = false;
-			Options.AllowEmptyTypes = false;
-			Options.ReportErrorPosition = false;
-			Options.CheckForEmptyCollections = false;
-			JsonOptions.MaxOnelineFields = 0;
 			JsonOptions.EnumAsString = true;
-			JsonOptions.SaveClass = JsonSaveClass.Unknown;
-			JsonOptions.IgnoreCompact = false;
-			JsonOptions.Int64AsString = false;
-			JsonOptions.DecimalAsString = false;
-			JsonOptions.Comments = false;
-			JsonOptions.FloatingPointFormat = "";
-			JsonOptions.FieldSeparator = "\n";
-			JsonOptions.Indent = "\t";
-			JsonOptions.ClassTag = "class";
-			JsonOptions.ArrayLengthPrefix = false;
-			JsonOptions.DateFormat = "O";
-			JsonOptions.DateTimeOffsetFormat = "O";
-			JsonOptions.TimeSpanFormat = "c";
-			JsonOptions.Unordered = false;
-			JsonOptions.BOM = false;
 		}
 
 		public override object FromReaderInt()
@@ -1138,27 +756,7 @@ namespace YuzuGen.YuzuTest
 		public SampleDerivedA_JsonDeserializer()
 		{
 			Options.TagMode = TagMode.Names;
-			Options.AllowUnknownFields = false;
-			Options.AllowEmptyTypes = false;
-			Options.ReportErrorPosition = false;
-			Options.CheckForEmptyCollections = false;
-			JsonOptions.MaxOnelineFields = 0;
 			JsonOptions.EnumAsString = true;
-			JsonOptions.SaveClass = JsonSaveClass.Unknown;
-			JsonOptions.IgnoreCompact = false;
-			JsonOptions.Int64AsString = false;
-			JsonOptions.DecimalAsString = false;
-			JsonOptions.Comments = false;
-			JsonOptions.FloatingPointFormat = "";
-			JsonOptions.FieldSeparator = "\n";
-			JsonOptions.Indent = "\t";
-			JsonOptions.ClassTag = "class";
-			JsonOptions.ArrayLengthPrefix = false;
-			JsonOptions.DateFormat = "O";
-			JsonOptions.DateTimeOffsetFormat = "O";
-			JsonOptions.TimeSpanFormat = "c";
-			JsonOptions.Unordered = false;
-			JsonOptions.BOM = false;
 		}
 
 		public override object FromReaderInt()
@@ -1191,27 +789,7 @@ namespace YuzuGen.YuzuTest
 		public SampleDerivedB_JsonDeserializer()
 		{
 			Options.TagMode = TagMode.Names;
-			Options.AllowUnknownFields = false;
-			Options.AllowEmptyTypes = false;
-			Options.ReportErrorPosition = false;
-			Options.CheckForEmptyCollections = false;
-			JsonOptions.MaxOnelineFields = 0;
 			JsonOptions.EnumAsString = true;
-			JsonOptions.SaveClass = JsonSaveClass.Unknown;
-			JsonOptions.IgnoreCompact = false;
-			JsonOptions.Int64AsString = false;
-			JsonOptions.DecimalAsString = false;
-			JsonOptions.Comments = false;
-			JsonOptions.FloatingPointFormat = "";
-			JsonOptions.FieldSeparator = "\n";
-			JsonOptions.Indent = "\t";
-			JsonOptions.ClassTag = "class";
-			JsonOptions.ArrayLengthPrefix = false;
-			JsonOptions.DateFormat = "O";
-			JsonOptions.DateTimeOffsetFormat = "O";
-			JsonOptions.TimeSpanFormat = "c";
-			JsonOptions.Unordered = false;
-			JsonOptions.BOM = false;
 		}
 
 		public override object FromReaderInt()
@@ -1244,27 +822,7 @@ namespace YuzuGen.YuzuTest
 		public SampleMatrix_JsonDeserializer()
 		{
 			Options.TagMode = TagMode.Names;
-			Options.AllowUnknownFields = false;
-			Options.AllowEmptyTypes = false;
-			Options.ReportErrorPosition = false;
-			Options.CheckForEmptyCollections = false;
-			JsonOptions.MaxOnelineFields = 0;
 			JsonOptions.EnumAsString = true;
-			JsonOptions.SaveClass = JsonSaveClass.Unknown;
-			JsonOptions.IgnoreCompact = false;
-			JsonOptions.Int64AsString = false;
-			JsonOptions.DecimalAsString = false;
-			JsonOptions.Comments = false;
-			JsonOptions.FloatingPointFormat = "";
-			JsonOptions.FieldSeparator = "\n";
-			JsonOptions.Indent = "\t";
-			JsonOptions.ClassTag = "class";
-			JsonOptions.ArrayLengthPrefix = false;
-			JsonOptions.DateFormat = "O";
-			JsonOptions.DateTimeOffsetFormat = "O";
-			JsonOptions.TimeSpanFormat = "c";
-			JsonOptions.Unordered = false;
-			JsonOptions.BOM = false;
 		}
 
 		public override object FromReaderInt()
@@ -1316,27 +874,7 @@ namespace YuzuGen.YuzuTest
 		public SamplePoint_JsonDeserializer()
 		{
 			Options.TagMode = TagMode.Names;
-			Options.AllowUnknownFields = false;
-			Options.AllowEmptyTypes = false;
-			Options.ReportErrorPosition = false;
-			Options.CheckForEmptyCollections = false;
-			JsonOptions.MaxOnelineFields = 0;
 			JsonOptions.EnumAsString = true;
-			JsonOptions.SaveClass = JsonSaveClass.Unknown;
-			JsonOptions.IgnoreCompact = false;
-			JsonOptions.Int64AsString = false;
-			JsonOptions.DecimalAsString = false;
-			JsonOptions.Comments = false;
-			JsonOptions.FloatingPointFormat = "";
-			JsonOptions.FieldSeparator = "\n";
-			JsonOptions.Indent = "\t";
-			JsonOptions.ClassTag = "class";
-			JsonOptions.ArrayLengthPrefix = false;
-			JsonOptions.DateFormat = "O";
-			JsonOptions.DateTimeOffsetFormat = "O";
-			JsonOptions.TimeSpanFormat = "c";
-			JsonOptions.Unordered = false;
-			JsonOptions.BOM = false;
 		}
 
 		public override object FromReaderInt()
@@ -1379,27 +917,7 @@ namespace YuzuGen.YuzuTest
 		public SampleRect_JsonDeserializer()
 		{
 			Options.TagMode = TagMode.Names;
-			Options.AllowUnknownFields = false;
-			Options.AllowEmptyTypes = false;
-			Options.ReportErrorPosition = false;
-			Options.CheckForEmptyCollections = false;
-			JsonOptions.MaxOnelineFields = 0;
 			JsonOptions.EnumAsString = true;
-			JsonOptions.SaveClass = JsonSaveClass.Unknown;
-			JsonOptions.IgnoreCompact = false;
-			JsonOptions.Int64AsString = false;
-			JsonOptions.DecimalAsString = false;
-			JsonOptions.Comments = false;
-			JsonOptions.FloatingPointFormat = "";
-			JsonOptions.FieldSeparator = "\n";
-			JsonOptions.Indent = "\t";
-			JsonOptions.ClassTag = "class";
-			JsonOptions.ArrayLengthPrefix = false;
-			JsonOptions.DateFormat = "O";
-			JsonOptions.DateTimeOffsetFormat = "O";
-			JsonOptions.TimeSpanFormat = "c";
-			JsonOptions.Unordered = false;
-			JsonOptions.BOM = false;
 		}
 
 		public override object FromReaderInt()
@@ -1432,27 +950,7 @@ namespace YuzuGen.YuzuTest
 		public SampleDate_JsonDeserializer()
 		{
 			Options.TagMode = TagMode.Names;
-			Options.AllowUnknownFields = false;
-			Options.AllowEmptyTypes = false;
-			Options.ReportErrorPosition = false;
-			Options.CheckForEmptyCollections = false;
-			JsonOptions.MaxOnelineFields = 0;
 			JsonOptions.EnumAsString = true;
-			JsonOptions.SaveClass = JsonSaveClass.Unknown;
-			JsonOptions.IgnoreCompact = false;
-			JsonOptions.Int64AsString = false;
-			JsonOptions.DecimalAsString = false;
-			JsonOptions.Comments = false;
-			JsonOptions.FloatingPointFormat = "";
-			JsonOptions.FieldSeparator = "\n";
-			JsonOptions.Indent = "\t";
-			JsonOptions.ClassTag = "class";
-			JsonOptions.ArrayLengthPrefix = false;
-			JsonOptions.DateFormat = "O";
-			JsonOptions.DateTimeOffsetFormat = "O";
-			JsonOptions.TimeSpanFormat = "c";
-			JsonOptions.Unordered = false;
-			JsonOptions.BOM = false;
 		}
 
 		public override object FromReaderInt()
@@ -1485,27 +983,7 @@ namespace YuzuGen.YuzuTest
 		public Color_JsonDeserializer()
 		{
 			Options.TagMode = TagMode.Names;
-			Options.AllowUnknownFields = false;
-			Options.AllowEmptyTypes = false;
-			Options.ReportErrorPosition = false;
-			Options.CheckForEmptyCollections = false;
-			JsonOptions.MaxOnelineFields = 0;
 			JsonOptions.EnumAsString = true;
-			JsonOptions.SaveClass = JsonSaveClass.Unknown;
-			JsonOptions.IgnoreCompact = false;
-			JsonOptions.Int64AsString = false;
-			JsonOptions.DecimalAsString = false;
-			JsonOptions.Comments = false;
-			JsonOptions.FloatingPointFormat = "";
-			JsonOptions.FieldSeparator = "\n";
-			JsonOptions.Indent = "\t";
-			JsonOptions.ClassTag = "class";
-			JsonOptions.ArrayLengthPrefix = false;
-			JsonOptions.DateFormat = "O";
-			JsonOptions.DateTimeOffsetFormat = "O";
-			JsonOptions.TimeSpanFormat = "c";
-			JsonOptions.Unordered = false;
-			JsonOptions.BOM = false;
 		}
 
 		public override object FromReaderInt()
@@ -1557,27 +1035,7 @@ namespace YuzuGen.System.Collections.Generic
 		public List_List_Int32_JsonDeserializer()
 		{
 			Options.TagMode = TagMode.Names;
-			Options.AllowUnknownFields = false;
-			Options.AllowEmptyTypes = false;
-			Options.ReportErrorPosition = false;
-			Options.CheckForEmptyCollections = false;
-			JsonOptions.MaxOnelineFields = 0;
 			JsonOptions.EnumAsString = true;
-			JsonOptions.SaveClass = JsonSaveClass.Unknown;
-			JsonOptions.IgnoreCompact = false;
-			JsonOptions.Int64AsString = false;
-			JsonOptions.DecimalAsString = false;
-			JsonOptions.Comments = false;
-			JsonOptions.FloatingPointFormat = "";
-			JsonOptions.FieldSeparator = "\n";
-			JsonOptions.Indent = "\t";
-			JsonOptions.ClassTag = "class";
-			JsonOptions.ArrayLengthPrefix = false;
-			JsonOptions.DateFormat = "O";
-			JsonOptions.DateTimeOffsetFormat = "O";
-			JsonOptions.TimeSpanFormat = "c";
-			JsonOptions.Unordered = false;
-			JsonOptions.BOM = false;
 		}
 
 		public override object FromReaderInt()
@@ -1635,27 +1093,7 @@ namespace YuzuGen.YuzuTest
 		public SampleClassList_JsonDeserializer()
 		{
 			Options.TagMode = TagMode.Names;
-			Options.AllowUnknownFields = false;
-			Options.AllowEmptyTypes = false;
-			Options.ReportErrorPosition = false;
-			Options.CheckForEmptyCollections = false;
-			JsonOptions.MaxOnelineFields = 0;
 			JsonOptions.EnumAsString = true;
-			JsonOptions.SaveClass = JsonSaveClass.Unknown;
-			JsonOptions.IgnoreCompact = false;
-			JsonOptions.Int64AsString = false;
-			JsonOptions.DecimalAsString = false;
-			JsonOptions.Comments = false;
-			JsonOptions.FloatingPointFormat = "";
-			JsonOptions.FieldSeparator = "\n";
-			JsonOptions.Indent = "\t";
-			JsonOptions.ClassTag = "class";
-			JsonOptions.ArrayLengthPrefix = false;
-			JsonOptions.DateFormat = "O";
-			JsonOptions.DateTimeOffsetFormat = "O";
-			JsonOptions.TimeSpanFormat = "c";
-			JsonOptions.Unordered = false;
-			JsonOptions.BOM = false;
 		}
 
 		public override object FromReaderInt()
@@ -1696,27 +1134,7 @@ namespace YuzuGen.YuzuTest
 		public SampleSmallTypes_JsonDeserializer()
 		{
 			Options.TagMode = TagMode.Names;
-			Options.AllowUnknownFields = false;
-			Options.AllowEmptyTypes = false;
-			Options.ReportErrorPosition = false;
-			Options.CheckForEmptyCollections = false;
-			JsonOptions.MaxOnelineFields = 0;
 			JsonOptions.EnumAsString = true;
-			JsonOptions.SaveClass = JsonSaveClass.Unknown;
-			JsonOptions.IgnoreCompact = false;
-			JsonOptions.Int64AsString = false;
-			JsonOptions.DecimalAsString = false;
-			JsonOptions.Comments = false;
-			JsonOptions.FloatingPointFormat = "";
-			JsonOptions.FieldSeparator = "\n";
-			JsonOptions.Indent = "\t";
-			JsonOptions.ClassTag = "class";
-			JsonOptions.ArrayLengthPrefix = false;
-			JsonOptions.DateFormat = "O";
-			JsonOptions.DateTimeOffsetFormat = "O";
-			JsonOptions.TimeSpanFormat = "c";
-			JsonOptions.Unordered = false;
-			JsonOptions.BOM = false;
 		}
 
 		public override object FromReaderInt()
@@ -1758,27 +1176,7 @@ namespace YuzuGen.YuzuTest
 		public SampleWithNullFieldCompact_JsonDeserializer()
 		{
 			Options.TagMode = TagMode.Names;
-			Options.AllowUnknownFields = false;
-			Options.AllowEmptyTypes = false;
-			Options.ReportErrorPosition = false;
-			Options.CheckForEmptyCollections = false;
-			JsonOptions.MaxOnelineFields = 0;
 			JsonOptions.EnumAsString = true;
-			JsonOptions.SaveClass = JsonSaveClass.Unknown;
-			JsonOptions.IgnoreCompact = false;
-			JsonOptions.Int64AsString = false;
-			JsonOptions.DecimalAsString = false;
-			JsonOptions.Comments = false;
-			JsonOptions.FloatingPointFormat = "";
-			JsonOptions.FieldSeparator = "\n";
-			JsonOptions.Indent = "\t";
-			JsonOptions.ClassTag = "class";
-			JsonOptions.ArrayLengthPrefix = false;
-			JsonOptions.DateFormat = "O";
-			JsonOptions.DateTimeOffsetFormat = "O";
-			JsonOptions.TimeSpanFormat = "c";
-			JsonOptions.Unordered = false;
-			JsonOptions.BOM = false;
 		}
 
 		public override object FromReaderInt()
@@ -1816,27 +1214,7 @@ namespace YuzuGen.YuzuTest
 		public SampleNested__NestedClass_JsonDeserializer()
 		{
 			Options.TagMode = TagMode.Names;
-			Options.AllowUnknownFields = false;
-			Options.AllowEmptyTypes = false;
-			Options.ReportErrorPosition = false;
-			Options.CheckForEmptyCollections = false;
-			JsonOptions.MaxOnelineFields = 0;
 			JsonOptions.EnumAsString = true;
-			JsonOptions.SaveClass = JsonSaveClass.Unknown;
-			JsonOptions.IgnoreCompact = false;
-			JsonOptions.Int64AsString = false;
-			JsonOptions.DecimalAsString = false;
-			JsonOptions.Comments = false;
-			JsonOptions.FloatingPointFormat = "";
-			JsonOptions.FieldSeparator = "\n";
-			JsonOptions.Indent = "\t";
-			JsonOptions.ClassTag = "class";
-			JsonOptions.ArrayLengthPrefix = false;
-			JsonOptions.DateFormat = "O";
-			JsonOptions.DateTimeOffsetFormat = "O";
-			JsonOptions.TimeSpanFormat = "c";
-			JsonOptions.Unordered = false;
-			JsonOptions.BOM = false;
 		}
 
 		public override object FromReaderInt()
@@ -1867,27 +1245,7 @@ namespace YuzuGen.YuzuTest
 		public SampleNested_JsonDeserializer()
 		{
 			Options.TagMode = TagMode.Names;
-			Options.AllowUnknownFields = false;
-			Options.AllowEmptyTypes = false;
-			Options.ReportErrorPosition = false;
-			Options.CheckForEmptyCollections = false;
-			JsonOptions.MaxOnelineFields = 0;
 			JsonOptions.EnumAsString = true;
-			JsonOptions.SaveClass = JsonSaveClass.Unknown;
-			JsonOptions.IgnoreCompact = false;
-			JsonOptions.Int64AsString = false;
-			JsonOptions.DecimalAsString = false;
-			JsonOptions.Comments = false;
-			JsonOptions.FloatingPointFormat = "";
-			JsonOptions.FieldSeparator = "\n";
-			JsonOptions.Indent = "\t";
-			JsonOptions.ClassTag = "class";
-			JsonOptions.ArrayLengthPrefix = false;
-			JsonOptions.DateFormat = "O";
-			JsonOptions.DateTimeOffsetFormat = "O";
-			JsonOptions.TimeSpanFormat = "c";
-			JsonOptions.Unordered = false;
-			JsonOptions.BOM = false;
 		}
 
 		public override object FromReaderInt()
@@ -1936,28 +1294,7 @@ namespace YuzuGen.YuzuTest
 
 		public SamplePerson_JsonDeserializer()
 		{
-			Options.TagMode = TagMode.Aliases;
-			Options.AllowUnknownFields = false;
-			Options.AllowEmptyTypes = false;
-			Options.ReportErrorPosition = false;
-			Options.CheckForEmptyCollections = false;
-			JsonOptions.MaxOnelineFields = 0;
 			JsonOptions.EnumAsString = true;
-			JsonOptions.SaveClass = JsonSaveClass.Unknown;
-			JsonOptions.IgnoreCompact = false;
-			JsonOptions.Int64AsString = false;
-			JsonOptions.DecimalAsString = false;
-			JsonOptions.Comments = false;
-			JsonOptions.FloatingPointFormat = "";
-			JsonOptions.FieldSeparator = "\n";
-			JsonOptions.Indent = "\t";
-			JsonOptions.ClassTag = "class";
-			JsonOptions.ArrayLengthPrefix = false;
-			JsonOptions.DateFormat = "O";
-			JsonOptions.DateTimeOffsetFormat = "O";
-			JsonOptions.TimeSpanFormat = "c";
-			JsonOptions.Unordered = false;
-			JsonOptions.BOM = false;
 		}
 
 		public override object FromReaderInt()
@@ -2006,28 +1343,7 @@ namespace YuzuGen.YuzuTest
 
 		public ISample_JsonDeserializer()
 		{
-			Options.TagMode = TagMode.Aliases;
-			Options.AllowUnknownFields = false;
-			Options.AllowEmptyTypes = false;
-			Options.ReportErrorPosition = false;
-			Options.CheckForEmptyCollections = false;
-			JsonOptions.MaxOnelineFields = 0;
 			JsonOptions.EnumAsString = true;
-			JsonOptions.SaveClass = JsonSaveClass.Unknown;
-			JsonOptions.IgnoreCompact = false;
-			JsonOptions.Int64AsString = false;
-			JsonOptions.DecimalAsString = false;
-			JsonOptions.Comments = false;
-			JsonOptions.FloatingPointFormat = "";
-			JsonOptions.FieldSeparator = "\n";
-			JsonOptions.Indent = "\t";
-			JsonOptions.ClassTag = "class";
-			JsonOptions.ArrayLengthPrefix = false;
-			JsonOptions.DateFormat = "O";
-			JsonOptions.DateTimeOffsetFormat = "O";
-			JsonOptions.TimeSpanFormat = "c";
-			JsonOptions.Unordered = false;
-			JsonOptions.BOM = false;
 		}
 
 		public override object FromReaderInt()
@@ -2053,28 +1369,7 @@ namespace YuzuGen.YuzuTest
 
 		public SampleInterfaced_JsonDeserializer()
 		{
-			Options.TagMode = TagMode.Aliases;
-			Options.AllowUnknownFields = false;
-			Options.AllowEmptyTypes = false;
-			Options.ReportErrorPosition = false;
-			Options.CheckForEmptyCollections = false;
-			JsonOptions.MaxOnelineFields = 0;
 			JsonOptions.EnumAsString = true;
-			JsonOptions.SaveClass = JsonSaveClass.Unknown;
-			JsonOptions.IgnoreCompact = false;
-			JsonOptions.Int64AsString = false;
-			JsonOptions.DecimalAsString = false;
-			JsonOptions.Comments = false;
-			JsonOptions.FloatingPointFormat = "";
-			JsonOptions.FieldSeparator = "\n";
-			JsonOptions.Indent = "\t";
-			JsonOptions.ClassTag = "class";
-			JsonOptions.ArrayLengthPrefix = false;
-			JsonOptions.DateFormat = "O";
-			JsonOptions.DateTimeOffsetFormat = "O";
-			JsonOptions.TimeSpanFormat = "c";
-			JsonOptions.Unordered = false;
-			JsonOptions.BOM = false;
 		}
 
 		public override object FromReaderInt()
@@ -2103,28 +1398,7 @@ namespace YuzuGen.YuzuTest
 
 		public SampleInterfaceField_JsonDeserializer()
 		{
-			Options.TagMode = TagMode.Aliases;
-			Options.AllowUnknownFields = false;
-			Options.AllowEmptyTypes = false;
-			Options.ReportErrorPosition = false;
-			Options.CheckForEmptyCollections = false;
-			JsonOptions.MaxOnelineFields = 0;
 			JsonOptions.EnumAsString = true;
-			JsonOptions.SaveClass = JsonSaveClass.Unknown;
-			JsonOptions.IgnoreCompact = false;
-			JsonOptions.Int64AsString = false;
-			JsonOptions.DecimalAsString = false;
-			JsonOptions.Comments = false;
-			JsonOptions.FloatingPointFormat = "";
-			JsonOptions.FieldSeparator = "\n";
-			JsonOptions.Indent = "\t";
-			JsonOptions.ClassTag = "class";
-			JsonOptions.ArrayLengthPrefix = false;
-			JsonOptions.DateFormat = "O";
-			JsonOptions.DateTimeOffsetFormat = "O";
-			JsonOptions.TimeSpanFormat = "c";
-			JsonOptions.Unordered = false;
-			JsonOptions.BOM = false;
 		}
 
 		public override object FromReaderInt()
@@ -2153,28 +1427,7 @@ namespace YuzuGen.YuzuTest
 
 		public SampleInterfacedGeneric_String_JsonDeserializer()
 		{
-			Options.TagMode = TagMode.Aliases;
-			Options.AllowUnknownFields = false;
-			Options.AllowEmptyTypes = false;
-			Options.ReportErrorPosition = false;
-			Options.CheckForEmptyCollections = false;
-			JsonOptions.MaxOnelineFields = 0;
 			JsonOptions.EnumAsString = true;
-			JsonOptions.SaveClass = JsonSaveClass.Unknown;
-			JsonOptions.IgnoreCompact = false;
-			JsonOptions.Int64AsString = false;
-			JsonOptions.DecimalAsString = false;
-			JsonOptions.Comments = false;
-			JsonOptions.FloatingPointFormat = "";
-			JsonOptions.FieldSeparator = "\n";
-			JsonOptions.Indent = "\t";
-			JsonOptions.ClassTag = "class";
-			JsonOptions.ArrayLengthPrefix = false;
-			JsonOptions.DateFormat = "O";
-			JsonOptions.DateTimeOffsetFormat = "O";
-			JsonOptions.TimeSpanFormat = "c";
-			JsonOptions.Unordered = false;
-			JsonOptions.BOM = false;
 		}
 
 		public override object FromReaderInt()
@@ -2206,28 +1459,7 @@ namespace YuzuGen.YuzuTest
 
 		public SampleAbstract_JsonDeserializer()
 		{
-			Options.TagMode = TagMode.Aliases;
-			Options.AllowUnknownFields = false;
-			Options.AllowEmptyTypes = false;
-			Options.ReportErrorPosition = false;
-			Options.CheckForEmptyCollections = false;
-			JsonOptions.MaxOnelineFields = 0;
 			JsonOptions.EnumAsString = true;
-			JsonOptions.SaveClass = JsonSaveClass.Unknown;
-			JsonOptions.IgnoreCompact = false;
-			JsonOptions.Int64AsString = false;
-			JsonOptions.DecimalAsString = false;
-			JsonOptions.Comments = false;
-			JsonOptions.FloatingPointFormat = "";
-			JsonOptions.FieldSeparator = "\n";
-			JsonOptions.Indent = "\t";
-			JsonOptions.ClassTag = "class";
-			JsonOptions.ArrayLengthPrefix = false;
-			JsonOptions.DateFormat = "O";
-			JsonOptions.DateTimeOffsetFormat = "O";
-			JsonOptions.TimeSpanFormat = "c";
-			JsonOptions.Unordered = false;
-			JsonOptions.BOM = false;
 		}
 
 		public override object FromReaderInt()
@@ -2253,28 +1485,7 @@ namespace YuzuGen.YuzuTest
 
 		public SampleConcrete_JsonDeserializer()
 		{
-			Options.TagMode = TagMode.Aliases;
-			Options.AllowUnknownFields = false;
-			Options.AllowEmptyTypes = false;
-			Options.ReportErrorPosition = false;
-			Options.CheckForEmptyCollections = false;
-			JsonOptions.MaxOnelineFields = 0;
 			JsonOptions.EnumAsString = true;
-			JsonOptions.SaveClass = JsonSaveClass.Unknown;
-			JsonOptions.IgnoreCompact = false;
-			JsonOptions.Int64AsString = false;
-			JsonOptions.DecimalAsString = false;
-			JsonOptions.Comments = false;
-			JsonOptions.FloatingPointFormat = "";
-			JsonOptions.FieldSeparator = "\n";
-			JsonOptions.Indent = "\t";
-			JsonOptions.ClassTag = "class";
-			JsonOptions.ArrayLengthPrefix = false;
-			JsonOptions.DateFormat = "O";
-			JsonOptions.DateTimeOffsetFormat = "O";
-			JsonOptions.TimeSpanFormat = "c";
-			JsonOptions.Unordered = false;
-			JsonOptions.BOM = false;
 		}
 
 		public override object FromReaderInt()
@@ -2303,28 +1514,7 @@ namespace YuzuGen.YuzuTest
 
 		public SampleCollection_Int32_JsonDeserializer()
 		{
-			Options.TagMode = TagMode.Aliases;
-			Options.AllowUnknownFields = false;
-			Options.AllowEmptyTypes = false;
-			Options.ReportErrorPosition = false;
-			Options.CheckForEmptyCollections = false;
-			JsonOptions.MaxOnelineFields = 0;
 			JsonOptions.EnumAsString = true;
-			JsonOptions.SaveClass = JsonSaveClass.Unknown;
-			JsonOptions.IgnoreCompact = false;
-			JsonOptions.Int64AsString = false;
-			JsonOptions.DecimalAsString = false;
-			JsonOptions.Comments = false;
-			JsonOptions.FloatingPointFormat = "";
-			JsonOptions.FieldSeparator = "\n";
-			JsonOptions.Indent = "\t";
-			JsonOptions.ClassTag = "class";
-			JsonOptions.ArrayLengthPrefix = false;
-			JsonOptions.DateFormat = "O";
-			JsonOptions.DateTimeOffsetFormat = "O";
-			JsonOptions.TimeSpanFormat = "c";
-			JsonOptions.Unordered = false;
-			JsonOptions.BOM = false;
 		}
 
 		public override object FromReaderInt()
@@ -2366,28 +1556,7 @@ namespace YuzuGen.YuzuTest
 
 		public SampleExplicitCollection_Int32_JsonDeserializer()
 		{
-			Options.TagMode = TagMode.Aliases;
-			Options.AllowUnknownFields = false;
-			Options.AllowEmptyTypes = false;
-			Options.ReportErrorPosition = false;
-			Options.CheckForEmptyCollections = false;
-			JsonOptions.MaxOnelineFields = 0;
 			JsonOptions.EnumAsString = true;
-			JsonOptions.SaveClass = JsonSaveClass.Unknown;
-			JsonOptions.IgnoreCompact = false;
-			JsonOptions.Int64AsString = false;
-			JsonOptions.DecimalAsString = false;
-			JsonOptions.Comments = false;
-			JsonOptions.FloatingPointFormat = "";
-			JsonOptions.FieldSeparator = "\n";
-			JsonOptions.Indent = "\t";
-			JsonOptions.ClassTag = "class";
-			JsonOptions.ArrayLengthPrefix = false;
-			JsonOptions.DateFormat = "O";
-			JsonOptions.DateTimeOffsetFormat = "O";
-			JsonOptions.TimeSpanFormat = "c";
-			JsonOptions.Unordered = false;
-			JsonOptions.BOM = false;
 		}
 
 		public override object FromReaderInt()
@@ -2429,28 +1598,7 @@ namespace YuzuGen.YuzuTest
 
 		public SampleWithCollection_JsonDeserializer()
 		{
-			Options.TagMode = TagMode.Aliases;
-			Options.AllowUnknownFields = false;
-			Options.AllowEmptyTypes = false;
-			Options.ReportErrorPosition = false;
-			Options.CheckForEmptyCollections = false;
-			JsonOptions.MaxOnelineFields = 0;
 			JsonOptions.EnumAsString = true;
-			JsonOptions.SaveClass = JsonSaveClass.Unknown;
-			JsonOptions.IgnoreCompact = false;
-			JsonOptions.Int64AsString = false;
-			JsonOptions.DecimalAsString = false;
-			JsonOptions.Comments = false;
-			JsonOptions.FloatingPointFormat = "";
-			JsonOptions.FieldSeparator = "\n";
-			JsonOptions.Indent = "\t";
-			JsonOptions.ClassTag = "class";
-			JsonOptions.ArrayLengthPrefix = false;
-			JsonOptions.DateFormat = "O";
-			JsonOptions.DateTimeOffsetFormat = "O";
-			JsonOptions.TimeSpanFormat = "c";
-			JsonOptions.Unordered = false;
-			JsonOptions.BOM = false;
 		}
 
 		public override object FromReaderInt()
@@ -2505,28 +1653,7 @@ namespace YuzuGen.YuzuTest
 
 		public SampleConcreteCollection_JsonDeserializer()
 		{
-			Options.TagMode = TagMode.Aliases;
-			Options.AllowUnknownFields = false;
-			Options.AllowEmptyTypes = false;
-			Options.ReportErrorPosition = false;
-			Options.CheckForEmptyCollections = false;
-			JsonOptions.MaxOnelineFields = 0;
 			JsonOptions.EnumAsString = true;
-			JsonOptions.SaveClass = JsonSaveClass.Unknown;
-			JsonOptions.IgnoreCompact = false;
-			JsonOptions.Int64AsString = false;
-			JsonOptions.DecimalAsString = false;
-			JsonOptions.Comments = false;
-			JsonOptions.FloatingPointFormat = "";
-			JsonOptions.FieldSeparator = "\n";
-			JsonOptions.Indent = "\t";
-			JsonOptions.ClassTag = "class";
-			JsonOptions.ArrayLengthPrefix = false;
-			JsonOptions.DateFormat = "O";
-			JsonOptions.DateTimeOffsetFormat = "O";
-			JsonOptions.TimeSpanFormat = "c";
-			JsonOptions.Unordered = false;
-			JsonOptions.BOM = false;
 		}
 
 		public override object FromReaderInt()
@@ -2568,28 +1695,7 @@ namespace YuzuGen.YuzuTest
 
 		public SampleAfter2_JsonDeserializer()
 		{
-			Options.TagMode = TagMode.Aliases;
-			Options.AllowUnknownFields = false;
-			Options.AllowEmptyTypes = false;
-			Options.ReportErrorPosition = false;
-			Options.CheckForEmptyCollections = false;
-			JsonOptions.MaxOnelineFields = 0;
 			JsonOptions.EnumAsString = true;
-			JsonOptions.SaveClass = JsonSaveClass.Unknown;
-			JsonOptions.IgnoreCompact = false;
-			JsonOptions.Int64AsString = false;
-			JsonOptions.DecimalAsString = false;
-			JsonOptions.Comments = false;
-			JsonOptions.FloatingPointFormat = "";
-			JsonOptions.FieldSeparator = "\n";
-			JsonOptions.Indent = "\t";
-			JsonOptions.ClassTag = "class";
-			JsonOptions.ArrayLengthPrefix = false;
-			JsonOptions.DateFormat = "O";
-			JsonOptions.DateTimeOffsetFormat = "O";
-			JsonOptions.TimeSpanFormat = "c";
-			JsonOptions.Unordered = false;
-			JsonOptions.BOM = false;
 		}
 
 		public override object FromReaderInt()
@@ -2621,28 +1727,7 @@ namespace YuzuGen.YuzuTest
 
 		public SampleAfterSerialization_JsonDeserializer()
 		{
-			Options.TagMode = TagMode.Aliases;
-			Options.AllowUnknownFields = false;
-			Options.AllowEmptyTypes = false;
-			Options.ReportErrorPosition = false;
-			Options.CheckForEmptyCollections = false;
-			JsonOptions.MaxOnelineFields = 0;
 			JsonOptions.EnumAsString = true;
-			JsonOptions.SaveClass = JsonSaveClass.Unknown;
-			JsonOptions.IgnoreCompact = false;
-			JsonOptions.Int64AsString = false;
-			JsonOptions.DecimalAsString = false;
-			JsonOptions.Comments = false;
-			JsonOptions.FloatingPointFormat = "";
-			JsonOptions.FieldSeparator = "\n";
-			JsonOptions.Indent = "\t";
-			JsonOptions.ClassTag = "class";
-			JsonOptions.ArrayLengthPrefix = false;
-			JsonOptions.DateFormat = "O";
-			JsonOptions.DateTimeOffsetFormat = "O";
-			JsonOptions.TimeSpanFormat = "c";
-			JsonOptions.Unordered = false;
-			JsonOptions.BOM = false;
 		}
 
 		public override object FromReaderInt()
@@ -2671,28 +1756,7 @@ namespace YuzuGen.YuzuTest
 
 		public SampleBeforeDeserialization_JsonDeserializer()
 		{
-			Options.TagMode = TagMode.Aliases;
-			Options.AllowUnknownFields = false;
-			Options.AllowEmptyTypes = false;
-			Options.ReportErrorPosition = false;
-			Options.CheckForEmptyCollections = false;
-			JsonOptions.MaxOnelineFields = 0;
 			JsonOptions.EnumAsString = true;
-			JsonOptions.SaveClass = JsonSaveClass.Unknown;
-			JsonOptions.IgnoreCompact = false;
-			JsonOptions.Int64AsString = false;
-			JsonOptions.DecimalAsString = false;
-			JsonOptions.Comments = false;
-			JsonOptions.FloatingPointFormat = "";
-			JsonOptions.FieldSeparator = "\n";
-			JsonOptions.Indent = "\t";
-			JsonOptions.ClassTag = "class";
-			JsonOptions.ArrayLengthPrefix = false;
-			JsonOptions.DateFormat = "O";
-			JsonOptions.DateTimeOffsetFormat = "O";
-			JsonOptions.TimeSpanFormat = "c";
-			JsonOptions.Unordered = false;
-			JsonOptions.BOM = false;
 		}
 
 		public override object FromReaderInt()
@@ -2722,28 +1786,7 @@ namespace YuzuGen.YuzuTest
 
 		public SampleMerge_JsonDeserializer()
 		{
-			Options.TagMode = TagMode.Aliases;
-			Options.AllowUnknownFields = false;
-			Options.AllowEmptyTypes = false;
-			Options.ReportErrorPosition = false;
-			Options.CheckForEmptyCollections = false;
-			JsonOptions.MaxOnelineFields = 0;
 			JsonOptions.EnumAsString = true;
-			JsonOptions.SaveClass = JsonSaveClass.Unknown;
-			JsonOptions.IgnoreCompact = false;
-			JsonOptions.Int64AsString = false;
-			JsonOptions.DecimalAsString = false;
-			JsonOptions.Comments = false;
-			JsonOptions.FloatingPointFormat = "";
-			JsonOptions.FieldSeparator = "\n";
-			JsonOptions.Indent = "\t";
-			JsonOptions.ClassTag = "class";
-			JsonOptions.ArrayLengthPrefix = false;
-			JsonOptions.DateFormat = "O";
-			JsonOptions.DateTimeOffsetFormat = "O";
-			JsonOptions.TimeSpanFormat = "c";
-			JsonOptions.Unordered = false;
-			JsonOptions.BOM = false;
 		}
 
 		public override object FromReaderInt()
@@ -2799,28 +1842,7 @@ namespace YuzuGen.YuzuTest
 
 		public SampleAssemblyDerivedR_JsonDeserializer()
 		{
-			Options.TagMode = TagMode.Aliases;
-			Options.AllowUnknownFields = false;
-			Options.AllowEmptyTypes = false;
-			Options.ReportErrorPosition = false;
-			Options.CheckForEmptyCollections = false;
-			JsonOptions.MaxOnelineFields = 0;
 			JsonOptions.EnumAsString = true;
-			JsonOptions.SaveClass = JsonSaveClass.Unknown;
-			JsonOptions.IgnoreCompact = false;
-			JsonOptions.Int64AsString = false;
-			JsonOptions.DecimalAsString = false;
-			JsonOptions.Comments = false;
-			JsonOptions.FloatingPointFormat = "";
-			JsonOptions.FieldSeparator = "\n";
-			JsonOptions.Indent = "\t";
-			JsonOptions.ClassTag = "class";
-			JsonOptions.ArrayLengthPrefix = false;
-			JsonOptions.DateFormat = "O";
-			JsonOptions.DateTimeOffsetFormat = "O";
-			JsonOptions.TimeSpanFormat = "c";
-			JsonOptions.Unordered = false;
-			JsonOptions.BOM = false;
 		}
 
 		public override object FromReaderInt()
@@ -2854,28 +1876,7 @@ namespace YuzuGen.YuzuTest
 
 		public SampleAliasMany_JsonDeserializer()
 		{
-			Options.TagMode = TagMode.Aliases;
-			Options.AllowUnknownFields = false;
-			Options.AllowEmptyTypes = false;
-			Options.ReportErrorPosition = false;
-			Options.CheckForEmptyCollections = false;
-			JsonOptions.MaxOnelineFields = 0;
 			JsonOptions.EnumAsString = true;
-			JsonOptions.SaveClass = JsonSaveClass.Unknown;
-			JsonOptions.IgnoreCompact = false;
-			JsonOptions.Int64AsString = false;
-			JsonOptions.DecimalAsString = false;
-			JsonOptions.Comments = false;
-			JsonOptions.FloatingPointFormat = "";
-			JsonOptions.FieldSeparator = "\n";
-			JsonOptions.Indent = "\t";
-			JsonOptions.ClassTag = "class";
-			JsonOptions.ArrayLengthPrefix = false;
-			JsonOptions.DateFormat = "O";
-			JsonOptions.DateTimeOffsetFormat = "O";
-			JsonOptions.TimeSpanFormat = "c";
-			JsonOptions.Unordered = false;
-			JsonOptions.BOM = false;
 		}
 
 		public override object FromReaderInt()
@@ -2904,28 +1905,7 @@ namespace YuzuGen.YuzuTest
 
 		public SamplePrivateConstructor_JsonDeserializer()
 		{
-			Options.TagMode = TagMode.Aliases;
-			Options.AllowUnknownFields = false;
-			Options.AllowEmptyTypes = false;
-			Options.ReportErrorPosition = false;
-			Options.CheckForEmptyCollections = false;
-			JsonOptions.MaxOnelineFields = 0;
 			JsonOptions.EnumAsString = true;
-			JsonOptions.SaveClass = JsonSaveClass.Unknown;
-			JsonOptions.IgnoreCompact = false;
-			JsonOptions.Int64AsString = false;
-			JsonOptions.DecimalAsString = false;
-			JsonOptions.Comments = false;
-			JsonOptions.FloatingPointFormat = "";
-			JsonOptions.FieldSeparator = "\n";
-			JsonOptions.Indent = "\t";
-			JsonOptions.ClassTag = "class";
-			JsonOptions.ArrayLengthPrefix = false;
-			JsonOptions.DateFormat = "O";
-			JsonOptions.DateTimeOffsetFormat = "O";
-			JsonOptions.TimeSpanFormat = "c";
-			JsonOptions.Unordered = false;
-			JsonOptions.BOM = false;
 		}
 
 		public override object FromReaderInt()
@@ -2958,28 +1938,7 @@ namespace YuzuGen.System.Collections.Generic
 
 		public List_SampleAssemblyBase_JsonDeserializer()
 		{
-			Options.TagMode = TagMode.Aliases;
-			Options.AllowUnknownFields = false;
-			Options.AllowEmptyTypes = false;
-			Options.ReportErrorPosition = false;
-			Options.CheckForEmptyCollections = false;
-			JsonOptions.MaxOnelineFields = 0;
 			JsonOptions.EnumAsString = true;
-			JsonOptions.SaveClass = JsonSaveClass.Unknown;
-			JsonOptions.IgnoreCompact = false;
-			JsonOptions.Int64AsString = false;
-			JsonOptions.DecimalAsString = false;
-			JsonOptions.Comments = false;
-			JsonOptions.FloatingPointFormat = "";
-			JsonOptions.FieldSeparator = "\n";
-			JsonOptions.Indent = "\t";
-			JsonOptions.ClassTag = "class";
-			JsonOptions.ArrayLengthPrefix = false;
-			JsonOptions.DateFormat = "O";
-			JsonOptions.DateTimeOffsetFormat = "O";
-			JsonOptions.TimeSpanFormat = "c";
-			JsonOptions.Unordered = false;
-			JsonOptions.BOM = false;
 		}
 
 		public override object FromReaderInt()
@@ -3025,28 +1984,7 @@ namespace YuzuGen.YuzuTestAssembly
 
 		public SampleAssemblyBase_JsonDeserializer()
 		{
-			Options.TagMode = TagMode.Aliases;
-			Options.AllowUnknownFields = false;
-			Options.AllowEmptyTypes = false;
-			Options.ReportErrorPosition = false;
-			Options.CheckForEmptyCollections = false;
-			JsonOptions.MaxOnelineFields = 0;
 			JsonOptions.EnumAsString = true;
-			JsonOptions.SaveClass = JsonSaveClass.Unknown;
-			JsonOptions.IgnoreCompact = false;
-			JsonOptions.Int64AsString = false;
-			JsonOptions.DecimalAsString = false;
-			JsonOptions.Comments = false;
-			JsonOptions.FloatingPointFormat = "";
-			JsonOptions.FieldSeparator = "\n";
-			JsonOptions.Indent = "\t";
-			JsonOptions.ClassTag = "class";
-			JsonOptions.ArrayLengthPrefix = false;
-			JsonOptions.DateFormat = "O";
-			JsonOptions.DateTimeOffsetFormat = "O";
-			JsonOptions.TimeSpanFormat = "c";
-			JsonOptions.Unordered = false;
-			JsonOptions.BOM = false;
 		}
 
 		public override object FromReaderInt()
@@ -3076,28 +2014,7 @@ namespace YuzuGen.YuzuTestAssembly
 
 		public SampleAssemblyDerivedQ_JsonDeserializer()
 		{
-			Options.TagMode = TagMode.Aliases;
-			Options.AllowUnknownFields = false;
-			Options.AllowEmptyTypes = false;
-			Options.ReportErrorPosition = false;
-			Options.CheckForEmptyCollections = false;
-			JsonOptions.MaxOnelineFields = 0;
 			JsonOptions.EnumAsString = true;
-			JsonOptions.SaveClass = JsonSaveClass.Unknown;
-			JsonOptions.IgnoreCompact = false;
-			JsonOptions.Int64AsString = false;
-			JsonOptions.DecimalAsString = false;
-			JsonOptions.Comments = false;
-			JsonOptions.FloatingPointFormat = "";
-			JsonOptions.FieldSeparator = "\n";
-			JsonOptions.Indent = "\t";
-			JsonOptions.ClassTag = "class";
-			JsonOptions.ArrayLengthPrefix = false;
-			JsonOptions.DateFormat = "O";
-			JsonOptions.DateTimeOffsetFormat = "O";
-			JsonOptions.TimeSpanFormat = "c";
-			JsonOptions.Unordered = false;
-			JsonOptions.BOM = false;
 		}
 
 		public override object FromReaderInt()
@@ -3135,28 +2052,7 @@ namespace YuzuGen.YuzuTest2
 
 		public SampleNamespace_JsonDeserializer()
 		{
-			Options.TagMode = TagMode.Aliases;
-			Options.AllowUnknownFields = false;
-			Options.AllowEmptyTypes = false;
-			Options.ReportErrorPosition = false;
-			Options.CheckForEmptyCollections = false;
-			JsonOptions.MaxOnelineFields = 0;
 			JsonOptions.EnumAsString = true;
-			JsonOptions.SaveClass = JsonSaveClass.Unknown;
-			JsonOptions.IgnoreCompact = false;
-			JsonOptions.Int64AsString = false;
-			JsonOptions.DecimalAsString = false;
-			JsonOptions.Comments = false;
-			JsonOptions.FloatingPointFormat = "";
-			JsonOptions.FieldSeparator = "\n";
-			JsonOptions.Indent = "\t";
-			JsonOptions.ClassTag = "class";
-			JsonOptions.ArrayLengthPrefix = false;
-			JsonOptions.DateFormat = "O";
-			JsonOptions.DateTimeOffsetFormat = "O";
-			JsonOptions.TimeSpanFormat = "c";
-			JsonOptions.Unordered = false;
-			JsonOptions.BOM = false;
 		}
 
 		public override object FromReaderInt()
