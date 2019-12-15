@@ -338,6 +338,7 @@ Available flags are:
 * `Unknown` -- save structure types which are NOT statically known,
 * `KnownRoot` -- save structure types which are NOT statically known plus the type of root object,
 * `KnownNonRoot` -- save structure types which ARE statically known except the type of root object,
+* `UnknownPrimitive` -- save primitive types which are not statically known,
 * `UnknownOrRoot` -- combination of `Unknown` and `UnknownOrRoot`, correspond to deprecated `SaveRootClass = true` setting.
 
 Default value is `Unknown`.

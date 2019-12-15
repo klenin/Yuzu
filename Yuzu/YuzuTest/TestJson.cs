@@ -475,6 +475,34 @@ namespace YuzuTest.Json
 		}
 
 		[TestMethod]
+		public void TestPrimitiveNames()
+		{
+			var js = new JsonSerializer();
+			var jd = new JsonDeserializer();
+			js.JsonOptions.SaveClass |= JsonSaveClass.UnknownPrimitive;
+			{
+				var s1 = js.ToString(34);
+				Assert.AreEqual(
+					"{\n\t\"class\":\"System.Int32\",\n\t\"value\":34\n}",
+					s1);
+				var w1 = jd.FromString(s1);
+				Assert.IsInstanceOfType(w1, typeof(int));
+				Assert.AreEqual(34, w1);
+			}
+			{
+				var s1 = js.ToString(new SampleObj { F = 91 });
+				Assert.AreEqual(
+					"{\n\t\"F\":{\n\t\t\"class\":\"System.Int32\",\n\t\t\"value\":91\n\t}\n}",
+					s1);
+				var w1 = jd.FromString<SampleObj>(s1);
+				Assert.IsInstanceOfType(w1.F, typeof(int));
+				Assert.AreEqual(91, w1.F);
+				var w2 = jd.FromString(s1);
+				Assert.AreEqual(91, ((Dictionary<string, object>)w2)["F"]);
+			}
+		}
+
+		[TestMethod]
 		public void TestList()
 		{
 			var js = new JsonSerializer();
@@ -2104,6 +2132,8 @@ namespace YuzuTest.Json
 				"ISample");
 			XAssert.Throws<YuzuException>(() =>
 				jd.FromString<Dictionary<Sample2, int>>("{\"a\":1}"), "Sample2");
+			XAssert.Throws<YuzuException>(() => jd.FromString(
+				"{\"class\":\"System.Int32\",\"a\":1}"), "Primitive");
 
 			XAssert.Throws<YuzuException>(() => jd.FromString(
 				"{\"class\":\"YuzuTest.SampleList, YuzuTest\",\"E\":[5, 4, 3]}"), "5");

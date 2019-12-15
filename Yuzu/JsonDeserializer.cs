@@ -535,6 +535,17 @@ namespace Yuzu.Json
 			return normalRead();
 		}
 
+		private object ReadTypedPrimitive(Type t)
+		{
+			Require(',');
+			if (RequireUnescapedString() != JsonOptions.ValueTag)
+				throw Error("Primitive type value expected");
+			Require(':');
+			var result = ReadValueFunc(t)();
+			Require('}');
+			return result;
+		}
+
 		protected object ReadAnyObject()
 		{
 			var ch = SkipSpaces();
@@ -569,6 +580,8 @@ namespace Yuzu.Json
 							ReadIntoDictionary(result.Fields);
 						return result;
 					}
+					if (t.IsPrimitive)
+						return ReadTypedPrimitive(t);
 					var meta = Meta.Get(t, Options);
 					return ReadFields(meta.Factory(), GetNextName(first: false));
 				case '[':

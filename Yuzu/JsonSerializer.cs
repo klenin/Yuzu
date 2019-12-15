@@ -17,6 +17,7 @@ namespace Yuzu.Json
 		Unknown = 1,
 		KnownRoot = 2,
 		KnownNonRoot = 4,
+		UnknownPrimitive = 8,
 
 		UnknownOrRoot = Unknown | KnownRoot,
 	};
@@ -29,6 +30,7 @@ namespace Yuzu.Json
 		public string FieldSeparator = "\n";
 		public string Indent = "\t";
 		public string ClassTag = "class";
+		public string ValueTag = "value";
 
 		private int maxOnelineFields = 0;
 		public int MaxOnelineFields { get { return maxOnelineFields; } set { maxOnelineFields = value; generation++; } }
@@ -347,6 +349,22 @@ namespace Yuzu.Json
 			writer.Write((byte)']');
 		}
 
+		private void WriteTypedPrimitive(object obj, Type t)
+		{
+			writer.Write((byte)'{');
+			depth += 1;
+			WriteFieldSeparator();
+			bool isFirst = true;
+			WriteName(JsonOptions.ClassTag, ref isFirst);
+			WriteUnescapedString(TypeSerializer.Serialize(t));
+			WriteName(JsonOptions.ValueTag, ref isFirst);
+			GetWriteFunc(t)(obj);
+			WriteFieldSeparator();
+			depth -= 1;
+			WriteIndent();
+			writer.Write((byte)'}');
+		}
+
 		// List<object>
 		private void WriteAny(object obj)
 		{
@@ -367,6 +385,8 @@ namespace Yuzu.Json
 				else
 					surrogateWriter(sg.FuncTo(obj));
 			}
+			else if (JsonOptions.SaveClass.HasFlag(JsonSaveClass.UnknownPrimitive))
+				WriteTypedPrimitive(obj, t);
 			else
 				GetWriteFunc(t)(obj);
 		}
@@ -770,10 +790,15 @@ namespace Yuzu.Json
 
 		protected override void ToWriter(object obj)
 		{
-			if (obj == null)
+			if (obj == null) {
 				writer.Write(nullBytes);
+				return;
+			}
+			var t = obj.GetType();
+			if (JsonOptions.SaveClass.HasFlag(JsonSaveClass.UnknownPrimitive) && !IsUserObject(t))
+				WriteTypedPrimitive(obj, t);
 			else
-				GetWriteFunc(obj.GetType())(obj);
+				GetWriteFunc(t)(obj);
 		}
 	}
 
