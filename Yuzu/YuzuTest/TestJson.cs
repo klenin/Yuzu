@@ -18,6 +18,9 @@ namespace YuzuTest.Json
 	[TestClass]
 	public class TestJson
 	{
+		private string MultiLine(string s) =>
+			s.Replace("\r", "").Replace("\t", "");
+
 		[TestMethod]
 		public void TestSimple()
 		{
@@ -431,15 +434,35 @@ namespace YuzuTest.Json
 		[TestMethod]
 		public void TestClassNames()
 		{
-			var js = new JsonSerializer();
-			js.JsonOptions.Indent = "";
-			js.JsonOptions.SaveRootClass = true;
-			js.Options.TagMode = TagMode.Names;
-			Assert.AreEqual(
-				"{\n\"class\":\"YuzuTest.SampleBase, YuzuTest\",\n\"FBase\":0\n}", js.ToString(new SampleBase()));
-			Assert.AreEqual(
-				"{\n\"class\":\"YuzuTest.SampleDerivedA, YuzuTest\",\n\"FBase\":0,\n\"FA\":0\n}",
-				js.ToString(new SampleDerivedA()));
+			{
+				var js = new JsonSerializer();
+				js.JsonOptions.Indent = "";
+				js.JsonOptions.SaveClass = JsonSaveClass.UnknownOrRoot;
+				js.Options.TagMode = TagMode.Names;
+				Assert.AreEqual(
+					"{\n\"class\":\"YuzuTest.SampleBase, YuzuTest\",\n\"FBase\":0\n}",
+					js.ToString(new SampleBase()));
+				Assert.AreEqual(
+					"{\n\"class\":\"YuzuTest.SampleDerivedA, YuzuTest\",\n\"FBase\":0,\n\"FA\":0\n}",
+					js.ToString(new SampleDerivedA()));
+			}
+
+			{
+				var js = new JsonSerializer();
+				js.JsonOptions.Indent = "";
+				js.JsonOptions.SaveClass = JsonSaveClass.UnknownOrRoot | JsonSaveClass.KnownNonRoot;
+				Assert.AreEqual(MultiLine(@"{
+					""class"":""YuzuTest.Sample3, YuzuTest"",
+					""S1"":{
+					""class"":""YuzuTest.Sample1, YuzuTest"",
+					""X"":31,
+					""Y"":""a""
+					},
+					""S11"":0,
+					""S2"":null
+					}"),
+					js.ToString(new Sample3 { S1 = new Sample1 { X = 31, Y = "a" } }));
+			}
 
 			var jd = new JsonDeserializer();
 			jd.Options.TagMode = TagMode.Names;
@@ -826,7 +849,7 @@ namespace YuzuTest.Json
 		{
 			var js = new JsonSerializer();
 			js.Options.TagMode = TagMode.Names;
-			js.JsonOptions.SaveRootClass = true;
+			js.JsonOptions.SaveClass = JsonSaveClass.UnknownOrRoot;
 			var jd = new JsonDeserializer();
 			jd.Options.TagMode = TagMode.Names;
 
@@ -962,7 +985,7 @@ namespace YuzuTest.Json
 			Assert.AreEqual(37, w2[1].X);
 
 			ISampleField v3 = new SampleInterfacedField { X = 41 };
-			js.JsonOptions.SaveRootClass = true;
+			js.JsonOptions.SaveClass = JsonSaveClass.UnknownOrRoot;
 			var result3 = js.ToString(v3);
 			Assert.AreEqual("{\"class\":\"YuzuTest.SampleInterfacedField, YuzuTest\",\"X\":41}", result3);
 			var w3 = (ISampleField)jd.FromString(result3);
@@ -975,7 +998,7 @@ namespace YuzuTest.Json
 			var js = new JsonSerializer();
 			js.JsonOptions.Indent = "";
 			js.JsonOptions.FieldSeparator = "";
-			js.JsonOptions.SaveRootClass = true;
+			js.JsonOptions.SaveClass = JsonSaveClass.UnknownOrRoot;
 			var jd = new JsonDeserializer();
 
 			SampleAbstract v1 = new SampleConcrete { XX = 81 };
@@ -1211,7 +1234,7 @@ namespace YuzuTest.Json
 			var js = new JsonSerializer();
 			js.JsonOptions.Indent = "";
 			js.JsonOptions.FieldSeparator = "";
-			js.JsonOptions.SaveRootClass = true;
+			js.JsonOptions.SaveClass = JsonSaveClass.UnknownOrRoot;
 			var jd = new JsonDeserializer();
 			jd.Options.AllowUnknownFields = true;
 
@@ -1684,7 +1707,7 @@ namespace YuzuTest.Json
 			var jd = new JsonDeserializer();
 			{
 				js.JsonOptions.Indent = js.JsonOptions.FieldSeparator = "";
-				js.JsonOptions.SaveRootClass = true;
+				js.JsonOptions.SaveClass = JsonSaveClass.UnknownOrRoot;
 				js.Options.AllowEmptyTypes = true;
 				js.Options.Meta = SampleUnknownDictOfLists.Override();
 				var actual = js.ToString(SampleUnknownDictOfLists.Sample);
@@ -1703,7 +1726,7 @@ namespace YuzuTest.Json
 		{
 			var js = new JsonSerializer();
 			js.JsonOptions.Indent = "";
-			js.JsonOptions.SaveRootClass = true;
+			js.JsonOptions.SaveClass = JsonSaveClass.UnknownOrRoot;
 			var v1 = new Sample2 { X = 83, Y = "83" };
 			var result1 = js.ToString(v1);
 			Assert.AreEqual("{\n\"class\":\"YuzuTest.Sample2, YuzuTest\",\n\"X\":83\n}", result1);
@@ -1821,7 +1844,7 @@ namespace YuzuTest.Json
 		public void TestIndentation()
 		{
 			var js = new JsonSerializer();
-			js.JsonOptions.SaveRootClass = true;
+			js.JsonOptions.SaveClass = JsonSaveClass.UnknownOrRoot;
 
 			var v1 = new SampleTree {
 				Value = 1, Children = new List<SampleTree> {
@@ -1959,7 +1982,7 @@ namespace YuzuTest.Json
 			var js = new JsonSerializer();
 			js.JsonOptions.Indent = "";
 			js.JsonOptions.FieldSeparator = " ";
-			js.JsonOptions.SaveRootClass = true;
+			js.JsonOptions.SaveClass = JsonSaveClass.UnknownOrRoot;
 			var jd = new JsonDeserializer();
 
 			var v1 = EnclosingClassForEnclosingClass.Sample;

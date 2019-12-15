@@ -10,6 +10,17 @@ using Yuzu.Util;
 
 namespace Yuzu.Json
 {
+	[Flags]
+	public enum JsonSaveClass
+	{
+		None = 0,
+		Unknown = 1,
+		KnownRoot = 2,
+		KnownNonRoot = 4,
+
+		UnknownOrRoot = Unknown | KnownRoot,
+	};
+
 	public class JsonSerializeOptions
 	{
 		private int generation = 0;
@@ -27,8 +38,13 @@ namespace Yuzu.Json
 
 		public bool ArrayLengthPrefix = false;
 
-		private bool saveRootClass = false;
-		public bool SaveRootClass { get { return saveRootClass; } set { saveRootClass = value; generation++; } }
+		private JsonSaveClass saveClass = JsonSaveClass.Unknown;
+		public JsonSaveClass SaveClass { get { return saveClass; } set { saveClass = value; generation++; } }
+		[Obsolete("Use SaveClass instead")]
+		public bool SaveRootClass {
+			get { return SaveClass.HasFlag(JsonSaveClass.KnownRoot); }
+			set { SaveClass = value ? JsonSaveClass.UnknownOrRoot : JsonSaveClass.Unknown; }
+		}
 
 		private bool ignoreCompact = false;
 		public bool IgnoreCompact { get { return ignoreCompact; } set { ignoreCompact = value; generation++; } }
@@ -604,6 +620,11 @@ namespace Yuzu.Json
 		private List<Action<object>> GetFieldWriters(Meta meta) =>
 			meta.Items.Select(yi => GetWriteFunc(yi.Type)).ToList();
 
+		private bool NeedToSaveClass(bool isTypeUnknown, bool isRoot) =>
+			isTypeUnknown && JsonOptions.SaveClass.HasFlag(JsonSaveClass.Unknown) ||
+			isRoot && JsonOptions.SaveClass.HasFlag(JsonSaveClass.KnownRoot) ||
+			JsonOptions.SaveClass.HasFlag(JsonSaveClass.KnownNonRoot);
+
 		private void WriteObject(object obj, Meta meta, List<Action<object>> fieldWriters)
 		{
 			if (obj == null) {
@@ -624,8 +645,9 @@ namespace Yuzu.Json
 				depth += 1;
 				var isFirst = true;
 				if (
-					expectedType != actualType || objStack.Count == 1 && JsonOptions.SaveRootClass ||
-					meta.WriteAlias != null
+					NeedToSaveClass(
+						isTypeUnknown: expectedType != actualType || meta.WriteAlias != null,
+						isRoot: objStack.Count == 1)
 				) {
 					WriteName(JsonOptions.ClassTag, ref isFirst);
 					WriteUnescapedString(meta.WriteAlias ?? TypeSerializer.Serialize(actualType));

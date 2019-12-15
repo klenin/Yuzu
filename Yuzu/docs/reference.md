@@ -329,7 +329,22 @@ Controls the format of arrays.
 If `true`, array length is serialized before array items, allowing to preallocate memory during deserialization.
 Default value is `false`.
 
+#### `SaveClass`
+
+Controls saving of type information alongside data.
+Available flags are:
+
+* `None` -- do not save types,
+* `Unknown` -- save structure types which are NOT statically known,
+* `KnownRoot` -- save structure types which are NOT statically known plus the type of root object,
+* `KnownNonRoot` -- save structure types which ARE statically known except the type of root object,
+* `UnknownOrRoot` -- combination of `Unknown` and `UnknownOrRoot`, correspond to deprecated `SaveRootClass = true` setting.
+
+Default value is `Unknown`.
+
 #### `SaveRootClass`
+
+Deprecated. Use `SaveClass = SaveClass.UnknownOrRoot` instead.
 
 If `true`, the name of the root structured type will be serialized even if it concides with generic argument type.
 Default value is `false`.

@@ -24,7 +24,7 @@ namespace YuzuTest.Interop
 			var js = new JsonSerializer();
 			js.JsonOptions.FieldSeparator = "";
 			js.JsonOptions.Indent = "";
-			js.JsonOptions.SaveRootClass = true;
+			js.JsonOptions.SaveClass = JsonSaveClass.UnknownOrRoot;
 			var jd = new JsonDeserializer();
 
 			var data1 = "{\"class\":\"YuzuTest.Sample1, YuzuTest\",\"X\":98,\"Y\":\"\"}";
@@ -38,7 +38,7 @@ namespace YuzuTest.Interop
 			var bs = new BinarySerializer();
 			var bd = new BinaryDeserializer();
 			var js = new JsonSerializer();
-			js.JsonOptions.SaveRootClass = true;
+			js.JsonOptions.SaveClass = JsonSaveClass.UnknownOrRoot;
 			var jd = new JsonDeserializer();
 
 			var n = "YuzuTest.Sample1, YuzuTest".ToCharArray().Select(ch => (byte)ch).ToList();
@@ -60,7 +60,7 @@ namespace YuzuTest.Interop
 			var js = new JsonSerializer();
 			js.JsonOptions.FieldSeparator = "";
 			js.JsonOptions.Indent = "";
-			js.JsonOptions.SaveRootClass = true;
+			js.JsonOptions.SaveClass = JsonSaveClass.UnknownOrRoot;
 			var jd = new JsonDeserializer();
 
 			var data1 = "{\"class\":\"NewType\",\"X\":\"abc\"}";
@@ -74,7 +74,7 @@ namespace YuzuTest.Interop
 			var bs = new BinarySerializer();
 			var bd = new BinaryDeserializer();
 			var js = new JsonSerializer();
-			js.JsonOptions.SaveRootClass = true;
+			js.JsonOptions.SaveClass = JsonSaveClass.UnknownOrRoot;
 			var jd = new JsonDeserializer();
 
 			var n = "NewType".ToCharArray().Select(ch => (byte)ch).ToList();
