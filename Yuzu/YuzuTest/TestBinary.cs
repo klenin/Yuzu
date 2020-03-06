@@ -503,6 +503,24 @@ namespace YuzuTest.Binary
 		}
 
 		[TestMethod]
+		public void TestRec()
+		{
+			var bs = new BinarySerializer();
+			var bd = new BinaryDeserializer();
+			var v1 = new SampleRec { Child = new SampleRec { S = "x" }, S = "a" };
+			var result1 = bs.ToBytes(v1);
+			Assert.AreEqual(
+				"20 01 00 " + XS(typeof(SampleRec)) + " 02 00 " +
+				XS("Child", RoughType.Record, "S", RoughType.String) +
+				" 01 00 01 00 01 00 00 00 02 00 " + XS("x") + " 00 00 02 00 " + XS("a") + " 00 00",
+				XS(result1));
+			var w1 = bd.FromBytes<SampleRec>(result1);
+			Assert.AreEqual("a", w1.S);
+			Assert.AreEqual("x", w1.Child.S);
+			Assert.IsNull(w1.Child.Child);
+		}
+
+		[TestMethod]
 		public void TestList()
 		{
 			var bs = new BinarySerializer();

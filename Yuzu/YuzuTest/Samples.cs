@@ -246,6 +246,14 @@ namespace YuzuTest
 		public Sample1[] A;
 	}
 
+	public class SampleRec
+	{
+		[YuzuRequired]
+		public SampleRec Child;
+		[YuzuRequired]
+		public string S;
+	}
+
 	public class SampleTree
 	{
 		[YuzuRequired("a")]

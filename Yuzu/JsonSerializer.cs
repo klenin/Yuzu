@@ -491,7 +491,7 @@ namespace Yuzu.Json
 			writerCache[typeof(YuzuUnknown)] = WriteUnknown;
 		}
 
-		private Action<object> GetWriteFunc(Type t)
+		private Action<object> GetWriteFunc(Type t, bool cachedOnly = false)
 		{
 			if (jsonOptionsGeneration != JsonOptions.Generation) {
 				writerCache.Clear();
@@ -501,6 +501,8 @@ namespace Yuzu.Json
 
 			if (writerCache.TryGetValue(t, out Action<object> result))
 				return result;
+			if (cachedOnly)
+				return null;
 			result = MakeWriteFunc(t);
 			writerCache[t] = result;
 			return result;
@@ -541,6 +543,46 @@ namespace Yuzu.Json
 				return obj => WriteObjectCompactOneline(obj, sgMeta, fieldWriters);
 			else
 				return obj => WriteObjectCompact(obj, sgMeta, fieldWriters);
+		}
+
+		private Action<object> MakeObjectWriteFunc(Meta meta)
+		{
+			Action<object> writeFunc;
+			var fieldWriters = GetFieldWriters(meta, cachedOnly: !Utils.IsStruct(meta.Type));
+			if (!fieldWriters.Contains(null)) {
+				// Fast case -- all field writers are already cached.
+				if (!meta.IsCompact || JsonOptions.IgnoreCompact)
+					writeFunc = obj => WriteObject(obj, meta, fieldWriters);
+				else if (IsOneline(meta))
+					writeFunc = obj => WriteObjectCompactOneline(obj, meta, fieldWriters);
+				else
+					writeFunc = obj => WriteObjectCompact(obj, meta, fieldWriters);
+			}
+			else {
+				// Slow case -- there may be a recursuve type, so calculate writers lazily.
+				if (!meta.IsCompact || JsonOptions.IgnoreCompact) {
+					List<Action<object>> fw = null;
+					writeFunc = obj => {
+						fw = fw ?? GetFieldWriters(meta);
+						WriteObject(obj, meta, fw);
+					};
+				}
+				else if (IsOneline(meta)) {
+					List<Action<object>> fw = null;
+					writeFunc = obj => {
+						fw = fw ?? GetFieldWriters(meta);
+						WriteObjectCompactOneline(obj, meta, fw);
+					};
+				}
+				else {
+					List<Action<object>> fw = null;
+					writeFunc = obj => {
+						fw = fw ?? GetFieldWriters(meta);
+						WriteObjectCompact(obj, meta, fw);
+					};
+				}
+			}
+			return writeFunc;
 		}
 
 		private Action<object> MakeWriteFunc(Type t)
@@ -592,14 +634,7 @@ namespace Yuzu.Json
 				if (sg.FuncTo != null && sg.FuncIf == null)
 					return obj => surrogateWriter(sg.FuncTo(obj));
 
-				Action<object> writeFunc;
-				var fieldWriters = GetFieldWriters(meta);
-				if (!meta.IsCompact || JsonOptions.IgnoreCompact)
-					writeFunc = obj => WriteObject(obj, meta, fieldWriters);
-				else if (IsOneline(meta))
-					writeFunc = obj => WriteObjectCompactOneline(obj, meta, fieldWriters);
-				else
-					writeFunc = obj => WriteObjectCompact(obj, meta, fieldWriters);
+				var writeFunc = MakeObjectWriteFunc(meta);
 
 				if (sg.FuncTo != null && sg.FuncIf != null)
 					return obj => {
@@ -637,8 +672,8 @@ namespace Yuzu.Json
 			GetWriteFunc(item.Value.GetType())(item.Value);
 		}
 
-		private List<Action<object>> GetFieldWriters(Meta meta) =>
-			meta.Items.Select(yi => GetWriteFunc(yi.Type)).ToList();
+		private List<Action<object>> GetFieldWriters(Meta meta, bool cachedOnly = false) =>
+			meta.Items.Select(yi => GetWriteFunc(yi.Type, cachedOnly)).ToList();
 
 		private bool NeedToSaveClass(bool isTypeUnknown, bool isRoot) =>
 			isTypeUnknown && JsonOptions.SaveClass.HasFlag(JsonSaveClass.Unknown) ||

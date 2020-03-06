@@ -503,6 +503,23 @@ namespace YuzuTest.Json
 		}
 
 		[TestMethod]
+		public void TestRec()
+		{
+			var js = new JsonSerializer();
+			var jd = new JsonDeserializer();
+			var v1 = new SampleRec { Child = new SampleRec { S = "x" }, S = "a" };
+			var s1 = js.ToString(v1);
+			Assert.AreEqual(
+				"{\n\t\"Child\":{" +
+				"\n\t\t\"Child\":null,\n\t\t\"S\":\"x\"\n\t},"+
+				"\n\t\"S\":\"a\"\n}", s1);
+			var w1 = jd.FromString<SampleRec>(s1);
+			Assert.AreEqual("a", w1.S);
+			Assert.AreEqual("x", w1.Child.S);
+			Assert.IsNull(w1.Child.Child);
+		}
+
+		[TestMethod]
 		public void TestList()
 		{
 			var js = new JsonSerializer();
