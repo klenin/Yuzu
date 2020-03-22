@@ -234,7 +234,7 @@ namespace YuzuTest
 		public string[] A;
 	}
 
-	public class SampleArray2D
+	public class SampleArrayOfArray
 	{
 		[YuzuRequired]
 		public int[][] A;

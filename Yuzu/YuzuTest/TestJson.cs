@@ -874,16 +874,16 @@ namespace YuzuTest.Json
 			js.JsonOptions.FieldSeparator = "";
 			var jd = new JsonDeserializer();
 
-			var v0 = new SampleArray2D { A = new int[][] { new int[] { 1, 2, 3 }, new int[] { 4, 5 } } };
+			var v0 = new SampleArrayOfArray { A = new int[][] { new int[] { 1, 2, 3 }, new int[] { 4, 5 } } };
 			var result0 = js.ToString(v0);
 			Assert.AreEqual("{\"A\":[[1,2,3],[4,5]]}", result0);
-			var w0 = new SampleArray2D();
+			var w0 = new SampleArrayOfArray();
 			jd.FromString(w0, result0);
 			Assert.AreEqual(2, w0.A.Length);
 			CollectionAssert.AreEqual(v0.A[0], w0.A[0]);
 			CollectionAssert.AreEqual(v0.A[1], w0.A[1]);
 
-			var w1 = (SampleArray2D)SampleArray2D_JsonDeserializer.Instance.FromString(result0);
+			var w1 = (SampleArrayOfArray)SampleArrayOfArray_JsonDeserializer.Instance.FromString(result0);
 			Assert.AreEqual(2, w1.A.Length);
 			CollectionAssert.AreEqual(v0.A[0], w1.A[0]);
 			CollectionAssert.AreEqual(v0.A[1], w1.A[1]);

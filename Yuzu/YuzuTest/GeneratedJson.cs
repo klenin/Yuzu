@@ -663,11 +663,11 @@ namespace YuzuGen.YuzuTest
 		}
 	}
 
-	class SampleArray2D_JsonDeserializer : JsonDeserializerGenBase
+	class SampleArrayOfArray_JsonDeserializer : JsonDeserializerGenBase
 	{
-		public static new SampleArray2D_JsonDeserializer Instance = new SampleArray2D_JsonDeserializer();
+		public static new SampleArrayOfArray_JsonDeserializer Instance = new SampleArrayOfArray_JsonDeserializer();
 
-		public SampleArray2D_JsonDeserializer()
+		public SampleArrayOfArray_JsonDeserializer()
 		{
 			Options.TagMode = TagMode.Names;
 			JsonOptions.EnumAsString = true;
@@ -675,17 +675,17 @@ namespace YuzuGen.YuzuTest
 
 		public override object FromReaderInt()
 		{
-			return FromReaderTyped<global::YuzuTest.SampleArray2D>(Reader);
+			return FromReaderTyped<global::YuzuTest.SampleArrayOfArray>(Reader);
 		}
 
 		public override object FromReaderIntPartial(string name)
 		{
-			return ReadFields(new global::YuzuTest.SampleArray2D(), name);
+			return ReadFields(new global::YuzuTest.SampleArrayOfArray(), name);
 		}
 
 		protected override object ReadFields(object obj, string name)
 		{
-			var result = (global::YuzuTest.SampleArray2D)obj;
+			var result = (global::YuzuTest.SampleArrayOfArray)obj;
 			if ("A" != name) throw new YuzuException("A!=" + name);
 			result.A = RequireOrNull('[') ? null : new int[0][];
 			if (result.A != null) {

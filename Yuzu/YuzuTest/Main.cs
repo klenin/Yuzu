@@ -125,7 +125,7 @@ namespace YuzuTest
 				jd.JsonOptions.ArrayLengthPrefix = true;
 				jd.Generate<SampleArray>();
 				jd.JsonOptions.ArrayLengthPrefix = false;
-				jd.Generate<SampleArray2D>();
+				jd.Generate<SampleArrayOfArray>();
 				jd.Generate<SampleBase>();
 				jd.Generate<SampleDerivedA>();
 				jd.Generate<SampleDerivedB>();
@@ -181,7 +181,7 @@ namespace YuzuTest
 				bd.Generate<SampleDictKeys>();
 				bd.Generate<SampleMemberI>();
 				bd.Generate<SampleArray>();
-				bd.Generate<SampleArray2D>();
+				bd.Generate<SampleArrayOfArray>();
 				bd.Generate<SampleBase>();
 				bd.Generate<SampleDerivedA>();
 				bd.Generate<SampleDerivedB>();
