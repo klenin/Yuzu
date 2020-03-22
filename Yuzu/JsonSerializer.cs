@@ -112,22 +112,22 @@ namespace Yuzu.Json
 				writer.Write(b);
 		}
 
-		private void WriteInt(object obj) => JsonIntWriter.WriteInt(writer, obj);
-		private void WriteUInt(object obj) => JsonIntWriter.WriteUInt(writer, obj);
-		private void WriteLong(object obj) => JsonIntWriter.WriteLong(writer, obj);
-		private void WriteULong(object obj) => JsonIntWriter.WriteULong(writer, obj);
+		private void WriteInt(object obj) => JsonIntWriter.WriteInt(writer, Convert.ToInt32(obj));
+		private void WriteUInt(object obj) => JsonIntWriter.WriteUInt(writer, Convert.ToUInt32(obj));
+		private void WriteLong(object obj) => JsonIntWriter.WriteLong(writer, (long)obj);
+		private void WriteULong(object obj) => JsonIntWriter.WriteULong(writer, (ulong)obj);
 
 		private void WriteLongAsString(object obj)
 		{
 			writer.Write((byte)'"');
-			JsonIntWriter.WriteLong(writer, obj);
+			JsonIntWriter.WriteLong(writer, (long)obj);
 			writer.Write((byte)'"');
 		}
 
 		private void WriteULongAsString(object obj)
 		{
 			writer.Write((byte)'"');
-			JsonIntWriter.WriteULong(writer, obj);
+			JsonIntWriter.WriteULong(writer, (ulong)obj);
 			writer.Write((byte)'"');
 		}
 

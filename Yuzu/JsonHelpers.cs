@@ -108,9 +108,8 @@ namespace Yuzu.Json
 			writer.Write(digitPairsZero[x - d * 100]);
 		}
 
-		public static void WriteInt(BinaryWriter writer, object obj)
+		public static void WriteInt(BinaryWriter writer, int x)
 		{
-			var x = Convert.ToInt32(obj);
 			if (x == int.MinValue) {
 				writer.Write(minIntValueBytes);
 				return;
@@ -126,9 +125,8 @@ namespace Yuzu.Json
 			unchecked { WriteUIntInternal(writer, (uint)x); }
 		}
 
-		public static void WriteUInt(BinaryWriter writer, object obj)
+		public static void WriteUInt(BinaryWriter writer, uint x)
 		{
-			var x = Convert.ToUInt32(obj);
 			if (x < 100) {
 				writer.Write(digitPairsNoZero[x]);
 				return;
@@ -136,9 +134,8 @@ namespace Yuzu.Json
 			WriteUIntInternal(writer, x);
 		}
 
-		public static void WriteLong(BinaryWriter writer, object obj)
+		public static void WriteLong(BinaryWriter writer, long x)
 		{
-			var x = Convert.ToInt64(obj);
 			if (x == long.MinValue) {
 				writer.Write(minLongValueBytes);
 				return;
@@ -159,9 +156,8 @@ namespace Yuzu.Json
 			writer.Write(Encoding.ASCII.GetBytes(x.ToString()));
 		}
 
-		public static void WriteULong(BinaryWriter writer, object obj)
+		public static void WriteULong(BinaryWriter writer, ulong x)
 		{
-			var x = Convert.ToUInt64(obj);
 			if (x < 100) {
 				writer.Write(digitPairsNoZero[x]);
 				return;
