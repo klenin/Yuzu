@@ -2255,6 +2255,9 @@ namespace YuzuTest.Binary
 				"20 03 00 " + XS(typeof(SampleList)) + " 01 00 " + XS("E", RoughType.Sequence) + " 05 01 00" +
 				" 00 00 00 00 00 00"
 			)), "List");
+			XAssert.Throws<YuzuException>(() => bd.FromBytes<Sample1>(SX(
+				"20 03 00 " + XS(typeof(YuzuTest.Sample2)) + " 02 00 " + XS("X") + " 05 " + XS("Y") +  " 10"
+			)), "YuzuTest.Sample2");
 
 		}
 
