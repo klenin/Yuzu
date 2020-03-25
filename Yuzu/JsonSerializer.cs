@@ -321,14 +321,14 @@ namespace Yuzu.Json
 				return;
 			}
 			var array = (T[])obj;
-			var wf = GetWriteFunc(typeof(T));
 			writer.Write((byte)'[');
 			if (array.Length > 0) {
+				var wf = GetWriteFunc(typeof(T));
 				try {
 					depth += 1;
 					if (JsonOptions.ArrayLengthPrefix) {
 						WriteIndent();
-						WriteStr(array.Length.ToString());
+						JsonIntWriter.WriteInt(writer, array.Length);
 					}
 					var isFirst = !JsonOptions.ArrayLengthPrefix;
 					foreach (var elem in array) {
@@ -347,6 +347,58 @@ namespace Yuzu.Json
 				WriteIndent();
 			}
 			writer.Write((byte)']');
+		}
+
+		private void WriteArrayNDim(object obj, Action<object> writeElemFunc)
+		{
+			if (obj == null) {
+				writer.Write(nullBytes);
+				return;
+			}
+			var array = (Array)obj;
+			writer.Write((byte)'[');
+			if (array.Length == 0) {
+				writer.Write((byte)']');
+				return;
+			}
+			++depth;
+			var ubs = new int[array.Rank];
+			var lbs = new int[array.Rank];
+			var indices = new int[array.Rank];
+			for (int dim = 0; dim < indices.Length; ++dim) {
+				indices[dim] = lbs[dim] = array.GetLowerBound(dim);
+				ubs[dim] = array.GetUpperBound(dim);
+			}
+			for (int dim = 0; dim >= 0;) {
+				if (indices[dim] > ubs[dim]) {
+					while (dim >= 0 && indices[dim] >= ubs[dim]) {
+						indices[dim] = lbs[dim];
+						--dim;
+						--depth;
+						WriteFieldSeparator();
+						WriteIndent();
+						writer.Write((byte)']');
+					}
+					if (dim < 0)
+						break;
+					++indices[dim];
+					if (indices[dim] > lbs[dim])
+						writer.Write((byte)',');
+				}
+				for (; dim < indices.Length - 1; ++dim) {
+					indices[dim + 1] = lbs[dim + 1];
+					WriteFieldSeparator();
+					WriteIndent();
+					writer.Write((byte)'[');
+					++depth;
+				}
+				if (indices[dim] > lbs[dim])
+					writer.Write((byte)',');
+				WriteFieldSeparator();
+				WriteIndent();
+				writeElemFunc(array.GetValue(indices));
+				++indices[dim];
+			}
 		}
 
 		private void WriteTypedPrimitive(object obj, Type t)
@@ -603,9 +655,14 @@ namespace Yuzu.Json
 					return obj => WriteNullable(obj, w);
 				}
 			}
-			if (t.IsArray)
-				return MakeDelegateAction(Utils.GetPrivateCovariantGeneric(GetType(), nameof(WriteArray), t));
-
+			if (t.IsArray) {
+				if (t.GetArrayRank() > 1) {
+					var wf = GetWriteFunc(t);
+					return obj => WriteArrayNDim(obj, wf);
+				}
+				return MakeDelegateAction(
+					Utils.GetPrivateCovariantGeneric(GetType(), nameof(WriteArray), t));
+			}
 
 			var idict = Utils.GetIDictionary(t);
 			if (idict != null) {

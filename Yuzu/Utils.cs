@@ -134,10 +134,10 @@ namespace Yuzu.Util
 			if (knownTypes.TryGetValue(t, out string result))
 				return result;
 			if (t.IsArray) {
-				var suffix = String.Format("[{0}]", arraySize);
+				var suffix = String.Format("[{0}{1}]", arraySize, new string(',', t.GetArrayRank() - 1));
 				t = t.GetElementType();
-				for (; t.IsArray; suffix += "[]")
-					t = t.GetElementType();
+				for (; t.IsArray; t = t.GetElementType())
+					suffix += "[" + new string(',', t.GetArrayRank() - 1) + "]";
 				return GetTypeSpec(t) + suffix;
 			}
 			var p = "global::" + t.Namespace + ".";

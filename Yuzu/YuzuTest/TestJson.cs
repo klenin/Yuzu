@@ -900,6 +900,47 @@ namespace YuzuTest.Json
 		}
 
 		[TestMethod]
+		public void TestArrayNDim()
+		{
+			var js = new JsonSerializer();
+			js.JsonOptions.Indent = "";
+			js.JsonOptions.FieldSeparator = "";
+			var jd = new JsonDeserializer();
+
+			var v0 = new SampleArrayNDim {
+				A = new int[2, 3] { { 1, 2, 3 }, { 4, 5, 6 } },
+				B = new string [1,1,1] { { { "x" } } },
+			};
+			var result0 = js.ToString(v0);
+			Assert.AreEqual("{\"A\":[[1,2,3],[4,5,6]],\"B\":[[[\"x\"]]]}", result0);
+			var w0 = new SampleArrayNDim();
+			jd.FromString(w0, result0);
+			Assert.AreEqual(1, w0.A.GetUpperBound(0));
+			Assert.AreEqual(2, w0.A.GetUpperBound(1));
+			Assert.AreEqual(v0.A[0, 0], w0.A[0, 0]);
+			Assert.AreEqual(v0.A[1, 2], w0.A[1, 2]);
+			var w0g = (SampleArrayNDim)SampleArrayNDim_JsonDeserializer.Instance.FromString(result0);
+			Assert.AreEqual(1, w0g.A.GetUpperBound(0));
+			Assert.AreEqual(2, w0g.A.GetUpperBound(1));
+			Assert.AreEqual(v0.A[0, 0], w0g.A[0, 0]);
+			Assert.AreEqual(v0.A[1, 2], w0g.A[1, 2]);
+
+			js.JsonOptions.Indent = " ";
+			js.JsonOptions.FieldSeparator = "\n";
+			var v1 = new SampleArrayNDim {
+				A = new int[3, 1] { { 1 }, { 2 }, { 3 } },
+				B = new string[0, 0, 0],
+			};
+			var result1 = js.ToString(v1);
+			Assert.AreEqual(
+				"{\n \"A\":[\n  [\n   1\n  ],\n  [\n   2\n  ],\n  [\n   3\n  ]\n ],\n \"B\":[]\n}",
+				result1);
+			var w1 = new SampleArrayNDim();
+			jd.FromString(w1, result1);
+
+		}
+
+		[TestMethod]
 		public void TestClassList()
 		{
 			var js = new JsonSerializer();
@@ -2168,6 +2209,9 @@ namespace YuzuTest.Json
 				"{\"class\":\"YuzuTest.SampleList, YuzuTest\",\"E\":[5, 4, 3]}"), "5");
 			XAssert.Throws<YuzuException>(() => jd.FromString(
 				"{\"class\":\"YuzuTest.SampleDict, YuzuTest\",\"a\":1,\"b\":7}"), "7");
+
+			XAssert.Throws<YuzuException>(() => jd.FromString<SampleArrayNDim>(
+				"{\"A\":[[1,2],[3]],\"B\":[]}"), "expected 2, found 1");
 
 			{
 				List<int> list = new List<int>();

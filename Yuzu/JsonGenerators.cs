@@ -283,6 +283,10 @@ namespace Yuzu.Json
 				cw.Put("}\n");
 				return;
 			}
+			if (t.IsArray && t.GetArrayRank() > 1) {
+				cw.PutPart("({0}){1}(typeof({0}));\n", Utils.GetTypeSpec(t), nameof(ReadArrayNDim));
+				return;
+			}
 			if (t.IsArray && !JsonOptions.ArrayLengthPrefix) {
 				PutRequireOrNullArray('[', t, name);
 				cw.Put("if (SkipSpacesCarefully() == ']') {\n");

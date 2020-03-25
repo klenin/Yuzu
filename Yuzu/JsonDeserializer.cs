@@ -504,6 +504,57 @@ namespace Yuzu.Json
 			return lst == null ? null : lst.ToArray();
 		}
 
+		protected Array ReadArrayNDim(Type t)
+		{
+			var n = t.GetArrayRank();
+			var lengths = new int[n];
+			var flatArray = new List<object>();
+			var readElemFunc = ReadValueFunc(t.GetElementType());
+
+			Action<int> readRecursive = null;
+			readRecursive = dim => {
+				RequireOrNull('[');
+				// ReadValue might invoke a new serializer, so we must not rely on PutBack.
+				if (SkipSpacesCarefully() == ']') {
+					Require(']');
+					return;
+				}
+				int count = 0;
+				do {
+					if (dim == n - 1)
+						flatArray.Add(readElemFunc());
+					else
+						readRecursive(dim + 1);
+					++count;
+				} while (Require(']', ',') == ',');
+				if (lengths[dim] == 0)
+					lengths[dim] = count;
+				else if (lengths[dim] != count)
+					throw Error("Inconsistent length of dimension {0}: expected {1}, found {2}",
+						dim, lengths[dim], count);
+			};
+			readRecursive(0);
+
+			var r = Array.CreateInstance(t.GetElementType(), lengths);
+			if (r.Length == 0)
+				return r;
+			var indices = new int[n];
+			for (int dim = n - 1, i = 0; ;++i) {
+				r.SetValue(flatArray[i], indices);
+				if (indices[dim] == lengths[dim] - 1) {
+					for (; dim >= 0 && indices[dim] == lengths[dim] - 1; --dim)
+						indices[dim] = 0;
+					if (dim < 0)
+						break;
+					++indices[dim];
+					dim = n - 1;
+				}
+				else
+					++indices[dim];
+;			}
+			return r;
+		}
+
 		private T[] ReadArrayWithLengthPrefix<T>()
 		{
 			if (RequireOrNull('[')) return null;
@@ -705,6 +756,8 @@ namespace Yuzu.Json
 				}
 			}
 			if (t.IsArray) {
+				if (t.GetArrayRank() > 1)
+					return () => ReadArrayNDim(t);
 				var n = JsonOptions.ArrayLengthPrefix ? nameof(ReadArrayWithLengthPrefix) : nameof(ReadArray);
 				return MakeDelegate(Utils.GetPrivateCovariantGeneric(GetType(), n, t));
 			}

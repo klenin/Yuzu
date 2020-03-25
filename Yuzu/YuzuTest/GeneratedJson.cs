@@ -719,6 +719,39 @@ namespace YuzuGen.YuzuTest
 		}
 	}
 
+	class SampleArrayNDim_JsonDeserializer : JsonDeserializerGenBase
+	{
+		public static new SampleArrayNDim_JsonDeserializer Instance = new SampleArrayNDim_JsonDeserializer();
+
+		public SampleArrayNDim_JsonDeserializer()
+		{
+			Options.TagMode = TagMode.Names;
+			JsonOptions.EnumAsString = true;
+		}
+
+		public override object FromReaderInt()
+		{
+			return FromReaderTyped<global::YuzuTest.SampleArrayNDim>(Reader);
+		}
+
+		public override object FromReaderIntPartial(string name)
+		{
+			return ReadFields(new global::YuzuTest.SampleArrayNDim(), name);
+		}
+
+		protected override object ReadFields(object obj, string name)
+		{
+			var result = (global::YuzuTest.SampleArrayNDim)obj;
+			if ("A" != name) throw new YuzuException("A!=" + name);
+			result.A = (int[,])ReadArrayNDim(typeof(int[,]));
+			name = GetNextName(false);
+			if ("B" != name) throw new YuzuException("B!=" + name);
+			result.B = (string[,,])ReadArrayNDim(typeof(string[,,]));
+			name = GetNextName(false);
+			return result;
+		}
+	}
+
 	class SampleBase_JsonDeserializer : JsonDeserializerGenBase
 	{
 		public static new SampleBase_JsonDeserializer Instance = new SampleBase_JsonDeserializer();

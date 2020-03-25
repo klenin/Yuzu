@@ -240,6 +240,14 @@ namespace YuzuTest
 		public int[][] A;
 	}
 
+	public class SampleArrayNDim
+	{
+		[YuzuRequired]
+		public int[,] A;
+		[YuzuRequired]
+		public string[,,] B;
+	}
+
 	public class SampleArrayOfClass
 	{
 		[YuzuRequired]
