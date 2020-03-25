@@ -760,10 +760,20 @@ namespace YuzuTest.Json
 			Assert.AreEqual(v0.Children.Count, w0.Children.Count);
 			Assert.AreEqual(v0.Children["a"].Value, w0.Children["a"].Value);
 
-			var w1 = (SampleDict)SampleDict_JsonDeserializer.Instance.FromString(result0);
-			Assert.AreEqual(v0.Value, w1.Value);
-			Assert.AreEqual(v0.Children.Count, w1.Children.Count);
-			Assert.AreEqual(v0.Children["a"].Value, w1.Children["a"].Value);
+			var w0g = (SampleDict)SampleDict_JsonDeserializer.Instance.FromString(result0);
+			Assert.AreEqual(v0.Value, w0g.Value);
+			Assert.AreEqual(v0.Children.Count, w0g.Children.Count);
+			Assert.AreEqual(v0.Children["a"].Value, w0g.Children["a"].Value);
+
+			var v1 = new Dictionary<string, int> { { "", 0 } };
+			var result1 = js.ToString(v1);
+			Assert.AreEqual("{\n\"\":0\n}", result1);
+			var w1 = jd.FromString<Dictionary<string, int>>(result1);
+			Assert.AreEqual(1, w1.Count);
+			Assert.AreEqual(0, w1[""]);
+			var w1a = (Dictionary<string, object>)jd.FromString(result1);
+			Assert.AreEqual(1, w1.Count);
+			Assert.AreEqual(0, w1[""]);
 		}
 
 		[TestMethod]
@@ -2151,6 +2161,8 @@ namespace YuzuTest.Json
 				jd.FromString<Dictionary<Sample2, int>>("{\"a\":1}"), "Sample2");
 			XAssert.Throws<YuzuException>(() => jd.FromString(
 				"{\"class\":\"System.Int32\",\"a\":1}"), "Primitive");
+			XAssert.Throws<YuzuException>(() => jd.FromString(
+				"{\"class\":\"YuzuTest.Sample1, YuzuTest\", \"X\": 3, \"\": 4}"), "''");
 
 			XAssert.Throws<YuzuException>(() => jd.FromString(
 				"{\"class\":\"YuzuTest.SampleList, YuzuTest\",\"E\":[5, 4, 3]}"), "5");

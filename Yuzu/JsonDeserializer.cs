@@ -378,7 +378,7 @@ namespace Yuzu.Json
 				ch = SkipSpaces();
 			}
 			if (ch == '}')
-				return "";
+				return null;
 			if (ch != '"')
 				throw Error("Expected '\"' but found '{0}'", ch);
 			sb.Clear();
@@ -564,7 +564,7 @@ namespace Yuzu.Json
 					var name = GetNextName(first: true);
 					if (name != JsonOptions.ClassTag) {
 						var any = new Dictionary<string, object>();
-						if (name != "") {
+						if (name != null) {
 							var val = ReadAnyObject();
 							any.Add(name, val);
 							if (Require(',', '}') == ',')
@@ -758,7 +758,7 @@ namespace Yuzu.Json
 
 		protected void ReadUnknownFieldsTail(YuzuUnknownStorage storage, string name)
 		{
-			while (name != "") {
+			while (name != null) {
 				storage.Add(name, ReadAnyObject());
 				name = GetNextName(false);
 			}
@@ -767,7 +767,7 @@ namespace Yuzu.Json
 		protected int ReadUnknownFields(YuzuUnknownStorage storage, string tag, ref string name)
 		{
 			var cmp = String.CompareOrdinal(tag, name);
-			while (cmp > 0 && name != "") {
+			while (cmp > 0 && name != null) {
 				storage.Add(name, ReadAnyObject());
 				name = GetNextName(false);
 				cmp = String.CompareOrdinal(tag, name);
@@ -787,7 +787,7 @@ namespace Yuzu.Json
 						NullYuzuUnknownStorage.Instance : meta.GetUnknownStorage(obj);
 					storage.Clear();
 					int requiredCountActiual = 0;
-					while (name != "") {
+					while (name != null) {
 						if (!meta.TagToItem.TryGetValue(name, out Meta.Item yi)) {
 							if (!Options.AllowUnknownFields)
 								throw Error("Unknown field '{0}'", name);
@@ -839,7 +839,7 @@ namespace Yuzu.Json
 							MergeValueFunc(yi.Type)(yi.GetValue(obj));
 						name = GetNextName(false);
 					}
-					if (name != "")
+					if (name != null)
 						throw Error("Unknown field '{0}'", name);
 				}
 			}

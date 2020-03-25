@@ -768,10 +768,17 @@ namespace YuzuTest.Binary
 			Assert.AreEqual(v0.Children.Count, w0.Children.Count);
 			Assert.AreEqual(v0.Children["a"].Value, w0.Children["a"].Value);
 
-			var w1 = (SampleDict)bdg.FromBytes(result0);
-			Assert.AreEqual(v0.Value, w1.Value);
-			Assert.AreEqual(v0.Children.Count, w1.Children.Count);
-			Assert.AreEqual(v0.Children["a"].Value, w1.Children["a"].Value);
+			var w0g = (SampleDict)bdg.FromBytes(result0);
+			Assert.AreEqual(v0.Value, w0g.Value);
+			Assert.AreEqual(v0.Children.Count, w0g.Children.Count);
+			Assert.AreEqual(v0.Children["a"].Value, w0g.Children["a"].Value);
+
+			var v1 = new Dictionary<string, int> { { "", 0 } };
+			var result1 = bs.ToBytes(v1);
+			Assert.AreEqual("22 10 05 01 00 00 00 00 00 00 00 00 00", XS(result1));
+			var w1 = bd.FromBytes<Dictionary<string, int>>(result1);
+			Assert.AreEqual(1, w1.Count);
+			Assert.AreEqual(0, w1[""]);
 		}
 
 		[TestMethod]

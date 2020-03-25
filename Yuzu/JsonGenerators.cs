@@ -46,7 +46,7 @@ namespace Yuzu.Json
 
 		private object MaybeReadObject(string className, string name)
 		{
-			return name == "" ?
+			return name == null ?
 				Activator.CreateInstance(FindType(className)) :
 				MakeDeserializer(className).FromReaderIntPartial(name);
 		}
@@ -70,7 +70,7 @@ namespace Yuzu.Json
 				CheckExpectedType(RequireUnescapedString(), expectedType);
 				name = GetNextName(first: false);
 			}
-			return name == "" ? obj :
+			return name == null ? obj :
 				MakeDeserializer(TypeSerializer.Serialize(obj.GetType())).ReadFields(obj, name);
 		}
 
