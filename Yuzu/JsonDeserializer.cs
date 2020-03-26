@@ -511,13 +511,16 @@ namespace Yuzu.Json
 			var flatArray = new List<object>();
 			var readElemFunc = ReadValueFunc(t.GetElementType());
 
-			Action<int> readRecursive = null;
+			Func<int, bool> readRecursive = null;
 			readRecursive = dim => {
-				RequireOrNull('[');
+				if (dim > 0)
+					Require('[');
+				else if (RequireOrNull('['))
+					return true;
 				// ReadValue might invoke a new serializer, so we must not rely on PutBack.
 				if (SkipSpacesCarefully() == ']') {
 					Require(']');
-					return;
+					return false;
 				}
 				int count = 0;
 				do {
@@ -532,8 +535,10 @@ namespace Yuzu.Json
 				else if (lengths[dim] != count)
 					throw Error("Inconsistent length of dimension {0}: expected {1}, found {2}",
 						dim, lengths[dim], count);
+				return false;
 			};
-			readRecursive(0);
+			if (readRecursive(0))
+				return null;
 
 			var r = Array.CreateInstance(t.GetElementType(), lengths);
 			if (r.Length == 0)

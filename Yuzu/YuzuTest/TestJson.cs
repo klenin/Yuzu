@@ -919,6 +919,12 @@ namespace YuzuTest.Json
 			var w0g = (SampleArrayNDim)SampleArrayNDim_JsonDeserializer.Instance.FromString(result0);
 			v0.AssertAreEqual(w0g);
 
+			var resultNull = js.ToString(new SampleArrayNDim());
+			Assert.AreEqual("{\"A\":null,\"B\":null}", resultNull);
+			var wNull = jd.FromString<SampleArrayNDim>(resultNull);
+			Assert.IsNull(wNull.A);
+			Assert.IsNull(wNull.B);
+
 			js.JsonOptions.Indent = " ";
 			js.JsonOptions.FieldSeparator = "\n";
 			var v1 = new SampleArrayNDim {
