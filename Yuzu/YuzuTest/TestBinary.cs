@@ -894,6 +894,63 @@ namespace YuzuTest.Binary
 		}
 
 		[TestMethod]
+		public void TestArrayNDim()
+		{
+			var bs = new BinarySerializer();
+			var bd = new BinaryDeserializer();
+			var bdg = new BinaryDeserializerGen();
+
+			var v0 = new SampleArrayNDim {
+				A = new int[2, 3] { { 1, 2, 3 }, { 4, 5, 6 } },
+				B = new string[1, 1, 1] { { { "x" } } },
+			};
+			var result0 = bs.ToBytes(v0);
+			Assert.AreEqual(
+				"20 01 00 " + XS(typeof(SampleArrayNDim)) + " 02 00 " +
+				XS("A", RoughType.NDimArray) + " 02 05 " + XS("B", RoughType.NDimArray) + " 03 10 " +
+				"01 00 02 00 00 00 03 00 00 00 00 " +
+				"01 00 00 00 02 00 00 00 03 00 00 00 04 00 00 00 05 00 00 00 06 00 00 00 " +
+				"02 00 01 00 00 00 01 00 00 00 01 00 00 00 00 " + XS("x") + " 00 00",
+				XS(result0));
+			var w0 = new SampleArrayNDim();
+			bd.FromBytes(w0, result0);
+			v0.AssertAreEqual(w0);
+
+			var w0g = bdg.FromBytes<SampleArrayNDim>(result0);
+			v0.AssertAreEqual(w0g);
+
+			var resultNull = bs.ToBytes(new SampleArrayNDim());
+			Assert.AreEqual("20 01 00 01 00 FF FF FF FF 02 00 FF FF FF FF 00 00", XS(resultNull));
+			var wNull = bd.FromBytes<SampleArrayNDim>(resultNull);
+			Assert.IsNull(wNull.A);
+			Assert.IsNull(wNull.B);
+
+			var v1 = new SampleArrayNDim {
+				A = new int[3, 1] { { 1 }, { 2 }, { 3 } },
+				B = new string[0, 0, 0],
+			};
+			var result1 = bs.ToBytes(v1);
+			Assert.AreEqual(
+				"\n20 01 00 01 00 03 00 00 00 01 00 00 00 00 01 00 00 00 02 00 00 00 03 00 00 00 " +
+				"02 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00",
+				"\n" + XS(result1));
+			var w1 = bd.FromBytes<SampleArrayNDim>(result1);
+			v1.AssertAreEqual(w1);
+
+			var v2 = new SampleArrayNDim {
+				A = (int[,])Array.CreateInstance(typeof(int), new int[] { 1, 1 }, new int[] { -1, 10 })
+			};
+			v2.A[-1, 10] = 7;
+			var result2 = bs.ToBytes(v2);
+			Assert.AreEqual(
+				"\n20 01 00 01 00 01 00 00 00 01 00 00 00 01 FF FF FF FF 0A 00 00 00 " +
+				"07 00 00 00 02 00 FF FF FF FF 00 00",
+				"\n" + XS(result2));
+			var w2 = bd.FromBytes<SampleArrayNDim>(result2);
+			v2.AssertAreEqual(w2);
+		}
+
+		[TestMethod]
 		public void TestClassList()
 		{
 			var bs = new BinarySerializer();

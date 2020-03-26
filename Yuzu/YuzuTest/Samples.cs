@@ -259,14 +259,23 @@ namespace YuzuTest
 		{
 			AssertBoundsAreEqual(A, actual.A);
 			if (A.Length > 0)
-				Assert.AreEqual(A[0, 0], actual.A[0, 0]);
+				Assert.AreEqual(
+					A[A.GetLowerBound(0), A.GetLowerBound(1)],
+					actual.A[A.GetLowerBound(0), A.GetLowerBound(1)]);
 			if (A.Length > 1)
 				Assert.AreEqual(
 					A[A.GetUpperBound(0), A.GetUpperBound(1)],
 					actual.A[A.GetUpperBound(0), A.GetUpperBound(1)]);
+
+			if (B == null) {
+				Assert.IsNull(actual.B);
+				return;
+			}
 			AssertBoundsAreEqual(B, actual.B);
 			if (B.Length > 0)
-				Assert.AreEqual(B[0, 0, 0], actual.B[0, 0, 0]);
+				Assert.AreEqual(
+					B[B.GetLowerBound(0), B.GetLowerBound(1), B.GetLowerBound(2)],
+					actual.B[B.GetLowerBound(0), B.GetLowerBound(1), B.GetLowerBound(2)]);
 			if (B.Length > 1)
 				Assert.AreEqual(
 					B[B.GetUpperBound(0), B.GetUpperBound(1), B.GetUpperBound(2)],

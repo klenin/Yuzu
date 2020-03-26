@@ -87,8 +87,13 @@ namespace Yuzu.Binary
 				var t = RT.roughTypeToType[(int)rt];
 				if (t != null) return t == expectedType;
 			}
-			if (expectedType.IsArray)
-				return rt == RoughType.Sequence && ReadCompatibleType(expectedType.GetElementType());
+			if (expectedType.IsArray) {
+				var r = expectedType.GetArrayRank();
+				return
+					(r == 1 ? rt == RoughType.Sequence :
+						rt == RoughType.NDimArray && Reader.ReadByte() == r) &&
+					ReadCompatibleType(expectedType.GetElementType());
+			}
 
 			var idict = Utils.GetIDictionary(expectedType);
 			if (idict != null) {
@@ -256,6 +261,47 @@ namespace Yuzu.Binary
 			var array = new T[count];
 			for (int i = 0; i < count; ++i)
 				array[i] = (T)rf();
+			return array;
+		}
+
+		protected Array ReadArrayNDim(Type elementType, int rank) =>
+			ReadArrayNDim(elementType, rank, ReadValueFunc(elementType));
+
+		protected Array ReadArrayNDim(Type elementType, int rank, Func<object> readElemFunc)
+		{
+			int lengthOrNull = Reader.ReadInt32();
+			if (lengthOrNull == -1)
+				return null;
+			var lbs = new int[rank];
+			var ubs = new int[rank];
+			var lengths = new int[rank];
+			lengths[0] = lengthOrNull;
+			for (int dim = 1; dim < rank; ++dim)
+				lengths[dim] = Reader.ReadInt32();
+			if (Reader.ReadBoolean()) {
+				for (int dim = 0; dim < rank; ++dim)
+					lbs[dim] = Reader.ReadInt32();
+			}
+			for (int dim = 0; dim < rank; ++dim)
+				ubs[dim] = lengths[dim] + lbs[dim] - 1;
+			var array = Array.CreateInstance(elementType, lengths, lbs);
+			if (array.Length == 0)
+				return array;
+
+			var indices = (int[])lbs.Clone();
+			for (int dim = rank - 1; ;) {
+				array.SetValue(readElemFunc(), indices);
+				if (indices[dim] == ubs[dim]) {
+					for (; dim >= 0 && indices[dim] == ubs[dim]; --dim)
+						indices[dim] = lbs[dim];
+					if (dim < 0)
+						break;
+					++indices[dim];
+					dim = rank - 1;
+				}
+				else
+					++indices[dim];
+			}
 			return array;
 		}
 
@@ -646,8 +692,15 @@ namespace Yuzu.Binary
 					return () => Reader.ReadBoolean() ? null : r();
 				}
 			}
-			if (t.IsArray)
+			if (t.IsArray) {
+				if (t.GetArrayRank() > 1) {
+					var et = t.GetElementType();
+					var rf = ReadValueFunc(et);
+					var rank = t.GetArrayRank();
+					return () => ReadArrayNDim(et, rank, rf);
+				}
 				return MakeDelegate(Utils.GetPrivateCovariantGeneric(GetType(), nameof(ReadArray), t));
+			}
 
 			var meta = Meta.Get(t, Options);
 			var sg = meta.Surrogate;

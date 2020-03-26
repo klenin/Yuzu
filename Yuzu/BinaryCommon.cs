@@ -41,6 +41,7 @@ namespace Yuzu.Binary
 		Record = 32,
 		Sequence = 33,
 		Mapping = 34,
+		NDimArray = 35,
 
 		FirstAtom = SByte,
 		LastAtom = Guid,

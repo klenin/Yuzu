@@ -132,7 +132,12 @@ namespace Yuzu.Binary
 				}
 			}
 			if (t.IsArray) {
-				writer.Write((byte)RoughType.Sequence);
+				if (t.GetArrayRank() > 1) {
+					writer.Write((byte)RoughType.NDimArray);
+					writer.Write((byte)t.GetArrayRank());
+				}
+				else
+					writer.Write((byte)RoughType.Sequence);
 				WriteRoughType(t.GetElementType());
 				return;
 			}
@@ -205,6 +210,47 @@ namespace Yuzu.Binary
 			writer.Write(arr.Length);
 			foreach (var a in arr)
 				wf(a);
+		}
+
+		private void WriteArrayNDim(object obj, Action<object> writeElemFunc)
+		{
+			if (obj == null) {
+				writer.Write(-1);
+				return;
+			}
+			var arr = (Array)obj;
+			var lbs = new int[arr.Rank];
+			var ubs = new int[arr.Rank];
+			var hasNonZeroLB = false;
+			for (int dim = 0; dim < arr.Rank; ++dim) {
+				lbs[dim] = arr.GetLowerBound(dim);
+				ubs[dim] = arr.GetUpperBound(dim);
+				writer.Write(ubs[dim] - lbs[dim] + 1);
+				if (lbs[dim] != 0)
+					hasNonZeroLB = true;
+			}
+
+			writer.Write(hasNonZeroLB);
+			if (hasNonZeroLB)
+				for (int dim = 0; dim < arr.Rank; ++dim)
+					writer.Write(lbs[dim]);
+
+			if (arr.Length == 0)
+				return;
+			var indices = (int[])lbs.Clone();
+			for (int dim = arr.Rank - 1; ;) {
+				writeElemFunc(arr.GetValue(indices));
+				if (indices[dim] == ubs[dim]) {
+					for (; dim >= 0 && indices[dim] == ubs[dim]; --dim)
+						indices[dim] = lbs[dim];
+					if (dim < 0)
+						break;
+					++indices[dim];
+					dim = arr.Rank - 1;
+				}
+				else
+					++indices[dim];
+			}
 		}
 
 		private void WriteIEnumerable<T>(object list, Action<object> wf)
@@ -600,6 +646,9 @@ namespace Yuzu.Binary
 			}
 			if (t.IsArray) {
 				var wf = GetWriteFunc(t.GetElementType());
+				if (t.GetArrayRank() > 1) {
+					return obj => WriteArrayNDim(obj, wf);
+				}
 				var m = Utils.GetPrivateCovariantGeneric(GetType(), nameof(WriteArray), t);
 				var d = MakeDelegateParam<Action<object>>(m);
 				return obj => d(obj, wf);

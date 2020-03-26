@@ -183,6 +183,7 @@ namespace YuzuTest
 				bd.Generate<SampleMemberI>();
 				bd.Generate<SampleArray>();
 				bd.Generate<SampleArrayOfArray>();
+				bd.Generate<SampleArrayNDim>();
 				bd.Generate<SampleBase>();
 				bd.Generate<SampleDerivedA>();
 				bd.Generate<SampleDerivedB>();
