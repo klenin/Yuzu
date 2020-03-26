@@ -865,7 +865,7 @@ namespace YuzuTest.Binary
 		}
 
 		[TestMethod]
-		public void TestArray2D()
+		public void TestArrayOfArray()
 		{
 			var bs = new BinarySerializer();
 			var bd = new BinaryDeserializer();

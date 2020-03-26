@@ -877,7 +877,7 @@ namespace YuzuTest.Json
 		}
 
 		[TestMethod]
-		public void TestArray2D()
+		public void TestArrayOfArray()
 		{
 			var js = new JsonSerializer();
 			js.JsonOptions.Indent = "";
