@@ -915,15 +915,9 @@ namespace YuzuTest.Json
 			Assert.AreEqual("{\"A\":[[1,2,3],[4,5,6]],\"B\":[[[\"x\"]]]}", result0);
 			var w0 = new SampleArrayNDim();
 			jd.FromString(w0, result0);
-			Assert.AreEqual(1, w0.A.GetUpperBound(0));
-			Assert.AreEqual(2, w0.A.GetUpperBound(1));
-			Assert.AreEqual(v0.A[0, 0], w0.A[0, 0]);
-			Assert.AreEqual(v0.A[1, 2], w0.A[1, 2]);
+			v0.AssertAreEqual(w0);
 			var w0g = (SampleArrayNDim)SampleArrayNDim_JsonDeserializer.Instance.FromString(result0);
-			Assert.AreEqual(1, w0g.A.GetUpperBound(0));
-			Assert.AreEqual(2, w0g.A.GetUpperBound(1));
-			Assert.AreEqual(v0.A[0, 0], w0g.A[0, 0]);
-			Assert.AreEqual(v0.A[1, 2], w0g.A[1, 2]);
+			v0.AssertAreEqual(w0g);
 
 			js.JsonOptions.Indent = " ";
 			js.JsonOptions.FieldSeparator = "\n";
@@ -937,7 +931,7 @@ namespace YuzuTest.Json
 				result1);
 			var w1 = new SampleArrayNDim();
 			jd.FromString(w1, result1);
-
+			v1.AssertAreEqual(w1);
 		}
 
 		[TestMethod]

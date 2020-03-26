@@ -657,7 +657,7 @@ namespace Yuzu.Json
 			}
 			if (t.IsArray) {
 				if (t.GetArrayRank() > 1) {
-					var wf = GetWriteFunc(t);
+					var wf = GetWriteFunc(t.GetElementType());
 					return obj => WriteArrayNDim(obj, wf);
 				}
 				return MakeDelegateAction(
