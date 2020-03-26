@@ -57,8 +57,9 @@ Value | Description
  19 | `DateTimeOffset`
  20 | `Guid`
  32 | *Record*
- 33 | *Sequence*
- 34 | *Mapping*
+ 33 | *Sequence* (list, enumarable or array with rank = 1)
+ 34 | *Mapping* (dictionary)
+ 35 | *NDimArray* (array with rank > 1)
 
 Basic types are immediately followed by value, where integers are stored in little-endian order,
 floating point values in IEEE 754 representation, char as UTF-8.
@@ -68,7 +69,7 @@ If the length is zero, it is followed by either a zero byte indicating empty str
 
 `Nullable` is followed by item type, then a zero byte to represent `null` or a byte with value 1 followed by item value.
 
-*Sequence* (denoting arrays and collections) is followed by item type, then by 4-byte item count and item representations.
+*Sequence* (denoting 1-dimensional arrays and collections) is followed by item type, then by 4-byte item count and item representations.
 Null sequence is designated by item count −1 (`FF FF FF FF`).
 
 *Mapping* (denoting dictionaries) is followed by key type, then by item type, then by 4-byte entry count and entry representations.
@@ -89,3 +90,12 @@ Field description is:
 2. Field name length, varint-encoded.
 3. Field name in UTF-8.
 4. Field type.
+
+*NDimArray* denotes an array with 2 or more dimensions. It is followed by:
+1. 1-byte rank (number of dimensions)
+2. For each dimension, 4-byte length.
+3. 1-byte equal to 1 if array has at least one non-zero lower bound, 0 otherwise.
+4. If previous item is 1, for each dimension, 4-byte lower bound.
+5. Item representations in last-index-fastest order.
+
+Null array is designated by value −1 (`FF FF FF FF`) immediately after the rank.
