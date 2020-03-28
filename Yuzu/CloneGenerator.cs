@@ -73,9 +73,9 @@ namespace Yuzu.Clone
 					Utils.GetTypeSpec(r.Key),
 					Cloner.IsCopyable(r.Key, options) ? "ValueCopyCloner" :
 					Utils.IsStruct(r.Key) ? r.Value + "_obj" : r.Value);
-			cw.Put("}\n");
-			cw.Put("}\n"); // Close class.
-			cw.Put("}\n"); // Close namespace.
+			cw.PutEndBlock();
+			cw.PutEndBlock(); // Close class.
+			cw.PutEndBlock(); // Close namespace.
 		}
 
 		private string GenerateFactoryCall(Meta meta) =>
@@ -122,7 +122,7 @@ namespace Yuzu.Clone
 				cw.Put("if ({0}.{1}({2}++, {3}))\n",
 					srcName, meta.SerializeItemIfMethod.Name, indexName, itemName);
 				cw.PutInd(add);
-				cw.Put("}\n");
+				cw.PutEndBlock();
 			}
 			else {
 				cw.Put("foreach (var {0} in {1})\n", itemName, srcName);
@@ -171,9 +171,9 @@ namespace Yuzu.Clone
 						e, string.Format("s.{0}[{1}]", yi.Name, indexNamesStr));
 					cw.Put("result.{0}[{1}] = {2};\n", yi.Name, indexNamesStr, clonerCall);
 					for (int dim = 0; dim < rank; ++dim)
-						cw.Put("}\n");
+						cw.PutEndBlock();
 				}
-				cw.Put("}\n");
+				cw.PutEndBlock();
 				return;
 			}
 			{
@@ -188,7 +188,7 @@ namespace Yuzu.Clone
 					var clonerCallV = GenerateClonerInit(a[1], string.Format("{0}.Value", itemName));
 					cw.Put("foreach (var {0} in s.{1})\n", itemName, yi.Name);
 					cw.PutInd("result.{0}.Add({1}, {2});\n", yi.Name, clonerCallK, clonerCallV);
-					cw.Put("}\n");
+					cw.PutEndBlock();
 					return;
 				}
 			}
@@ -204,7 +204,7 @@ namespace Yuzu.Clone
 					var a = icoll.GetGenericArguments();
 					GenerateCloneCollection(
 						Meta.Get(yi.Type, options), icoll, a[0], "result." + yi.Name, "s." + yi.Name);
-					cw.Put("}\n");
+					cw.PutEndBlock();
 					return;
 				}
 			}
@@ -237,7 +237,7 @@ namespace Yuzu.Clone
 				if (cond != null) {
 					cw.Put("if ({0}) {{\n", cond);
 					GenerateCloneItem(meta, yi);
-					cw.Put("}\n");
+					cw.PutEndBlock();
 				}
 				else
 					GenerateCloneItem(meta, yi);
@@ -312,7 +312,7 @@ namespace Yuzu.Clone
 			cw.GenerateActionList(meta.AfterSerialization, "s");
 			cw.GenerateActionList(meta.AfterDeserialization);
 			cw.Put("return result;\n");
-			cw.Put("}\n");
+			cw.PutEndBlock();
 			cw.Put("\n");
 			if (Utils.IsStruct(t)) {
 				cw.Put("private static object {0}_obj(Cloner cl, object src) =>\n", clonerName);

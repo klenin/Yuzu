@@ -265,6 +265,8 @@ namespace Yuzu.Util
 			indentLevel -= 1;
 		}
 
+		public void PutEndBlock() => Put("}\n");
+
 		// Check for explicit vs implicit interface implementation.
 		public string GenAddToCollection(Type t, Type icoll, string collName, string elementName)
 		{

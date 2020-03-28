@@ -84,9 +84,9 @@ namespace Yuzu.Binary
 				cw.Put("readCache[typeof({0})] = {1};\n", Utils.GetTypeSpec(r.Key), r.Value);
 			foreach (var r in generatedMakers)
 				cw.Put("makeCache[typeof({0})] = {1};\n", Utils.GetTypeSpec(r.Key), r.Value);
-			cw.Put("}\n");
-			cw.Put("}\n"); // Close class.
-			cw.Put("}\n"); // Close namespace.
+			cw.PutEndBlock();
+			cw.PutEndBlock(); // Close class.
+			cw.PutEndBlock(); // Close namespace.
 		}
 
 		private static Dictionary<Type, string> simpleValueReader = new Dictionary<Type, string>();
@@ -132,7 +132,7 @@ namespace Yuzu.Binary
 			cw.Put("var {0} = ", tempElementName);
 			GenerateValue(icoll.GetGenericArguments()[0], tempElementName);
 			cw.PutAddToCollection(t, icoll, name, tempElementName);
-			cw.Put("}\n"); // while
+			cw.PutEndBlock(); // while
 		}
 
 		private void GenerateDictionary(Type t, Type idict, string name, string tempIndexName)
@@ -145,7 +145,7 @@ namespace Yuzu.Binary
 			cw.Put("var {0} = ", tempValueName);
 			GenerateValue(idict.GetGenericArguments()[1], tempValueName);
 			cw.Put("{0}.Add({1}, {2});\n", name, tempKeyName, tempValueName);
-			cw.Put("}\n"); // while
+			cw.PutEndBlock(); // while
 		}
 
 		private string MaybeUnchecked() { return SafetyChecks ? "" : "Unchecked"; }
@@ -183,9 +183,9 @@ namespace Yuzu.Binary
 				cw.Put("var {0} = new {1};\n", tempArrayName, Utils.GetTypeSpec(t, arraySize: tempIndexName));
 				cw.Put("for({0} = 0; {0} < {1}.Length; ++{0}) {{\n", tempIndexName, tempArrayName);
 				GenerateSetValue(t.GetElementType(), String.Format("{0}[{1}]", tempArrayName, tempIndexName), null);
-				cw.Put("}\n");
+				cw.PutEndBlock();
 				cw.Put("{0} = {1};\n", name, tempArrayName);
-				cw.Put("}\n"); // if >= 0
+				cw.PutEndBlock(); // if >= 0
 				return;
 			}
 			var idict = Utils.GetIDictionary(t);
@@ -193,7 +193,7 @@ namespace Yuzu.Binary
 				var tempIndexName = PutNullOrCount(t);
 				cw.Put("{0} = new {1}();\n", name, Utils.GetTypeSpec(t));
 				GenerateDictionary(t, idict, name, tempIndexName);
-				cw.Put("}\n");
+				cw.PutEndBlock();
 				return;
 			}
 			var icoll = Utils.GetICollection(t);
@@ -201,7 +201,7 @@ namespace Yuzu.Binary
 				var tempIndexName = PutNullOrCount(t);
 				cw.Put("{0} = new {1}();\n", name, Utils.GetTypeSpec(t));
 				GenerateCollection(t, icoll, name, tempIndexName);
-				cw.Put("}\n");
+				cw.PutEndBlock();
 				return;
 			}
 			if (t.IsClass || t.IsInterface) {
@@ -265,13 +265,13 @@ namespace Yuzu.Binary
 			var idict = Utils.GetIDictionary(t);
 			if (idict != null) {
 				GenerateDictionary(t, idict, name, PutCount());
-				cw.Put("}\n");
+				cw.PutEndBlock();
 				return;
 			}
 			var icoll = Utils.GetICollection(t);
 			if (icoll != null) {
 				GenerateCollection(t, icoll, name, PutCount());
-				cw.Put("}\n");
+				cw.PutEndBlock();
 				return;
 			}
 			if ((t.IsClass || t.IsInterface) && t != typeof(object)) {
@@ -321,7 +321,7 @@ namespace Yuzu.Binary
 						GenerateMerge(yi.Type, "result." + yi.Name);
 					cw.Put("fd = def.Fields[d.Reader.ReadInt16()];\n");
 					if (yi.IsOptional)
-						cw.Put("}\n");
+						cw.PutEndBlock();
 				}
 				if (SafetyChecks)
 					cw.Put("if (fd.OurIndex != {0}.EOF) throw dg.Error(\"Unfinished object\");\n", classDefName);
@@ -346,7 +346,7 @@ namespace Yuzu.Binary
 				cw.Put("{\n");
 				cw.Put("var result = ({0})obj;\n", Utils.GetTypeSpec(t));
 				GenerateReaderBody(meta);
-				cw.Put("}\n");
+				cw.PutEndBlock();
 				cw.Put("\n");
 				generatedReaders[t] = readerName;
 			}
@@ -360,7 +360,7 @@ namespace Yuzu.Binary
 			else
 				cw.Put("{0}(d, def, result);\n", readerName);
 			cw.Put("return result;\n");
-			cw.Put("}\n");
+			cw.PutEndBlock();
 			cw.Put("\n");
 			generatedMakers[t] = makerName;
 		}

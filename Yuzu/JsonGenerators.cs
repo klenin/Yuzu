@@ -147,7 +147,7 @@ namespace Yuzu.Json
 
 		public void GenerateFooter()
 		{
-			cw.Put("}\n"); // Close namespace.
+			cw.PutEndBlock(); // Close namespace.
 		}
 
 		private void PutRequireOrNull(char ch, Type t, string name)
@@ -166,7 +166,7 @@ namespace Yuzu.Json
 		{
 			cw.Put("if (SkipSpacesCarefully() == ']') {\n");
 			cw.Put("Require(']');\n");
-			cw.Put("}\n");
+			cw.PutEndBlock();
 			cw.Put("else {\n");
 			cw.Put("do {\n");
 			var tempElementName = cw.GetTempName();
@@ -174,7 +174,7 @@ namespace Yuzu.Json
 			GenerateValue(icoll.GetGenericArguments()[0], tempElementName);
 			cw.PutAddToCollection(t, icoll, name, tempElementName);
 			cw.Put("} while (Require(']', ',') == ',');\n");
-			cw.Put("}\n");
+			cw.PutEndBlock();
 		}
 
 		private void GenerateMerge(Type t, string name)
@@ -201,7 +201,7 @@ namespace Yuzu.Json
 		{
 			cw.Put("if (SkipSpacesCarefully() == '}') {\n");
 			cw.Put("Require('}');\n");
-			cw.Put("}\n");
+			cw.PutEndBlock();
 			cw.Put("else {\n");
 			cw.Put("do {\n");
 			var tempKeyStr = cw.GetTempName();
@@ -220,7 +220,7 @@ namespace Yuzu.Json
 					String.Format("({0})keyParsers[typeof({0})]({1})", Utils.GetTypeSpec(keyType), tempKeyStr);
 			cw.Put("{0}.Add({1}, {2});\n", name, tempKey, tempValue);
 			cw.Put("} while (Require('}', ',') == ',');\n");
-			cw.Put("}\n");
+			cw.PutEndBlock();
 		}
 
 		private static Dictionary<Type, string> simpleValueReader = new Dictionary<Type, string>();
@@ -276,11 +276,11 @@ namespace Yuzu.Json
 				cw.PutPart("null;\n");
 				cw.Put("if (SkipSpacesCarefully() == 'n') {\n");
 				cw.Put("Require(\"null\");\n");
-				cw.Put("}\n");
+				cw.PutEndBlock();
 				cw.Put("else {\n");
 				cw.Put("{0} = ", name);
 				GenerateValue(t.GetGenericArguments()[0], name);
-				cw.Put("}\n");
+				cw.PutEndBlock();
 				return;
 			}
 			if (t.IsArray && t.GetArrayRank() > 1) {
@@ -291,7 +291,7 @@ namespace Yuzu.Json
 				PutRequireOrNullArray('[', t, name);
 				cw.Put("if (SkipSpacesCarefully() == ']') {\n");
 				cw.Put("Require(']');\n");
-				cw.Put("}\n");
+				cw.PutEndBlock();
 				cw.Put("else {\n");
 				var tempListName = cw.GetTempName();
 				cw.Put("var {0} = new List<{1}>();\n", tempListName, Utils.GetTypeSpec(t.GetElementType()));
@@ -302,8 +302,8 @@ namespace Yuzu.Json
 				cw.Put("{0}.Add({1});\n", tempListName, tempName);
 				cw.Put("} while (Require(']', ',') == ',');\n");
 				cw.Put("{0} = {1}.ToArray();\n", name, tempListName);
-				cw.Put("}\n");
-				cw.Put("}\n");
+				cw.PutEndBlock();
+				cw.PutEndBlock();
 				return;
 			}
 			if (t.IsArray && JsonOptions.ArrayLengthPrefix) {
@@ -316,25 +316,25 @@ namespace Yuzu.Json
 				cw.Put("Require(',');\n");
 				cw.Put("{0}[{1}] = ", tempArrayName, tempIndexName);
 				GenerateValue(t.GetElementType(), String.Format("{0}[{1}]", tempArrayName, tempIndexName));
-				cw.Put("}\n");
+				cw.PutEndBlock();
 				cw.Put("{0} = {1};\n", name, tempArrayName);
-				cw.Put("}\n");
+				cw.PutEndBlock();
 				cw.Put("Require(']');\n");
-				cw.Put("}\n");
+				cw.PutEndBlock();
 				return;
 			}
 			var idict = Utils.GetIDictionary(t);
 			if (idict != null) {
 				PutRequireOrNull('{', t, name);
 				GenerateDictionary(t, idict, name);
-				cw.Put("}\n");
+				cw.PutEndBlock();
 				return;
 			}
 			var icoll = Utils.GetICollection(t);
 			if (icoll != null) {
 				PutRequireOrNull('[', t, name);
 				GenerateCollection(t, icoll, name);
-				cw.Put("}\n");
+				cw.PutEndBlock();
 				return;
 			}
 			if (t.IsClass || t.IsInterface || Utils.IsStruct(t)) {
@@ -384,7 +384,7 @@ namespace Yuzu.Json
 
 			if (lastNameSpace != t.Namespace) {
 				if (lastNameSpace != "")
-					cw.Put("}\n");
+					cw.PutEndBlock();
 				cw.Put("\n");
 				lastNameSpace = t.Namespace;
 				cw.Put("namespace {0}.{1}\n", wrapperNameSpace, lastNameSpace);
@@ -402,7 +402,7 @@ namespace Yuzu.Json
 			cw.Put("{\n");
 			GenAssigns("Options", Options);
 			GenAssigns("JsonOptions", JsonOptions);
-			cw.Put("}\n");
+			cw.PutEndBlock();
 			cw.Put("\n");
 
 			var icoll = Utils.GetICollection(t);
@@ -413,7 +413,7 @@ namespace Yuzu.Json
 				cw.Put("return FromReaderInt(new {0}());\n", typeSpec);
 			else
 				cw.Put("return {0}\n", GenerateFromReader(meta));
-			cw.Put("}\n");
+			cw.PutEndBlock();
 			cw.Put("\n");
 
 			if (icoll != null) {
@@ -423,7 +423,7 @@ namespace Yuzu.Json
 				cw.Put("Require('[');\n");
 				GenerateCollection(t, icoll, "result");
 				cw.Put("return result;\n");
-				cw.Put("}\n");
+				cw.PutEndBlock();
 				cw.Put("\n");
 			}
 
@@ -435,7 +435,7 @@ namespace Yuzu.Json
 				cw.Put("return ReadFields(new {0}(), name);\n", typeSpec);
 			else
 				cw.Put("return ReadFields({0}.{1}(), name);\n", typeSpec, meta.FactoryMethod.Name);
-			cw.Put("}\n");
+			cw.PutEndBlock();
 			cw.Put("\n");
 
 			cw.Put("protected override object ReadFields(object obj, string name)\n");
@@ -462,12 +462,12 @@ namespace Yuzu.Json
 						GenerateMerge(yi.Type, "result." + yi.Name);
 					cw.Put("name = GetNextName(false);\n");
 					if (yi.IsOptional)
-						cw.Put("}\n");
+						cw.PutEndBlock();
 				}
 				cw.GenerateActionList(meta.AfterDeserialization);
 			}
 			cw.Put("return result;\n");
-			cw.Put("}\n");
+			cw.PutEndBlock();
 
 			if (meta.IsCompact) {
 				cw.Put("\n");
@@ -491,9 +491,9 @@ namespace Yuzu.Json
 				cw.Put("Require(']');\n");
 				cw.GenerateActionList(meta.AfterDeserialization);
 				cw.Put("return result;\n");
-				cw.Put("}\n");
+				cw.PutEndBlock();
 			}
-			cw.Put("}\n");
+			cw.PutEndBlock();
 			cw.Put("\n");
 		}
 
