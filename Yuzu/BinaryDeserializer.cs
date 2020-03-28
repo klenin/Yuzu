@@ -521,11 +521,17 @@ namespace Yuzu.Binary
 			def.ReadFields(this, def, obj);
 		}
 
-		private void CheckAssignable(Type dest, Type src, object value)
+		private object MakeAndCheckAssignable<T>(ReaderClassDef def)
 		{
-			if (!dest.IsAssignableFrom(src))
-				throw Error("Unable to assign type \"{0}\" to \"{1}\"",
-					src == typeof(YuzuUnknown) ? ((YuzuUnknownBinary)value).ClassTag : src.ToString(), dest);
+			var srcType = def.Meta.Type;
+			var srcIsUnknown = srcType == typeof(YuzuUnknown);
+			var dstType = typeof(T);
+			if (!srcIsUnknown && !dstType.IsAssignableFrom(srcType))
+					throw Error("Unable to assign type \"{0}\" to \"{1}\"", srcType.ToString(), dstType);
+			var result = def.Make?.Invoke(this, def);
+			if (srcIsUnknown && !dstType.IsInstanceOfType(result))
+					throw Error("Unable to assign type \"{0}\" to \"{1}\"", ((YuzuUnknownBinary)result).ClassTag, dstType);
+			return result;
 		}
 
 		protected object ReadObject<T>() where T : class
@@ -534,8 +540,7 @@ namespace Yuzu.Binary
 			if (classId == 0)
 				return null;
 			var def = GetClassDef(classId);
-			var result = def.Make?.Invoke(this, def);
-			CheckAssignable(typeof(T), def.Meta.Type, result);
+			var result = MakeAndCheckAssignable<T>(def);
 			if (result == null) {
 				result = def.Meta.Factory();
 				def.ReadFields(this, def, result);
@@ -569,8 +574,7 @@ namespace Yuzu.Binary
 			if (classId == 0)
 				return null;
 			var def = GetClassDef(classId);
-			var result = def.Make?.Invoke(this, def);
-			CheckAssignable(typeof(T), def.Meta.Type, result);
+			var result = MakeAndCheckAssignable<T>(def);
 			if (result == null) {
 				result = def.Meta.Factory();
 				def.ReadFields(this, def, result);
@@ -584,9 +588,7 @@ namespace Yuzu.Binary
 			if (classId == 0)
 				return;
 			var def = GetClassDef(classId);
-
-			var result = def.Make?.Invoke(this, def);
-			CheckAssignable(typeof(T), def.Meta.Type, result);
+			var result = MakeAndCheckAssignable<T>(def);
 			if (result == null) {
 				result = def.Meta.Factory();
 				def.ReadFields(this, def, result);
