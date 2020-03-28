@@ -143,14 +143,35 @@ namespace Yuzu.Clone
 			if (yi.Type.IsArray) {
 				var e = yi.Type.GetElementType();
 				cw.Put("if (s.{0} != null) {{\n", yi.Name);
-				cw.Put("result.{0} = new {1}[s.{0}.Length];\n", yi.Name, Utils.GetTypeSpec(e));
 				if (Cloner.IsCopyable(e, options))
-					cw.Put("Array.Copy(s.{0}, result.{0}, s.{0}.Length);\n", yi.Name);
-				else {
+					cw.Put("result.{0} = ({1})s.{0}.Clone();\n", yi.Name, Utils.GetTypeSpec(yi.Type));
+				else if (yi.Type.GetArrayRank() == 1) {
+					cw.Put("result.{0} = new {1}[s.{0}.Length];\n", yi.Name, Utils.GetTypeSpec(e));
 					var indexName = cw.GetTempName();
 					var clonerCall = GenerateClonerInit(e, string.Format("s.{0}[{1}]", yi.Name, indexName));
 					cw.Put("for(int {0} = 0; {0} < s.{1}.Length; ++{0})\n", indexName, yi.Name);
 					cw.PutInd("result.{0}[{1}] = {2};\n", yi.Name, indexName, clonerCall);
+				}
+				else {
+					var rank = yi.Type.GetArrayRank();
+					Func<string, string> allDims = name => 
+						string.Join(", ", Enumerable.Range(0, rank).Select(
+						dim => string.Format("s.{0}.{1}({2})", yi.Name, name, dim)));
+					cw.Put("result.{0} = ({1})Array.CreateInstance(typeof({2}),\n",
+						yi.Name, Utils.GetTypeSpec(yi.Type), Utils.GetTypeSpec(e));
+					cw.PutInd("new int[] {{ {0} }},\n", allDims("GetLength"));
+					cw.PutInd("new int[] {{ {0} }});\n", allDims("GetLowerBound"));
+					var indexNames = Enumerable.Range(0, rank).Select(_ => cw.GetTempName()).ToArray();
+					var indexNamesStr = string.Join(", ", indexNames);
+					for (int dim = 0; dim < rank; ++dim)
+						cw.Put(
+							"for(int {0} = s.{1}.GetLowerBound({2}); {0} <= s.{1}.GetLowerBound({2}); ++{0}) {{\n",
+							indexNames[dim], yi.Name, dim);
+					var clonerCall = GenerateClonerInit(
+						e, string.Format("s.{0}[{1}]", yi.Name, indexNamesStr));
+					cw.Put("result.{0}[{1}] = {2};\n", yi.Name, indexNamesStr, clonerCall);
+					for (int dim = 0; dim < rank; ++dim)
+						cw.Put("}\n");
 				}
 				cw.Put("}\n");
 				return;

@@ -94,7 +94,6 @@ namespace Yuzu.Clone
 
 		private Func<object, object> MakeCloner(Type t)
 		{
-			if (IsCopyable(t)) return CloneUtils.ValueCopy;
 			if (t.IsGenericType) {
 				var g = t.GetGenericTypeDefinition();
 				if (g == typeof(Nullable<>)) {
@@ -105,11 +104,15 @@ namespace Yuzu.Clone
 			if (t.IsArray) {
 				var e = t.GetElementType();
 				if (IsCopyable(e)) {
+					if (t.GetArrayRank() > 1)
+						return CloneUtils.CloneArrayPrimitiveNDim;
 					var m = CloneUtils.GetGeneric(nameof(CloneUtils.CloneArrayPrimitive), e);
 					return CloneUtils.MakeDelegate<Func<object, object>>(m);
 				}
 				else {
 					var cloneElem = GetCloner(e);
+					if (t.GetArrayRank() > 1)
+						return src => CloneUtils.CloneArrayNDim(src, cloneElem);
 					var m = CloneUtils.GetGeneric(nameof(CloneUtils.CloneArray), e);
 					var d = CloneUtils.MakeDelegate<Func<object, Func<object, object>, object>>(m);
 					return src => d(src, cloneElem);
@@ -143,6 +146,7 @@ namespace Yuzu.Clone
 			}
 			if (t == typeof(object))
 				return DeepObject;
+			if (IsCopyable(t)) return CloneUtils.ValueCopy;
 			var meta = Meta.Get(t, Options);
 			{
 				var icoll = Utils.GetICollection(t);

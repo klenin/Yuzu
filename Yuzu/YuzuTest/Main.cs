@@ -233,6 +233,8 @@ namespace YuzuTest
 				cd.Generate<SampleGenNoGen>();
 				cd.Generate<SampleArray>();
 				cd.Generate<SampleArrayOfClass>();
+				cd.Generate<SampleArrayNDim>();
+				cd.Generate<SampleArrayNDimOfClass>();
 				cd.Generate<SampleList>();
 				cd.Generate<SampleNullable>();
 				cd.Generate<SampleObj>();

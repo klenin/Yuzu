@@ -162,6 +162,41 @@ namespace YuzuTest
 		}
 
 		[TestMethod]
+		public void TestArrayNDim()
+		{
+			TestGen(cl => {
+				var src = new SampleArrayNDim {
+					A = new int[2, 2] { { 1, 2 }, { 3, 4 } },
+					B = new string[1, 1, 1] { { { "x" } } }
+				};
+				var dst = cl.Deep(src);
+				Assert.AreNotEqual(src, dst);
+				Assert.AreNotEqual(src.A, dst.A);
+				Assert.AreNotEqual(src.B, dst.B);
+				src.AssertAreEqual(dst);
+			});
+			TestGen(cl => {
+				var src = new List<int>[2, 1] {
+					{ new List<int> { 1, 2 } }, { new List<int> { 3 } } };
+				var dst = cl.Deep(src);
+				Assert.AreNotEqual(src, dst);
+				Assert.AreNotEqual(src[0, 0], dst[0, 0]);
+				Assert.AreEqual(src.GetUpperBound(0), dst.GetUpperBound(0));
+				CollectionAssert.AreEqual(src[0, 0], dst[0, 0]);
+				CollectionAssert.AreEqual(src[1, 0], dst[1, 0]);
+			});
+			TestGen(cl => {
+				var src = new SampleArrayNDimOfClass {
+					A = new Sample1[1, 1, 2] { { { new Sample1 { X = 8, Y = "q" }, null } } },
+				};
+				var dst = cl.Deep(src);
+				Assert.AreNotEqual(src, dst);
+				Assert.AreNotEqual(src.A, dst.A);
+				Assert.AreEqual(src.A[0, 0, 0].X, dst.A[0, 0, 0].X);
+			});
+		}
+
+		[TestMethod]
 		public void TestCollection()
 		{
 			TestGen(cl => {

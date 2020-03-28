@@ -106,8 +106,45 @@ namespace YuzuGenClone
 			var s = (global::YuzuTest.SampleArray)src;
 			var result = new global::YuzuTest.SampleArray();
 			if (s.A != null) {
-				result.A = new string[s.A.Length];
-				Array.Copy(s.A, result.A, s.A.Length);
+				result.A = (string[])s.A.Clone();
+			}
+			return result;
+		}
+
+		protected static global::YuzuTest.SampleArrayNDim Clone_YuzuTest__SampleArrayNDim(Cloner cl, object src)
+		{
+			if (src == null) return null;
+			if (src.GetType() != typeof(global::YuzuTest.SampleArrayNDim))
+				return (global::YuzuTest.SampleArrayNDim)cl.DeepObject(src);
+			var s = (global::YuzuTest.SampleArrayNDim)src;
+			var result = new global::YuzuTest.SampleArrayNDim();
+			if (s.A != null) {
+				result.A = (int[,])s.A.Clone();
+			}
+			if (s.B != null) {
+				result.B = (string[,,])s.B.Clone();
+			}
+			return result;
+		}
+
+		protected static global::YuzuTest.SampleArrayNDimOfClass Clone_YuzuTest__SampleArrayNDimOfClass(Cloner cl, object src)
+		{
+			if (src == null) return null;
+			if (src.GetType() != typeof(global::YuzuTest.SampleArrayNDimOfClass))
+				return (global::YuzuTest.SampleArrayNDimOfClass)cl.DeepObject(src);
+			var s = (global::YuzuTest.SampleArrayNDimOfClass)src;
+			var result = new global::YuzuTest.SampleArrayNDimOfClass();
+			if (s.A != null) {
+				result.A = (global::YuzuTest.Sample1[,,])Array.CreateInstance(typeof(global::YuzuTest.Sample1),
+					new int[] { s.A.GetLength(0), s.A.GetLength(1), s.A.GetLength(2) },
+					new int[] { s.A.GetLowerBound(0), s.A.GetLowerBound(1), s.A.GetLowerBound(2) });
+				for(int tmp1 = s.A.GetLowerBound(0); tmp1 <= s.A.GetLowerBound(0); ++tmp1) {
+					for(int tmp2 = s.A.GetLowerBound(1); tmp2 <= s.A.GetLowerBound(1); ++tmp2) {
+						for(int tmp3 = s.A.GetLowerBound(2); tmp3 <= s.A.GetLowerBound(2); ++tmp3) {
+							result.A[tmp1, tmp2, tmp3] = Clone_YuzuTest__Sample1(cl, s.A[tmp1, tmp2, tmp3]);
+						}
+					}
+				}
 			}
 			return result;
 		}
@@ -548,6 +585,8 @@ namespace YuzuGenClone
 			clonerCache[typeof(global::YuzuTest.SampleAfterDeserialization)] = Clone_YuzuTest__SampleAfterDeserialization;
 			clonerCache[typeof(global::YuzuTest.SampleAfterSerialization)] = Clone_YuzuTest__SampleAfterSerialization;
 			clonerCache[typeof(global::YuzuTest.SampleArray)] = Clone_YuzuTest__SampleArray;
+			clonerCache[typeof(global::YuzuTest.SampleArrayNDim)] = Clone_YuzuTest__SampleArrayNDim;
+			clonerCache[typeof(global::YuzuTest.SampleArrayNDimOfClass)] = Clone_YuzuTest__SampleArrayNDimOfClass;
 			clonerCache[typeof(global::YuzuTest.SampleArrayOfClass)] = Clone_YuzuTest__SampleArrayOfClass;
 			clonerCache[typeof(global::YuzuTest.SampleBase)] = Clone_YuzuTest__SampleBase;
 			clonerCache[typeof(global::YuzuTest.SampleBefore2)] = Clone_YuzuTest__SampleBefore2;

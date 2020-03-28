@@ -76,7 +76,7 @@ namespace Yuzu.Binary
 		{
 			if (expectedType.IsEnum)
 				return ReadCompatibleType(Enum.GetUnderlyingType(expectedType));
-			if (expectedType.IsRecord() && expectedType.Namespace != "System") {
+			if (expectedType.IsRecord() && !expectedType.Namespace.StartsWith("System")) {
 				var sg = Meta.Get(expectedType, Options).Surrogate;
 				if (sg.SurrogateType != null && sg.FuncFrom != null)
 					return ReadCompatibleType(sg.SurrogateType);

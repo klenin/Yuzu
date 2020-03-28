@@ -387,7 +387,7 @@ namespace Yuzu.Metadata
 
 		private void CheckForNoFields(CommonOptions options)
 		{
-			if (Surrogate.SurrogateType != null)
+			if (Surrogate.SurrogateType != null || Type.IsArray)
 				return;
 			if (Utils.GetIEnumerable(Type) != null) {
 				if (Items.Count > 0)

@@ -283,6 +283,12 @@ namespace YuzuTest
 		}
 	}
 
+	public class SampleArrayNDimOfClass
+	{
+		[YuzuRequired]
+		public Sample1[,,] A;
+	}
+
 	public class SampleArrayOfClass
 	{
 		[YuzuRequired]

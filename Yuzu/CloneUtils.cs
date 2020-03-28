@@ -24,15 +24,46 @@ namespace Yuzu.CloneUtil
 			return result;
 		}
 
-		public static T[] CloneArrayPrimitive<T>(object src)
+		public static Array CloneArrayNDim(object src, Func<object, object> cloneElem)
 		{
 			if (src == null)
 				return null;
-			var a = (T[])src;
-			var result = new T[a.Length];
-			Array.Copy(a, result, a.Length);
-			return result;
+			var arr = (Array)src;
+			var lbs = new int[arr.Rank];
+			var ubs = new int[arr.Rank];
+			var lengths = new int[arr.Rank];
+			for (int dim = 0; dim < arr.Rank; ++dim) {
+				lbs[dim] = arr.GetLowerBound(dim);
+				ubs[dim] = arr.GetUpperBound(dim);
+				lengths[dim] = arr.GetLength(dim);
+			}
+
+			var dst = Array.CreateInstance(src.GetType().GetElementType(), lengths, lbs);
+			if (arr.Length == 0)
+				return dst;
+
+			var indices = (int[])lbs.Clone();
+			for (int dim = arr.Rank - 1; ;) {
+				dst.SetValue(cloneElem(arr.GetValue(indices)), indices);
+				if (indices[dim] == ubs[dim]) {
+					for (; dim >= 0 && indices[dim] == ubs[dim]; --dim)
+						indices[dim] = lbs[dim];
+					if (dim < 0)
+						break;
+					++indices[dim];
+					dim = arr.Rank - 1;
+				}
+				else
+					++indices[dim];
+			}
+			return dst;
 		}
+
+		public static T[] CloneArrayPrimitive<T>(object src) =>
+			src == null ? null : (T[])((Array)src).Clone();
+
+		public static Array CloneArrayPrimitiveNDim(object src) =>
+			src == null ? null : (Array)((Array)src).Clone();
 
 		public static I CloneIDictionary<I, K, V>(
 			object src, Func<object, object> cloneKey, Func<object, object> cloneValue
