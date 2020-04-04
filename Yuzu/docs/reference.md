@@ -334,12 +334,12 @@ Default value is `false`.
 Controls saving of type information alongside data.
 Available flags are:
 
-* `None` -- do not save types,
-* `Unknown` -- save structure types which are NOT statically known,
-* `KnownRoot` -- save structure types which are NOT statically known plus the type of root object,
-* `KnownNonRoot` -- save structure types which ARE statically known except the type of root object,
-* `UnknownPrimitive` -- save primitive types which are not statically known,
-* `UnknownOrRoot` -- combination of `Unknown` and `KnownRoot`, correspond to deprecated `SaveRootClass = true` setting.
+* `None` — do not save types,
+* `Unknown` — save structure types which are NOT statically known,
+* `KnownRoot` — save structure types which are NOT statically known plus the type of root object,
+* `KnownNonRoot` — save structure types which ARE statically known except the type of root object,
+* `UnknownPrimitive` — save primitive types which are not statically known,
+* `UnknownOrRoot` — combination of `Unknown` and `KnownRoot`, correspond to deprecated `SaveRootClass = true` setting.
 
 Default value is `Unknown`.
 
@@ -409,8 +409,8 @@ Default value is empty string.
 Controls type of boxed numbers created when there is no type information available.
 Possible values are:
 
-* `Double` -- numbers are converted to `double` (with possible loss of precision if not representable exactly),
-* `Minimal` -- numbers are converted to minimal integer type if they have integer representation (with possible overflow error), or `double` otherwise.
+* `Double` — numbers are converted to `double` (with possible loss of precision if not representable exactly),
+* `Minimal` — numbers are converted to minimal integer type if they have integer representation (with possible overflow error), or `double` otherwise.
 
 Default value is `Double`.
 
