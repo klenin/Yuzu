@@ -363,6 +363,38 @@ namespace YuzuTest.Json
 			Assert.AreEqual(v.N, w3.N);
 		}
 
+		private void CheckNumber<T>(JsonDeserializer jd, object expected, string s = null)
+		{
+			var actual = jd.FromString((s ?? expected.ToString()) + " ");
+			Assert.IsInstanceOfType(actual, typeof(T));
+			Assert.AreEqual(expected, actual);
+		}
+
+		[TestMethod]
+		public void TestMinimalNumberType()
+		{
+			var jd = new JsonDeserializer();
+
+			CheckNumber<double>(jd, 1.234, "1.234");
+			CheckNumber<double>(jd, 1d, "1");
+			CheckNumber<double>(jd, -5d, "-5");
+
+			jd.JsonOptions.UnknownNumberType = JsonUnknownNumberType.Minimal;
+
+			CheckNumber<double>(jd, 1.234, "1.234");
+			CheckNumber<byte>(jd, (byte)0);
+			CheckNumber<byte>(jd, byte.MaxValue);
+			CheckNumber<ushort>(jd, ushort.MaxValue);
+			CheckNumber<uint>(jd, uint.MaxValue);
+			CheckNumber<ulong>(jd, 1 + (ulong)uint.MaxValue);
+			CheckNumber<ulong>(jd, ulong.MaxValue);
+			CheckNumber<sbyte>(jd, (sbyte)-1);
+			CheckNumber<sbyte>(jd, sbyte.MinValue);
+			CheckNumber<short>(jd, short.MinValue);
+			CheckNumber<int>(jd, int.MinValue);
+			CheckNumber<long>(jd, long.MinValue);
+		}
+
 		[TestMethod]
 		public void TestNullable()
 		{

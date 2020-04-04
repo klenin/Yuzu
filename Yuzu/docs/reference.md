@@ -388,18 +388,31 @@ Note that `Unordered` mode does not guarantee text-data-text roundtrip and is no
 Default value is `false`.
 
 #### `Comments`
+
 If `true`, single-line comments starting with double slash (`//`) are accepted during deserialization.
 Comments are ignored and not preserved on roundtrip.
 Default value is `false`.
 
 #### `BOM`
+
 If `true`, UTF-8 byte order mark (bytes `EF BB BF`) is allowed before the first byte of input stream during deserialization.
 Default value is `false`.
 
 #### `FloatingPointFormat`
+
 If empty, `float` and `double` values are serialized by internal code. Otherwise, `ToString(FloatingPointFormat)` is used.
 Note that roundtrip is only guaranteed when using internal serializer.
 Default value is empty string.
+
+#### `UnknownNumberType`
+
+Controls type of boxed numbers created when there is no type information available.
+Possible values are:
+
+* `Double` -- numbers are converted to `double` (with possible loss of precision if not representable exactly),
+* `Minimal` -- numbers are converted to minimal integer type if they have integer representation (with possible overflow error), or `double` otherwise.
+
+Default value is `Double`.
 
 ## `Binary options`
 

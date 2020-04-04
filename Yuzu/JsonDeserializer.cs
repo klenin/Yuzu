@@ -349,8 +349,62 @@ namespace Yuzu.Json
 			return decimal.Parse(sb.ToString(), CultureInfo.InvariantCulture);
 		}
 
+		protected object RequireNumber()
+		{
+			sb.Clear();
+			var ch = SkipSpaces();
+			bool neg = ch == '-';
+			if (neg) {
+				sb.Append(ch);
+				ch = Reader.ReadChar();
+			}
+			if (ch == 'N') {
+				Require("aN");
+				return double.NaN;
+			}
+			if (ch == 'I') {
+				Require("nfinity");
+				return neg ? double.NegativeInfinity : double.PositiveInfinity;
+			}
+			ch = JsonNumberReader.ReadDigits(Reader, sb, ch);
+			var isFloat = ch == '.';
+			if (isFloat) {
+				sb.Append(ch);
+				ch = JsonNumberReader.ReadDigits(Reader, sb, Reader.ReadChar());
+			}
+			if (ch == 'e' || ch == 'E') {
+				isFloat = true;
+				sb.Append(ch);
+				ch = Reader.ReadChar();
+				if (ch == '+' || ch == '-') {
+					sb.Append(ch);
+					ch = Reader.ReadChar();
+				}
+				ch = JsonNumberReader.ReadDigits(Reader, sb, ch);
+			}
+			PutBack(ch);
+			if (isFloat)
+				return double.Parse(sb.ToString(), CultureInfo.InvariantCulture);
+			if (neg) {
+				var result = long.Parse(sb.ToString());
+				return
+					result >= sbyte.MinValue ? (sbyte)result :
+					result >= short.MinValue ? (short)result :
+					result >=   int.MinValue ? (int)result :
+					(object)result;
+			}
+			else {
+				var result = ulong.Parse(sb.ToString());
+				return
+					result <=   byte.MaxValue ?   (byte)result :
+					result <= ushort.MaxValue ? (ushort)result :
+					result <=   uint.MaxValue ?   (uint)result :
+					(object)result;
+			}
+		}
+
 		protected decimal RequireDecimalAsString() =>
-			Decimal.Parse(RequireUnescapedString(), CultureInfo.InvariantCulture);
+			decimal.Parse(RequireUnescapedString(), CultureInfo.InvariantCulture);
 
 		protected DateTime RequireDateTime()
 		{
@@ -649,7 +703,8 @@ namespace Yuzu.Json
 				case '[':
 					return ReadList<object>();
 				default:
-					return RequireDouble();
+					return JsonOptions.UnknownNumberType == JsonUnknownNumberType.Double ?
+						RequireDouble() : RequireNumber();
 			}
 		}
 

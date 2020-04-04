@@ -22,6 +22,12 @@ namespace Yuzu.Json
 		UnknownOrRoot = Unknown | KnownRoot,
 	};
 
+	public enum JsonUnknownNumberType
+	{
+		Double = 0,
+		Minimal = 1,
+	}
+
 	public class JsonSerializeOptions
 	{
 		private int generation = 0;
@@ -72,6 +78,7 @@ namespace Yuzu.Json
 		public string FloatingPointFormat {
 			get { return floatingPointFormat; } set { floatingPointFormat = value; generation++; }
 		}
+		public JsonUnknownNumberType UnknownNumberType = JsonUnknownNumberType.Double;
 	};
 
 	public class JsonSerializer : AbstractWriterSerializer
