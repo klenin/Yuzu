@@ -226,4 +226,36 @@ namespace Yuzu.Json
 			writer.Write((byte)'"');
 		}
 	}
+
+	internal static class JsonNumberReader
+	{
+		public static char ReadDigits(BinaryReader reader, StringBuilder sb, char ch)
+		{
+			while ('0' <= ch && ch <= '9') {
+				sb.Append(ch);
+				ch = reader.ReadChar();
+			}
+			return ch;
+		}
+
+		public static char ReadUnsignedFloat(BinaryReader reader, StringBuilder sb, char ch)
+		{
+			ch = ReadDigits(reader, sb, ch);
+			if (ch == '.') {
+				sb.Append(ch);
+				ch = ReadDigits(reader, sb, reader.ReadChar());
+			}
+			if (ch == 'e' || ch == 'E') {
+				sb.Append(ch);
+				ch = reader.ReadChar();
+				if (ch == '+' || ch == '-') {
+					sb.Append(ch);
+					ch = reader.ReadChar();
+				}
+				ch = ReadDigits(reader, sb, ch);
+			}
+			return ch;
+		}
+	}
+
 }

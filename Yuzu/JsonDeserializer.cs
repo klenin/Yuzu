@@ -291,9 +291,8 @@ namespace Yuzu.Json
 			return result;
 		}
 
-		private string ParseFloat()
+		protected float RequireSingle()
 		{
-			// Optimization: Do not extract helper methods.
 			sb.Clear();
 			var ch = SkipSpaces();
 			bool neg = ch == '-';
@@ -303,45 +302,52 @@ namespace Yuzu.Json
 			}
 			if (ch == 'N') {
 				Require("aN");
-				return "NaN";
+				return float.NaN;
 			}
 			if (ch == 'I') {
 				Require("nfinity");
-				return neg ? "-Infinity" : "Infinity";
+				return neg ? float.NegativeInfinity : float.PositiveInfinity;
 			}
-			while ('0' <= ch && ch <= '9') {
-				sb.Append(ch);
-				ch = Reader.ReadChar();
-			}
-			if (ch == '.') {
-				sb.Append(ch);
-				ch = Reader.ReadChar();
-				while ('0' <= ch && ch <= '9') {
-					sb.Append(ch);
-					ch = Reader.ReadChar();
-				}
-			}
-			if (ch == 'e'|| ch == 'E') {
-				sb.Append(ch);
-				ch = Reader.ReadChar();
-				if (ch == '+' || ch == '-') {
-					sb.Append(ch);
-					ch = Reader.ReadChar();
-				}
-				while ('0' <= ch && ch <= '9') {
-					sb.Append(ch);
-					ch = Reader.ReadChar();
-				}
-			}
+			ch = JsonNumberReader.ReadUnsignedFloat(Reader, sb, ch);
 			PutBack(ch);
-			return sb.ToString();
+			return float.Parse(sb.ToString(), CultureInfo.InvariantCulture);
 		}
 
-		protected double RequireDouble() => Double.Parse(ParseFloat(), CultureInfo.InvariantCulture);
+		protected double RequireDouble()
+		{
+			sb.Clear();
+			var ch = SkipSpaces();
+			bool neg = ch == '-';
+			if (neg) {
+				sb.Append(ch);
+				ch = Reader.ReadChar();
+			}
+			if (ch == 'N') {
+				Require("aN");
+				return double.NaN;
+			}
+			if (ch == 'I') {
+				Require("nfinity");
+				return neg ? double.NegativeInfinity : double.PositiveInfinity;
+			}
+			ch = JsonNumberReader.ReadUnsignedFloat(Reader, sb, ch);
+			PutBack(ch);
+			return double.Parse(sb.ToString(), CultureInfo.InvariantCulture);
+		}
 
-		protected float RequireSingle() => Single.Parse(ParseFloat(), CultureInfo.InvariantCulture);
-
-		protected decimal RequireDecimal() => Decimal.Parse(ParseFloat(), CultureInfo.InvariantCulture);
+		protected decimal RequireDecimal()
+		{
+			sb.Clear();
+			var ch = SkipSpaces();
+			bool neg = ch == '-';
+			if (neg) {
+				sb.Append(ch);
+				ch = Reader.ReadChar();
+			}
+			ch = JsonNumberReader.ReadUnsignedFloat(Reader, sb, ch);
+			PutBack(ch);
+			return decimal.Parse(sb.ToString(), CultureInfo.InvariantCulture);
+		}
 
 		protected decimal RequireDecimalAsString() =>
 			Decimal.Parse(RequireUnescapedString(), CultureInfo.InvariantCulture);
