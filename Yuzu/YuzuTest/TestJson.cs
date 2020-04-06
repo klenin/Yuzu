@@ -1498,6 +1498,9 @@ namespace YuzuTest.Json
 
 			var w = jd.FromString<SampleGuid>(result);
 			Assert.AreEqual(v.G, w.G);
+
+			var wg = (SampleGuid)SampleGuid_JsonDeserializer.Instance.FromString(result);
+			Assert.AreEqual(v.G, wg.G);
 		}
 
 		[TestMethod]

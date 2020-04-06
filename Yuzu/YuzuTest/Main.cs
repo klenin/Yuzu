@@ -134,6 +134,7 @@ namespace YuzuTest
 				jd.Generate<SamplePoint>();
 				jd.Generate<SampleRect>();
 				jd.Generate<SampleDate>();
+				jd.Generate<SampleGuid>();
 				jd.Generate<Color>();
 				jd.Generate<List<List<int>>>();
 				jd.Generate<SampleClassList>();
@@ -190,6 +191,7 @@ namespace YuzuTest
 				bd.Generate<SampleMatrix>();
 				bd.Generate<SamplePoint>();
 				bd.Generate<SampleRect>();
+				bd.Generate<SampleGuid>();
 				bd.Generate<SampleDefault>();
 				bd.Generate<Color>();
 				bd.Generate<SampleClassList>();

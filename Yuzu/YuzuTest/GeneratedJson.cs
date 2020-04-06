@@ -1009,6 +1009,36 @@ namespace YuzuGen.YuzuTest
 		}
 	}
 
+	class SampleGuid_JsonDeserializer : JsonDeserializerGenBase
+	{
+		public static new SampleGuid_JsonDeserializer Instance = new SampleGuid_JsonDeserializer();
+
+		public SampleGuid_JsonDeserializer()
+		{
+			Options.TagMode = TagMode.Names;
+			JsonOptions.EnumAsString = true;
+		}
+
+		public override object FromReaderInt()
+		{
+			return FromReaderTyped<global::YuzuTest.SampleGuid>(Reader);
+		}
+
+		public override object FromReaderIntPartial(string name)
+		{
+			return ReadFields(new global::YuzuTest.SampleGuid(), name);
+		}
+
+		protected override object ReadFields(object obj, string name)
+		{
+			var result = (global::YuzuTest.SampleGuid)obj;
+			if ("G" != name) throw new YuzuException("G!=" + name);
+			result.G = RequireGuid();
+			name = GetNextName(false);
+			return result;
+		}
+	}
+
 	class Color_JsonDeserializer : JsonDeserializerGenBase
 	{
 		public static new Color_JsonDeserializer Instance = new Color_JsonDeserializer();

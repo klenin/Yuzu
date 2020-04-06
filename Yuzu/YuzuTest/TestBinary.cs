@@ -1527,9 +1527,11 @@ namespace YuzuTest.Binary
 				" 01 00 07 B6 27 57 EE DC 5F 44 85 6C FD 8E BB 4B 45 73 00 00",
 				"\n" + XS(result));
 
-
 			var w = bd.FromBytes<SampleGuid>(result);
 			Assert.AreEqual(v.G, w.G);
+
+			var wg = (new BinaryDeserializerGen()).FromBytes<SampleGuid>(result);
+			Assert.AreEqual(v.G, wg.G);
 		}
 
 		[TestMethod]

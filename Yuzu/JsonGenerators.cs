@@ -241,6 +241,7 @@ namespace Yuzu.Json
 			simpleValueReader[typeof(double)] = "RequireDouble()";
 			simpleValueReader[typeof(DateTime)] = "RequireDateTime()";
 			simpleValueReader[typeof(TimeSpan)] = "RequireTimeSpan()";
+			simpleValueReader[typeof(Guid)] = nameof(RequireGuid) + "()";
 			simpleValueReader[typeof(string)] = "RequireString()";
 			simpleValueReader[typeof(object)] = "ReadAnyObject()";
 		}
