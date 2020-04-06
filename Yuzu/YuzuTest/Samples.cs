@@ -434,6 +434,8 @@ namespace YuzuTest
 		[YuzuRequired]
 		public DateTime D;
 		[YuzuRequired]
+		public DateTimeOffset DOfs;
+		[YuzuRequired]
 		public TimeSpan T;
 	}
 

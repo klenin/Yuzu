@@ -1002,6 +1002,9 @@ namespace YuzuGen.YuzuTest
 			if ("D" != name) throw new YuzuException("D!=" + name);
 			result.D = RequireDateTime();
 			name = GetNextName(false);
+			if ("DOfs" != name) throw new YuzuException("DOfs!=" + name);
+			result.DOfs = RequireDateTimeOffset();
+			name = GetNextName(false);
 			if ("T" != name) throw new YuzuException("T!=" + name);
 			result.T = RequireTimeSpan();
 			name = GetNextName(false);

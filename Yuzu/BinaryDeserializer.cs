@@ -33,7 +33,7 @@ namespace Yuzu.Binary
 		private object ReadDecimal() => Reader.ReadDecimal();
 
 		private DateTime ReadDateTime() => DateTime.FromBinary(Reader.ReadInt64());
-		private DateTimeOffset ReadDateTimeOffset()
+		protected DateTimeOffset ReadDateTimeOffset()
 		{
 			var d = DateTime.FromBinary(Reader.ReadInt64());
 			var t = new TimeSpan(Reader.ReadInt64());

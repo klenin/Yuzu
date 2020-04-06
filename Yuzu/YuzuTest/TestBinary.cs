@@ -1482,18 +1482,27 @@ namespace YuzuTest.Binary
 			var bs = new BinarySerializer();
 			var bd = new BinaryDeserializer();
 
-			var v1 = new SampleDate { D = new DateTime(2011, 3, 25), T = TimeSpan.FromMinutes(5) };
+			var d = new DateTime(2011, 3, 25);
+			var v1 = new SampleDate {
+				D = d, DOfs = new DateTimeOffset(d, TimeSpan.FromHours(1)), T = TimeSpan.FromMinutes(5) };
 			var result1 = bs.ToBytes(v1);
 			Assert.AreEqual(
-				"20 01 00 " + XS(typeof(SampleDate)) + " 02 00 " +
-				XS("D", RoughType.DateTime, "T", RoughType.TimeSpan) +
-				" 01 00 00 00 F5 B7 96 B8 CD 08 02 00 00 5E D0 B2 00 00 00 00 00 00",
+				"20 01 00 " + XS(typeof(SampleDate)) + " 03 00 " +
+				XS("D", RoughType.DateTime, "DOfs", RoughType.DateTimeOffset, "T", RoughType.TimeSpan) +
+				" 01 00 00 00 F5 B7 96 B8 CD 08 " +
+				"02 00 00 00 F5 B7 96 B8 CD 08 00 68 C4 61 08 00 00 00 " +
+				"03 00 00 5E D0 B2 00 00 00 00 00 00",
 				XS(result1));
 
 			var w1 = new SampleDate();
 			bd.FromBytes(w1, result1);
 			Assert.AreEqual(v1.D, w1.D);
+			Assert.AreEqual(v1.DOfs, w1.DOfs);
 			Assert.AreEqual(v1.T, w1.T);
+			var w1g = (new BinaryDeserializerGen()).FromBytes<SampleDate>(result1);
+			Assert.AreEqual(v1.D, w1g.D);
+			Assert.AreEqual(v1.DOfs, w1g.DOfs);
+			Assert.AreEqual(v1.T, w1g.T);
 
 			var v2 = new DateTime(2011, 3, 25, 1, 2, 3, DateTimeKind.Utc);
 			var result2 = bs.ToBytes(v2);
