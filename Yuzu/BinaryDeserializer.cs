@@ -524,13 +524,12 @@ namespace Yuzu.Binary
 		private object MakeAndCheckAssignable<T>(ReaderClassDef def)
 		{
 			var srcType = def.Meta.Type;
-			var srcIsUnknown = srcType == typeof(YuzuUnknown);
 			var dstType = typeof(T);
-			if (!srcIsUnknown && !dstType.IsAssignableFrom(srcType))
-					throw Error("Unable to assign type \"{0}\" to \"{1}\"", srcType.ToString(), dstType);
+			if (srcType != typeof(YuzuUnknown) && !dstType.IsAssignableFrom(srcType))
+				throw Error("Unable to assign type \"{0}\" to \"{1}\"", srcType.ToString(), dstType);
 			var result = def.Make?.Invoke(this, def);
-			if (srcIsUnknown && !dstType.IsInstanceOfType(result))
-					throw Error("Unable to assign type \"{0}\" to \"{1}\"", ((YuzuUnknownBinary)result).ClassTag, dstType);
+			if (srcType == typeof(YuzuUnknown) && !dstType.IsInstanceOfType(result))
+				throw Error("Unable to assign type \"{0}\" to \"{1}\"", ((YuzuUnknownBinary)result).ClassTag, dstType);
 			return result;
 		}
 
