@@ -132,8 +132,6 @@ namespace Yuzu.Json
 			this.wrapperNameSpace = wrapperNameSpace;
 		}
 
-		static JsonDeserializerGenerator() { InitSimpleValueReader(); }
-
 		public void GenerateHeader()
 		{
 			if (Options.AllowUnknownFields || JsonOptions.Unordered)
@@ -223,29 +221,26 @@ namespace Yuzu.Json
 			cw.PutEndBlock();
 		}
 
-		private static Dictionary<Type, string> simpleValueReader = new Dictionary<Type, string>();
-
-		private static void InitSimpleValueReader()
-		{
-			simpleValueReader[typeof(sbyte)] = "checked((sbyte)RequireInt())";
-			simpleValueReader[typeof(byte)] = "checked((byte)RequireUInt())";
-			simpleValueReader[typeof(short)] = "checked((short)RequireInt())";
-			simpleValueReader[typeof(ushort)] = "checked((ushort)RequireUInt())";
-			simpleValueReader[typeof(int)] = "RequireInt()";
-			simpleValueReader[typeof(uint)] = "RequireUInt()";
-			simpleValueReader[typeof(long)] = "RequireLong()";
-			simpleValueReader[typeof(ulong)] = "RequireULong()";
-			simpleValueReader[typeof(bool)] = "RequireBool()";
-			simpleValueReader[typeof(char)] = "RequireChar()";
-			simpleValueReader[typeof(float)] = "RequireSingle()";
-			simpleValueReader[typeof(double)] = "RequireDouble()";
-			simpleValueReader[typeof(DateTime)] = "RequireDateTime()";
-			simpleValueReader[typeof(DateTimeOffset)] = nameof(RequireDateTimeOffset) + "()";
-			simpleValueReader[typeof(TimeSpan)] = "RequireTimeSpan()";
-			simpleValueReader[typeof(Guid)] = nameof(RequireGuid) + "()";
-			simpleValueReader[typeof(string)] = "RequireString()";
-			simpleValueReader[typeof(object)] = "ReadAnyObject()";
-		}
+		private static Dictionary<Type, string> simpleValueReader = new Dictionary<Type, string>() {
+			{ typeof(sbyte), "checked((sbyte)RequireInt())" },
+			{ typeof(byte), "checked((byte)RequireUInt())" },
+			{ typeof(short), "checked((short)RequireInt())" },
+			{ typeof(ushort), "checked((ushort)RequireUInt())" },
+			{ typeof(int), "RequireInt()" },
+			{ typeof(uint), "RequireUInt()" },
+			{ typeof(long), "RequireLong()" },
+			{ typeof(ulong), "RequireULong()" },
+			{ typeof(bool), "RequireBool()" },
+			{ typeof(char), "RequireChar()" },
+			{ typeof(float), "RequireSingle()" },
+			{ typeof(double), "RequireDouble()" },
+			{ typeof(DateTime), "RequireDateTime()" },
+			{ typeof(DateTimeOffset), nameof(RequireDateTimeOffset) + "()" },
+			{ typeof(TimeSpan), "RequireTimeSpan()" },
+			{ typeof(Guid), nameof(RequireGuid) + "()" },
+			{ typeof(string), "RequireString()" },
+			{ typeof(object), "ReadAnyObject()" },
+		};
 
 		private string GenerateFromReader(Meta meta) =>
 			String.Format(

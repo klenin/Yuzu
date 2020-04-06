@@ -65,7 +65,7 @@ namespace Yuzu.Binary
 
 		protected void WriteRecord(object obj) => GetWriteFunc(obj.GetType())(obj);
 
-		private Dictionary<Type, Action<object>> writerCache = new Dictionary<Type, Action<object>>();
+		private Dictionary<Type, Action<object>> writerCache;
 
 		private Action<object> GetWriteFunc(Type t)
 		{
@@ -83,29 +83,31 @@ namespace Yuzu.Binary
 
 		private void InitWriters()
 		{
-			writerCache[typeof(sbyte)] = WriteSByte;
-			writerCache[typeof(byte)] = WriteByte;
-			writerCache[typeof(short)] = WriteShort;
-			writerCache[typeof(ushort)] = WriteUShort;
-			writerCache[typeof(int)] = WriteInt;
-			writerCache[typeof(uint)] = WriteUInt;
-			writerCache[typeof(long)] = WriteLong;
-			writerCache[typeof(ulong)] = WriteULong;
-			writerCache[typeof(bool)] = WriteBool;
-			writerCache[typeof(char)] = WriteChar;
-			writerCache[typeof(float)] = WriteFloat;
-			writerCache[typeof(double)] = WriteDouble;
-			writerCache[typeof(decimal)] = WriteDecimal;
-			writerCache[typeof(DateTime)] = WriteDateTime;
-			writerCache[typeof(DateTimeOffset)] = WriteDateTimeOffset;
-			writerCache[typeof(TimeSpan)] = WriteTimeSpan;
-			writerCache[typeof(Guid)] = WriteGuid;
-			writerCache[typeof(string)] = WriteString;
-			writerCache[typeof(object)] = WriteAny;
+			writerCache = new Dictionary<Type, Action<object>>() {
+				{ typeof(sbyte), WriteSByte },
+				{ typeof(byte), WriteByte },
+				{ typeof(short), WriteShort },
+				{ typeof(ushort), WriteUShort },
+				{ typeof(int), WriteInt },
+				{ typeof(uint), WriteUInt },
+				{ typeof(long), WriteLong },
+				{ typeof(ulong), WriteULong },
+				{ typeof(bool), WriteBool },
+				{ typeof(char), WriteChar },
+				{ typeof(float), WriteFloat },
+				{ typeof(double), WriteDouble },
+				{ typeof(decimal), WriteDecimal },
+				{ typeof(DateTime), WriteDateTime },
+				{ typeof(DateTimeOffset), WriteDateTimeOffset },
+				{ typeof(TimeSpan), WriteTimeSpan },
+				{ typeof(Guid), WriteGuid },
+				{ typeof(string), WriteString },
+				{ typeof(object), WriteAny },
 
-			writerCache[typeof(Record)] = WriteRecord;
-			writerCache[typeof(YuzuUnknown)] = WriteUnknown;
-			writerCache[typeof(YuzuUnknownBinary)] = WriteUnknownBinary;
+				{ typeof(Record), WriteRecord },
+				{ typeof(YuzuUnknown), WriteUnknown },
+				{ typeof(YuzuUnknownBinary), WriteUnknownBinary },
+			};
 		}
 
 		private void WriteRoughType(Type t)

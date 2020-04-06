@@ -62,8 +62,6 @@ namespace Yuzu.Binary
 			this.baseClassName = baseClassName;
 		}
 
-		static BinaryDeserializerGenerator() { InitSimpleValueReader(); }
-
 		public void GenerateHeader()
 		{
 			cw.Put("using System;\n");
@@ -89,29 +87,26 @@ namespace Yuzu.Binary
 			cw.PutEndBlock(); // Close namespace.
 		}
 
-		private static Dictionary<Type, string> simpleValueReader = new Dictionary<Type, string>();
-
-		private static void InitSimpleValueReader()
-		{
-			simpleValueReader[typeof(sbyte)] = "d.Reader.ReadSByte()";
-			simpleValueReader[typeof(byte)] = "d.Reader.ReadByte()";
-			simpleValueReader[typeof(short)] = "d.Reader.ReadInt16()";
-			simpleValueReader[typeof(ushort)] = "d.Reader.ReadUInt16()";
-			simpleValueReader[typeof(int)] = "d.Reader.ReadInt32()";
-			simpleValueReader[typeof(uint)] = "d.Reader.ReadUInt32()";
-			simpleValueReader[typeof(long)] = "d.Reader.ReadInt64()";
-			simpleValueReader[typeof(ulong)] = "d.Reader.ReadUInt64()";
-			simpleValueReader[typeof(bool)] = "d.Reader.ReadBoolean()";
-			simpleValueReader[typeof(char)] = "d.Reader.ReadChar()";
-			simpleValueReader[typeof(float)] = "d.Reader.ReadSingle()";
-			simpleValueReader[typeof(double)] = "d.Reader.ReadDouble()";
-			simpleValueReader[typeof(decimal)] = "d.Reader.ReadDecimal()";
-			simpleValueReader[typeof(DateTime)] = "DateTime.FromBinary(d.Reader.ReadInt64())";
-			simpleValueReader[typeof(DateTimeOffset)] = "dg.ReadDateTimeOffset()";
-			simpleValueReader[typeof(TimeSpan)] = "new TimeSpan(d.Reader.ReadInt64())";
-			simpleValueReader[typeof(Guid)] = "new Guid(d.Reader.ReadBytes(16))";
-			simpleValueReader[typeof(object)] = "dg.ReadAny()";
-		}
+		private static Dictionary<Type, string> simpleValueReader = new Dictionary<Type, string>() {
+			{ typeof(sbyte), "d.Reader.ReadSByte()" },
+			{ typeof(byte), "d.Reader.ReadByte()" },
+			{ typeof(short), "d.Reader.ReadInt16()" },
+			{ typeof(ushort), "d.Reader.ReadUInt16()" },
+			{ typeof(int), "d.Reader.ReadInt32()" },
+			{ typeof(uint), "d.Reader.ReadUInt32()" },
+			{ typeof(long), "d.Reader.ReadInt64()" },
+			{ typeof(ulong), "d.Reader.ReadUInt64()" },
+			{ typeof(bool), "d.Reader.ReadBoolean()" },
+			{ typeof(char), "d.Reader.ReadChar()" },
+			{ typeof(float), "d.Reader.ReadSingle()" },
+			{ typeof(double), "d.Reader.ReadDouble()" },
+			{ typeof(decimal), "d.Reader.ReadDecimal()" },
+			{ typeof(DateTime), "DateTime.FromBinary(d.Reader.ReadInt64())" },
+			{ typeof(DateTimeOffset), "dg.ReadDateTimeOffset()" },
+			{ typeof(TimeSpan), "new TimeSpan(d.Reader.ReadInt64())" },
+			{ typeof(Guid), "new Guid(d.Reader.ReadBytes(16))" },
+			{ typeof(object), "dg.ReadAny()" },
+		};
 
 		private string PutCount()
 		{

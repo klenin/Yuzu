@@ -120,26 +120,28 @@ namespace Yuzu.Binary
 
 		private void InitReaders()
 		{
-			readerCache[typeof(sbyte)] = ReadSByte;
-			readerCache[typeof(byte)] = ReadByte;
-			readerCache[typeof(short)] = ReadShort;
-			readerCache[typeof(ushort)] = ReadUShort;
-			readerCache[typeof(int)] = ReadInt;
-			readerCache[typeof(uint)] = ReadUInt;
-			readerCache[typeof(long)] = ReadLong;
-			readerCache[typeof(ulong)] = ReadULong;
-			readerCache[typeof(bool)] = ReadBool;
-			readerCache[typeof(char)] = ReadChar;
-			readerCache[typeof(float)] = ReadFloat;
-			readerCache[typeof(double)] = ReadDouble;
-			readerCache[typeof(decimal)] = ReadDecimal;
-			readerCache[typeof(DateTime)] = ReadDateTimeObj;
-			readerCache[typeof(DateTimeOffset)] = ReadDateTimeOffsetObj;
-			readerCache[typeof(TimeSpan)] = ReadTimeSpanObj;
-			readerCache[typeof(Guid)] = ReadGuidObj;
-			readerCache[typeof(string)] = ReadString;
-			readerCache[typeof(object)] = ReadAny;
-			readerCache[typeof(Record)] = ReadObject<object>;
+			readerCache = new Dictionary<Type, Func<object>>() {
+				{ typeof(sbyte), ReadSByte },
+				{ typeof(byte), ReadByte },
+				{ typeof(short), ReadShort },
+				{ typeof(ushort), ReadUShort },
+				{ typeof(int), ReadInt },
+				{ typeof(uint), ReadUInt },
+				{ typeof(long), ReadLong },
+				{ typeof(ulong), ReadULong },
+				{ typeof(bool), ReadBool },
+				{ typeof(char), ReadChar },
+				{ typeof(float), ReadFloat },
+				{ typeof(double), ReadDouble },
+				{ typeof(decimal), ReadDecimal },
+				{ typeof(DateTime), ReadDateTimeObj },
+				{ typeof(DateTimeOffset), ReadDateTimeOffsetObj },
+				{ typeof(TimeSpan), ReadTimeSpanObj },
+				{ typeof(Guid), ReadGuidObj },
+				{ typeof(string), ReadString },
+				{ typeof(object), ReadAny },
+				{ typeof(Record), ReadObject<object> },
+			};
 		}
 
 		private object ReadDateTimeObj() => ReadDateTime();
@@ -608,7 +610,7 @@ namespace Yuzu.Binary
 			return result;
 		}
 
-		private Dictionary<Type, Func<object>> readerCache = new Dictionary<Type, Func<object>>();
+		private Dictionary<Type, Func<object>> readerCache;
 		private Dictionary<Type, Action<object>> mergerCache = new Dictionary<Type, Action<object>>();
 
 		private Func<object> ReadValueFunc(Type t)
