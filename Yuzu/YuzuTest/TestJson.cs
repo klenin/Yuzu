@@ -363,36 +363,36 @@ namespace YuzuTest.Json
 			Assert.AreEqual(v.N, w3.N);
 		}
 
-		private void CheckNumber<T>(JsonDeserializer jd, object expected, string s = null)
-		{
-			var actual = jd.FromString((s ?? expected.ToString()) + " ");
-			Assert.IsInstanceOfType(actual, typeof(T));
-			Assert.AreEqual(expected, actual);
-		}
-
 		[TestMethod]
 		public void TestMinimalNumberType()
 		{
 			var jd = new JsonDeserializer();
 
-			CheckNumber<double>(jd, 1.234, "1.234");
-			CheckNumber<double>(jd, 1d, "1");
-			CheckNumber<double>(jd, -5d, "-5");
+			void CheckNumber<T>(object expected, string s = null)
+			{
+				var actual = jd.FromString((s ?? expected.ToString()) + " ");
+				Assert.IsInstanceOfType(actual, typeof(T));
+				Assert.AreEqual(expected, actual);
+			}
+
+			CheckNumber<double>(1.234, "1.234");
+			CheckNumber<double>(1d, "1");
+			CheckNumber<double>(-5d, "-5");
 
 			jd.JsonOptions.UnknownNumberType = JsonUnknownNumberType.Minimal;
 
-			CheckNumber<double>(jd, 1.234, "1.234");
-			CheckNumber<byte>(jd, (byte)0);
-			CheckNumber<byte>(jd, byte.MaxValue);
-			CheckNumber<ushort>(jd, ushort.MaxValue);
-			CheckNumber<uint>(jd, uint.MaxValue);
-			CheckNumber<ulong>(jd, 1 + (ulong)uint.MaxValue);
-			CheckNumber<ulong>(jd, ulong.MaxValue);
-			CheckNumber<sbyte>(jd, (sbyte)-1);
-			CheckNumber<sbyte>(jd, sbyte.MinValue);
-			CheckNumber<short>(jd, short.MinValue);
-			CheckNumber<int>(jd, int.MinValue);
-			CheckNumber<long>(jd, long.MinValue);
+			CheckNumber<double>(1.234, "1.234");
+			CheckNumber<byte>((byte)0);
+			CheckNumber<byte>(byte.MaxValue);
+			CheckNumber<ushort>(ushort.MaxValue);
+			CheckNumber<uint>(uint.MaxValue);
+			CheckNumber<ulong>(1 + (ulong)uint.MaxValue);
+			CheckNumber<ulong>(ulong.MaxValue);
+			CheckNumber<sbyte>((sbyte)-1);
+			CheckNumber<sbyte>(sbyte.MinValue);
+			CheckNumber<short>(short.MinValue);
+			CheckNumber<int>(int.MinValue);
+			CheckNumber<long>(long.MinValue);
 		}
 
 		[TestMethod]
