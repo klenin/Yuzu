@@ -812,7 +812,7 @@ namespace YuzuTest
 			F = new Dictionary<int, List<SampleBoolBase>> {
 				{ 7, new List<SampleBoolBase>{ new SampleBool { B = true } } } }
 		};
-}
+	}
 
 	public class SampleSurrogateColor
 	{

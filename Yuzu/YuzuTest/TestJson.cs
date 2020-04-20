@@ -1512,6 +1512,21 @@ namespace YuzuTest.Json
 
 			var wg = (SampleGuid)SampleGuid_JsonDeserializer.Instance.FromString(result);
 			Assert.AreEqual(v.G, wg.G);
+			{
+				var v1 = new SampleObj { F = Guid.NewGuid() };
+				var result1 = js.ToString(v1);
+				Assert.AreEqual("{\"F\":\"" + v1.F.ToString() + "\"}", result1);
+				var w1 = jd.FromString<SampleObj>(result1);
+				Assert.AreEqual(v1.F.ToString(), w1.F);
+
+				js.JsonOptions.SaveClass |= JsonSaveClass.UnknownPrimitive;
+				var result2 = js.ToString(v1);
+				Assert.AreEqual(
+					"{\"F\":{\"class\":\"System.Guid\",\"value\":\"" + v1.F.ToString() + "\"}}",
+					result2);
+				var w2 = jd.FromString<SampleObj>(result2);
+				Assert.AreEqual(v1.F, w2.F);
+			}
 		}
 
 		[TestMethod]

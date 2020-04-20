@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Text;
 
 using Yuzu.Deserializer;
@@ -662,6 +663,10 @@ namespace Yuzu.Json
 			return result;
 		}
 
+		private static Type[] systemTypes = {
+			typeof(DateTime), typeof(DateTimeOffset), typeof(TimeSpan), typeof(Guid),
+		};
+
 		protected object ReadAnyObject()
 		{
 			var ch = SkipSpaces();
@@ -696,7 +701,7 @@ namespace Yuzu.Json
 							ReadIntoDictionary(result.Fields);
 						return result;
 					}
-					if (t.IsPrimitive)
+					if (t.IsPrimitive || systemTypes.Contains(t))
 						return ReadTypedPrimitive(t);
 					var meta = Meta.Get(t, Options);
 					return ReadFields(meta.Factory(), GetNextName(first: false));

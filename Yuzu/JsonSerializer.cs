@@ -567,10 +567,14 @@ namespace Yuzu.Json
 			return result;
 		}
 
+		private static Type[] systemTypes = {
+			typeof(string), typeof(DateTime), typeof(DateTimeOffset), typeof(TimeSpan), typeof(Guid),
+		};
+
 		// This condition must be equivalent to MakeWriteFunc returning WriteObject*.
 		private bool IsUserObject(Type t)
 		{
-			if (t == typeof(string)) return false;
+			if (systemTypes.Contains(t)) return false;
 			if (Utils.IsStruct(t)) return true;
 			if (!t.IsClass && !t.IsInterface) return false;
 			if (t.IsGenericType) {

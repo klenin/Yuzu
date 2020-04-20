@@ -1541,6 +1541,17 @@ namespace YuzuTest.Binary
 
 			var wg = (new BinaryDeserializerGen()).FromBytes<SampleGuid>(result);
 			Assert.AreEqual(v.G, wg.G);
+			{
+				var g = Guid.NewGuid();
+				var v1 = new SampleObj { F = g };
+				var result1 = bs.ToBytes(v1);
+				Assert.AreEqual(
+					"\n20 02 00 " + XS(typeof(SampleObj)) + " 01 00 " + XS("F", RoughType.Any) +
+					" 01 00 14 " + XS(g.ToByteArray()) + " 00 00",
+					"\n" + XS(result1));
+				var w1 = bd.FromBytes<SampleObj>(result1);
+				Assert.AreEqual(v1.F, w1.F);
+			}
 		}
 
 		[TestMethod]
