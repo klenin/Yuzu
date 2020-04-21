@@ -701,7 +701,7 @@ namespace Yuzu.Json
 							ReadIntoDictionary(result.Fields);
 						return result;
 					}
-					if (t.IsPrimitive || systemTypes.Contains(t))
+					if (t.IsPrimitive || t.IsEnum || systemTypes.Contains(t))
 						return ReadTypedPrimitive(t);
 					var meta = Meta.Get(t, Options);
 					return ReadFields(meta.Factory(), GetNextName(first: false));

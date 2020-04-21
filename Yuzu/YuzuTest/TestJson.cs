@@ -222,43 +222,55 @@ namespace YuzuTest.Json
 		public void TestEnum()
 		{
 			var js = new JsonSerializer();
-
-			var v = new Sample4 { E = SampleEnum.E3 };
 			js.JsonOptions.Indent = "";
-
-			var result1 = js.ToString(v);
-			Assert.AreEqual("{\n\"E\":2\n}", result1);
-
-			var vb = new SampleEnumMemberTyped { Eb = SampleEnumByte.EB2, El = SampleEnumLong.Large };
-
-			var result1b = js.ToString(vb);
-			Assert.AreEqual("{\n\"Eb\":1,\n\"El\":1125899906842624\n}", result1b);
-
-			js.JsonOptions.EnumAsString = true;
-			var result2 = js.ToString(v);
-			Assert.AreEqual("{\n\"E\":\"E3\"\n}", result2);
-
 			var jd = new JsonDeserializer();
-			var w = new Sample4();
-			jd.FromString(w, result1);
-			Assert.AreEqual(SampleEnum.E3, w.E);
 
-			var wb = jd.FromString<SampleEnumMemberTyped>(result1b);
-			Assert.AreEqual(vb.Eb, wb.Eb);
-			Assert.AreEqual(vb.El, wb.El);
+			{
+				var v = new Sample4 { E = SampleEnum.E3 };
 
-			wb = (SampleEnumMemberTyped)
-				SampleEnumMemberTyped_JsonDeserializer.Instance.FromString(result1b);
-			Assert.AreEqual(vb.Eb, wb.Eb);
-			Assert.AreEqual(vb.El, wb.El);
+				var result1 = js.ToString(v);
+				Assert.AreEqual("{\n\"E\":2\n}", result1);
 
-			w.E = SampleEnum.E1;
-			jd.JsonOptions.EnumAsString = true;
-			jd.FromString(w, result2);
-			Assert.AreEqual(SampleEnum.E3, w.E);
+				var vb = new SampleEnumMemberTyped { Eb = SampleEnumByte.EB2, El = SampleEnumLong.Large };
 
-			w = (Sample4)Sample4_JsonDeserializer.Instance.FromString(result2);
-			Assert.AreEqual(SampleEnum.E3, w.E);
+				var result1b = js.ToString(vb);
+				Assert.AreEqual("{\n\"Eb\":1,\n\"El\":1125899906842624\n}", result1b);
+
+				js.JsonOptions.EnumAsString = true;
+				var result2 = js.ToString(v);
+				Assert.AreEqual("{\n\"E\":\"E3\"\n}", result2);
+
+				var w = new Sample4();
+				jd.FromString(w, result1);
+				Assert.AreEqual(SampleEnum.E3, w.E);
+
+				var wb = jd.FromString<SampleEnumMemberTyped>(result1b);
+				Assert.AreEqual(vb.Eb, wb.Eb);
+				Assert.AreEqual(vb.El, wb.El);
+
+				wb = (SampleEnumMemberTyped)
+					SampleEnumMemberTyped_JsonDeserializer.Instance.FromString(result1b);
+				Assert.AreEqual(vb.Eb, wb.Eb);
+				Assert.AreEqual(vb.El, wb.El);
+
+				w.E = SampleEnum.E1;
+				jd.JsonOptions.EnumAsString = true;
+				jd.FromString(w, result2);
+				Assert.AreEqual(SampleEnum.E3, w.E);
+
+				w = (Sample4)Sample4_JsonDeserializer.Instance.FromString(result2);
+				Assert.AreEqual(SampleEnum.E3, w.E);
+			}
+			{
+				var v = new SampleObj { F = SampleEnum.E3 };
+				js.JsonOptions.SaveClass |= JsonSaveClass.UnknownPrimitive;
+				var result = js.ToString(v);
+				Assert.AreEqual(
+					"{\n\"F\":{\n\"class\":\"YuzuTest.SampleEnum, YuzuTest\",\n\"value\":\"E3\"\n}\n}",
+					result);
+				var w = jd.FromString<SampleObj>(result);
+				Assert.AreEqual(SampleEnum.E3, w.F);
+			}
 		}
 
 		[TestMethod]
