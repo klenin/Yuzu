@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
 using Yuzu.Metadata;
@@ -60,6 +60,7 @@ namespace Yuzu.Binary
 
 		public static bool IsRecord(this Type t)
 		{
+			// TODO: when type.IsArray is true type.IsClass is also true, which seems to be a bug in this method
 			return t.IsClass || t.IsInterface || Utils.IsStruct(t);
 		}
 	}

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Reflection;
 
@@ -76,7 +76,7 @@ namespace Yuzu.Binary
 		{
 			if (expectedType.IsEnum)
 				return ReadCompatibleType(Enum.GetUnderlyingType(expectedType));
-			if (expectedType.IsRecord() && !expectedType.Namespace.StartsWith("System")) {
+			if (!expectedType.IsArray && expectedType.IsRecord() && (!expectedType.Namespace?.StartsWith("System") ?? true)) {
 				var sg = Meta.Get(expectedType, Options).Surrogate;
 				if (sg.SurrogateType != null && sg.FuncFrom != null)
 					return ReadCompatibleType(sg.SurrogateType);
