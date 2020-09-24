@@ -261,9 +261,9 @@ namespace YuzuTest.Json
 				w = (Sample4)Sample4_JsonDeserializer.Instance.FromString(result2);
 				Assert.AreEqual(SampleEnum.E3, w.E);
 			}
+			js.JsonOptions.SaveClass |= JsonSaveClass.UnknownPrimitive;
 			{
 				var v = new SampleObj { F = SampleEnum.E3 };
-				js.JsonOptions.SaveClass |= JsonSaveClass.UnknownPrimitive;
 				var result = js.ToString(v);
 				Assert.AreEqual(
 					"{\n\"F\":{\n\"class\":\"YuzuTest.SampleEnum, YuzuTest\",\n\"value\":\"E3\"\n}\n}",
@@ -532,6 +532,16 @@ namespace YuzuTest.Json
 				var w1 = jd.FromString(s1);
 				Assert.IsInstanceOfType(w1, typeof(int));
 				Assert.AreEqual(34, w1);
+			}
+			{
+				var v = "abc";
+				var result = js.ToString(v);
+				Assert.AreEqual(
+					"{\n\t\"class\":\"System.String\",\n\t\"value\":\"abc\"\n}",
+					result);
+				var w = jd.FromString(result);
+				Assert.IsInstanceOfType(w, typeof(string));
+				Assert.AreEqual(v, w);
 			}
 			{
 				var s1 = js.ToString(new SampleObj { F = 91 });

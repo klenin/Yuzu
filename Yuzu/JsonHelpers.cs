@@ -258,4 +258,13 @@ namespace Yuzu.Json
 		}
 	}
 
+	internal static class SystemForcedPrimitiveTypes
+	{
+		private static Type[] systemTypes = {
+			typeof(string), typeof(DateTime), typeof(DateTimeOffset), typeof(TimeSpan), typeof(Guid),
+		};
+
+		public static bool Contains(Type t) => systemTypes.Contains(t);
+	}
+
 }

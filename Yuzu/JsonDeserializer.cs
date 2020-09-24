@@ -663,10 +663,6 @@ namespace Yuzu.Json
 			return result;
 		}
 
-		private static Type[] systemTypes = {
-			typeof(DateTime), typeof(DateTimeOffset), typeof(TimeSpan), typeof(Guid),
-		};
-
 		protected object ReadAnyObject()
 		{
 			var ch = SkipSpaces();
@@ -701,7 +697,7 @@ namespace Yuzu.Json
 							ReadIntoDictionary(result.Fields);
 						return result;
 					}
-					if (t.IsPrimitive || t.IsEnum || systemTypes.Contains(t))
+					if (t.IsPrimitive || t.IsEnum || SystemForcedPrimitiveTypes.Contains(t))
 						return ReadTypedPrimitive(t);
 					var meta = Meta.Get(t, Options);
 					return ReadFields(meta.Factory(), GetNextName(first: false));
