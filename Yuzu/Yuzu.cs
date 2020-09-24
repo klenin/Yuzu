@@ -106,7 +106,7 @@ namespace Yuzu
 			Value = value;
 		}
 
-		private bool Check(object obj, object field) => !Value.Equals(field);
+		private bool Check(object obj, object field) => !Equals(Value, field);
 		public override Func<object, object, bool> MakeChecker(Type tObj) => Check;
 		public override object GetDefault() => Value;
 	}

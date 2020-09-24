@@ -395,6 +395,21 @@ namespace YuzuTest.Metadata
 		{
 			Meta.Get(typeof(MutualRec1), new CommonOptions());
 		}
+
+		internal class DefaultNull
+		{
+			[YuzuOptional]
+			[YuzuDefault(null)]
+			public string S = null;
+		}
+
+		[TestMethod]
+		public void TestDefaultNull ()
+		{
+			var d = new DefaultNull();
+			Assert.IsFalse(
+				Meta.Get(typeof(DefaultNull), new CommonOptions()).Items[0].SerializeCond(d, d.S));
+		}
 	}
 
 }
