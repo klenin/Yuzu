@@ -264,7 +264,7 @@ namespace Yuzu.Json
 			typeof(string), typeof(DateTime), typeof(DateTimeOffset), typeof(TimeSpan), typeof(Guid),
 		};
 
-		public static bool Contains(Type t) => systemTypes.Contains(t);
+		public static bool Contains(Type t) => Array.IndexOf(systemTypes, t) != -1;
 	}
 
 }
