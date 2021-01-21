@@ -4,3 +4,4 @@ obj
 *.vsp
 *.psess
 .vs
+Resources/Resource.designer.cs

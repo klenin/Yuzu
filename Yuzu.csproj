@@ -1,0 +1,30 @@
+﻿<Project>
+
+  <PropertyGroup>
+    <MSBuildProjectExtensionsPath>obj/msbuild_project_extensions</MSBuildProjectExtensionsPath>
+  </PropertyGroup>
+
+  <Import Project="Sdk.props" Sdk="Microsoft.NET.Sdk" />
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+    <RootNamespace>Yuzu</RootNamespace>
+    <AssemblyName>Yuzu</AssemblyName>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <LangVersion>8.0</LangVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="*" />
+    <None Remove="*/**" />
+    <Compile Include="Yuzu\**" />
+    <Compile Remove="Yuzu\docs\**" />
+    <Compile Remove="Yuzu\Properties\**" />
+    <Compile Remove="Yuzu\YuzuTest\**" />
+    <Compile Remove="Yuzu\Grisu\LICENSE" />
+  </ItemGroup>
+
+  <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
+
+</Project>
