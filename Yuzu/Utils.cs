@@ -203,7 +203,13 @@ namespace Yuzu.Util
 
 		public static string Serialize(Type t)
 		{
-			return extendedAssemblyInfo.Replace(t.AssemblyQualifiedName, "").Replace(", mscorlib", "");
+			return extendedAssemblyInfo.Replace(t.AssemblyQualifiedName, "")
+				// Tries to replace multiple system type assembly names
+				// because they differ across platforms and frameworks.
+				// .NET Framework, Xamarin.Mac
+				.Replace(", mscorlib", "")
+				// .NET Core, .NET 5.0+
+				.Replace(", System.Private.CoreLib", "");
 		}
 
 		public static Type Deserialize(string typeName)
@@ -273,7 +279,7 @@ namespace Yuzu.Util
 			var imap = t.GetInterfaceMap(icoll);
 			var addIndex = Array.FindIndex(imap.InterfaceMethods, m => m.Name == "Add");
 			return string.Format(
-				imap.TargetMethods[addIndex].Name == "Add" ? "{0}.Add({1});\n" : "(({2}){0}).Add({1});\n", 
+				imap.TargetMethods[addIndex].Name == "Add" ? "{0}.Add({1});\n" : "(({2}){0}).Add({1});\n",
 				collName, elementName, Utils.GetTypeSpec(icoll));
 		}
 
