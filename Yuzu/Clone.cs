@@ -123,19 +123,19 @@ namespace Yuzu.Clone
 				if (idict != null) {
 					var a = idict.GetGenericArguments();
 					if (!IsCopyable(a[0])) {
-						var сk = GetCloner(a[0]);
-						var сv = GetCloner(a[1]);
+						var ck = GetCloner(a[0]);
+						var cv = GetCloner(a[1]);
 						var m = CloneUtils.GetGeneric(nameof(CloneUtils.CloneIDictionary), t, a[0], a[1]);
 						var d = CloneUtils.MakeDelegate<
 							Func<object, Func<object, object>, Func<object, object>, object>>(m);
-						return obj => d(obj, сk, сv);
+						return obj => d(obj, ck, cv);
 					}
 					else if (!IsCopyable(a[1])) {
-						var сv = GetCloner(a[1]);
+						var cv = GetCloner(a[1]);
 						var m = CloneUtils.GetGeneric(
 							nameof(CloneUtils.CloneIDictionaryPrimiviteKey), t, a[0], a[1]);
 						var d = CloneUtils.MakeDelegate<Func<object, Func<object, object>, object>>(m);
-						return obj => d(obj, сv);
+						return obj => d(obj, cv);
 					}
 					else {
 						var m = CloneUtils.GetGeneric(
@@ -153,17 +153,17 @@ namespace Yuzu.Clone
 				if (icoll != null) {
 					var a = icoll.GetGenericArguments();
 					if (!IsCopyable(a[0])) {
-						var сe = GetCloner(a[0]);
+						var ce = GetCloner(a[0]);
 						if (meta.SerializeItemIf != null) {
 							var m = CloneUtils.GetGeneric(nameof(CloneUtils.CloneCollectionIf), t, a[0]);
 							var d = CloneUtils.MakeDelegate<
 								Func<object, Func<object, object>, serializeItemIfType, object>>(m);
-							return obj => d(obj, сe, meta.SerializeItemIf);
+							return obj => d(obj, ce, meta.SerializeItemIf);
 						}
 						else {
 							var m = CloneUtils.GetGeneric(nameof(CloneUtils.CloneCollection), t, a[0]);
 							var d = CloneUtils.MakeDelegate<Func<object, Func<object, object>, object>>(m);
-							return obj => d(obj, сe);
+							return obj => d(obj, ce);
 						}
 					}
 					else {
@@ -198,19 +198,19 @@ namespace Yuzu.Clone
 				if (idict != null) {
 					var a = idict.GetGenericArguments();
 					if (!IsCopyable(a[0])) {
-						var сk = GetCloner(a[0]);
-						var сv = GetCloner(a[1]);
+						var ck = GetCloner(a[0]);
+						var cv = GetCloner(a[1]);
 						var m = CloneUtils.GetGeneric(nameof(CloneUtils.MergeIDictionary), t, a[0], a[1]);
 						var d = CloneUtils.MakeDelegate<
 							Action<object, object, Func<object, object>, Func<object, object>>>(m);
-						return (dst, src) => d(dst, src, сk, сv);
+						return (dst, src) => d(dst, src, ck, cv);
 					}
 					else if (!IsCopyable(a[1])) {
-						var сv = GetCloner(a[1]);
+						var cv = GetCloner(a[1]);
 						var m = CloneUtils.GetGeneric(
 							nameof(CloneUtils.MergeIDictionaryPrimiviteKey), t, a[0], a[1]);
 						var d = CloneUtils.MakeDelegate<Action<object, object, Func<object, object>>>(m);
-						return (dst, src) => d(dst, src, сv);
+						return (dst, src) => d(dst, src, cv);
 					}
 					else {
 						var m = CloneUtils.GetGeneric(
@@ -225,17 +225,17 @@ namespace Yuzu.Clone
 				if (icoll != null) {
 					var a = icoll.GetGenericArguments();
 					if (!IsCopyable(a[0])) {
-						var сe = GetCloner(a[0]);
+						var ce = GetCloner(a[0]);
 						if (meta.SerializeItemIf != null) {
 							var m = CloneUtils.GetGeneric(nameof(CloneUtils.MergeCollectionIf), t, a[0]);
 							var d = CloneUtils.MakeDelegate<
 								Action<object, object, Func<object, object>, serializeItemIfType>>(m);
-							return (dst, src) => d(dst, src, сe, meta.SerializeItemIf);
+							return (dst, src) => d(dst, src, ce, meta.SerializeItemIf);
 						}
 						else {
 							var m = CloneUtils.GetGeneric(nameof(CloneUtils.MergeCollection), t, a[0]);
 							var d = CloneUtils.MakeDelegate<Action<object, object, Func<object, object>>>(m);
-							return (dst, src) => d(dst, src, сe);
+							return (dst, src) => d(dst, src, ce);
 						}
 					}
 					else {
