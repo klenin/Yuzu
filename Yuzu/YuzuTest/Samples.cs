@@ -1028,6 +1028,97 @@ namespace YuzuTest
 		public int F;
 	}
 
+	public class TypedNumberSample : IEquatable<TypedNumberSample>
+	{
+		public TypedNumberSample(int number) { this.number = number; }
+		public TypedNumberSample() { }
+		private int number;
+
+		[YuzuToSurrogate]
+		public int Serialize() => number;
+
+		[YuzuFromSurrogate]
+		public static TypedNumberSample Deserialize(int value) => new TypedNumberSample { number = value };
+
+		public override int GetHashCode() => number.GetHashCode();
+		public bool Equals(TypedNumberSample other) => ReferenceEquals(this, other) || (other != null) && number == other.number;
+		public override bool Equals(object other) => (other != null) && (GetType() == other.GetType()) && Equals(other as TypedNumberSample);
+		public static bool operator ==(TypedNumberSample lhs, TypedNumberSample rhs) => Equals(lhs, rhs);
+		public static bool operator !=(TypedNumberSample lhs, TypedNumberSample rhs) => !Equals(lhs, rhs);
+	}
+
+	public class SurrogateDictionaryKey
+	{
+		[YuzuMember]
+		public Dictionary<TypedNumberSample, int> F = new Dictionary<TypedNumberSample, int>();
+	}
+
+	public class SurrogateDictionaryValue
+	{
+		[YuzuMember]
+		public Dictionary<int, TypedNumberSample> F = new Dictionary<int, TypedNumberSample>();
+	}
+
+	public class SurrogateListElement
+	{
+		[YuzuMember]
+		public List<TypedNumberSample> F = new List<TypedNumberSample>();
+	}
+
+	public class SurrogateHashSetElement
+	{
+		[YuzuMember]
+		public HashSet<TypedNumberSample> F = new HashSet<TypedNumberSample>();
+	}
+
+	public class SurrogateIntToStringSample
+	{
+		public SurrogateIntToStringSample() { }
+		public SurrogateIntToStringSample(int number) { Number = number; }
+		public int Number;
+
+		[YuzuToSurrogate]
+		public string Serialize() => Number.ToString();
+
+		[YuzuFromSurrogate]
+		public static SurrogateIntToStringSample Deserialize(string value) => new SurrogateIntToStringSample(int.Parse(value));
+	}
+
+	public class SurrogateCustomGenericArgument
+	{
+		public class Generic<T>
+		{
+			[YuzuMember]
+			public T F;
+		}
+
+		[YuzuMember]
+		public Generic<SurrogateIntToStringSample> F;
+	}
+
+	public class SurrogateCustomGeneric
+	{
+		public class Generic<T>
+		{
+			public T F;
+
+			public Generic(T f)
+			{
+				F = f;
+			}
+
+			[YuzuToSurrogate]
+			public string Serialize() => F.ToString();
+
+			[YuzuFromSurrogate]
+			// this generic will only work where T : int, see hack below
+			public static Generic<T> Deserialize(string value) => new Generic<T>((T)(object)int.Parse(value));
+		}
+
+		[YuzuMember]
+		public Generic<int> F;
+	}
+
 	public static class XAssert
 	{
 		public static void Throws<TExpectedException>(Action exceptionThrower, string expectedExceptionMessage = "")
